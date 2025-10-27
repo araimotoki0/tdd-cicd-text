@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基礎編：Red-Greenサイクル体験 - TDD実践ハンズオン</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">TDD ハンズオン講座 - 基礎編</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="index.html" class="hover:text-blue-200">理論編</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="handson-basic.html" class="hover:text-blue-200">基礎：Red-Green</a>
+                    <a href="handson-refactor.html" class="hover:text-blue-200">改善：Refactor</a>
+                    <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
+                    <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="handson-basic.html" class="block hover:text-blue-200">基礎：Red-Green</a>
+            <a href="handson-refactor.html" class="block hover:text-blue-200">改善：Refactor</a>
+            <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
+            <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">基礎編：Red-Greenサイクルを体験</h2>
+                <p class="text-2xl mb-4">TDDの核心「失敗→成功」のサイクルを実際に手を動かして理解しよう</p>
+            </div>
+        </section>
+
+        <!-- 事前準備 -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🔧 事前準備</h2>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-6">環境確認</h3>
+                        <p class="text-gray-700 mb-6">
+                            このハンズオンでは<strong>Docker環境</strong>を使用します。<br>
+                            コンテナ内でコマンドを実行するため、まずコンテナに入ります。
+                        </p>
+
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-2">1. Dockerコンテナを起動</h4>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">docker compose up -d</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">コンテナがバックグラウンドで起動します</p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-2">2. appコンテナに入る</h4>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">docker compose exec app bash</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">コンテナ内のシェルが起動します</p>
+                            </div>
+
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                                <p class="font-bold text-yellow-800 mb-2">⚠️ 重要</p>
+                                <p class="text-sm text-gray-700">
+                                    <strong>以降の<code>php artisan</code>コマンドは、全てコンテナ内で実行します。</strong><br>
+                                    <code>docker compose exec app bash</code>でコンテナに入った状態で進めてください。
+                                </p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-2">3. PHPUnitがインストールされているか確認</h4>
+                                <p class="text-sm text-gray-600 mb-2">（コンテナ内で実行）</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">./vendor/bin/phpunit --version</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">期待する出力: <code>PHPUnit 10.x.x</code> または <code>PHPUnit 11.x.x</code></p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-gray-800 mb-2">4. Laravelのテストコマンドを確認</h4>
+                                <p class="text-sm text-gray-600 mb-2">（コンテナ内で実行）</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">php artisan test</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">デフォルトのテストが実行されて結果が表示されればOK</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 bg-white p-4 rounded border-l-4 border-blue-600">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 ヒント:</strong> エラーが出た場合は、コンテナ内で<code>composer install</code>を実行してみてください。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- チェックリスト -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">✅ 準備完了チェックリスト</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded cursor-pointer">
+                                <input type="checkbox" id="check-prep-1" class="w-5 h-5 text-green-600">
+                                <span class="text-gray-700">Dockerコンテナが起動している</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded cursor-pointer">
+                                <input type="checkbox" id="check-prep-2" class="w-5 h-5 text-green-600">
+                                <span class="text-gray-700">appコンテナ内に入っている</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded cursor-pointer">
+                                <input type="checkbox" id="check-prep-3" class="w-5 h-5 text-green-600">
+                                <span class="text-gray-700">PHPUnitのバージョンが表示された</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded cursor-pointer">
+                                <input type="checkbox" id="check-prep-4" class="w-5 h-5 text-green-600">
+                                <span class="text-gray-700">php artisan test が実行できた</span>
+                            </label>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <p class="text-gray-600 mb-4">すべてチェックできたら、ハンズオンを始めましょう！</p>
+                            <a href="#red-phase" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full inline-block transition">
+                                REDフェーズへ進む →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REDフェーズ -->
+        <section id="red-phase" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <span class="bg-red-500 text-white px-8 py-3 rounded-full text-3xl font-bold inline-block shadow-lg">🔴 RED フェーズ</span>
+                        <h2 class="text-5xl font-bold text-gray-800 mt-8 mb-4">まず失敗するテストを書く</h2>
+                        <p class="text-2xl text-gray-600">計算機クラスの足し算機能をテストします</p>
+                    </div>
+
+                    <!-- なぜREDから始めるのか -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-t-4 border-red-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">🤔 なぜ失敗するテストから書くのか？</h3>
+                        <div class="space-y-4 text-gray-700">
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <p class="font-bold text-red-800 mb-2">1. 何を作るべきか明確になる</p>
+                                <p class="text-sm">テストを書くことで「どんな機能が必要か」「どんな入力でどんな出力が期待されるか」が明確になります。</p>
+                            </div>
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <p class="font-bold text-red-800 mb-2">2. テスト自体が正しく動いているか確認できる</p>
+                                <p class="text-sm">最初に失敗を見ることで、「このテストは本当に機能をチェックしている」と確認できます。常に成功するテストは意味がありません。</p>
+                            </div>
+                            <div class="bg-red-50 p-4 rounded-lg">
+                                <p class="font-bold text-red-800 mb-2">3. 仕様から開発する習慣がつく</p>
+                                <p class="text-sm">「どう動くべきか」を先に考えることで、目的に沿った実装ができます。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 実装手順 -->
+                    <div class="space-y-8">
+                        <!-- 手順1: テストファイル作成 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                                <h3 class="text-3xl font-bold text-gray-800">テストファイルを作成</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">Laravelのartisanコマンドを使ってテストファイルを作成します。</p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 実行するコマンド:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">php artisan make:test CalculatorTest --unit</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-yellow-50 p-6 rounded-lg mb-6 border-l-4 border-yellow-500">
+                                <p class="font-bold text-yellow-800 mb-3">💡 コマンドの解説:</p>
+                                <ul class="text-gray-700 space-y-2">
+                                    <li><strong><code>make:test</code></strong>: テストファイルを生成するartisanコマンド</li>
+                                    <li><strong><code>CalculatorTest</code></strong>: テストクラスの名前（慣習として<code>Test</code>で終わる）</li>
+                                    <li><strong><code>--unit</code></strong>: ユニットテストとして作成（<code>tests/Unit/</code>に配置される）</li>
+                                </ul>
+                                <div class="mt-4 bg-white p-4 rounded">
+                                    <p class="text-sm font-bold text-gray-800 mb-2">📚 補足：ユニットテストとは？</p>
+                                    <p class="text-sm text-gray-700">
+                                        ユニットテストは、<strong>個別のクラスやメソッド単体の動作</strong>をテストします。<br>
+                                        データベースや外部APIなどに依存せず、高速に実行できるのが特徴です。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                                <p class="font-bold text-green-800 mb-3">✅ 期待される結果:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-3">
+<pre class="text-green-400">Test [tests/Unit/CalculatorTest.php] created successfully.</pre>
+                                </div>
+                                <p class="text-gray-700">
+                                    <strong>ファイルの場所:</strong> <code class="bg-gray-100 px-2 py-1 rounded">src/tests/Unit/CalculatorTest.php</code>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順2: ファイルの中身を確認 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                                <h3 class="text-3xl font-bold text-gray-800">生成されたファイルを確認</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">エディタで生成されたファイルを開いてみましょう。</p>
+
+                            <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> Tests\Unit;
+
+<span class="text-purple-400">use</span> PHPUnit\Framework\TestCase;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">CalculatorTest</span> <span class="text-purple-400">extends</span> <span class="text-yellow-300">TestCase</span>
+{
+    <span class="text-gray-500">/**
+     * A basic unit test example.
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">test_example</span>(): <span class="text-purple-400">void</span>
+    {
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertTrue</span>(<span class="text-purple-400">true</span>);
+    }
+}</pre>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800 mb-4">📖 コードの詳しい解説:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div>
+                                        <p class="font-bold text-gray-800"><code>namespace Tests\Unit;</code></p>
+                                        <p class="text-sm ml-4">このクラスが<code>Tests\Unit</code>名前空間に属することを宣言</p>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-800"><code>use PHPUnit\Framework\TestCase;</code></p>
+                                        <p class="text-sm ml-4">PHPUnitの<code>TestCase</code>クラスをインポート。これを継承することでテストクラスになります。</p>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-800"><code>extends TestCase</code></p>
+                                        <p class="text-sm ml-4">PHPUnitのテストクラスを継承。これにより<code>assertEquals</code>などのアサーションメソッドが使えます。</p>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-800"><code>public function test_example()</code></p>
+                                        <p class="text-sm ml-4">テストメソッド。<code>test_</code>で始まるか<code>@test</code>アノテーションを付けると、PHPUnitがテストとして認識します。</p>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-800"><code>$this->assertTrue(true)</code></p>
+                                        <p class="text-sm ml-4">常に成功するダミーのアサーション。これは次のステップで書き換えます。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 手順3: 最初のテストを書く -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
+                                <h3 class="text-3xl font-bold text-gray-800">最初のテストを書く（まだ実装していないコード）</h3>
+                            </div>
+
+                            <div class="bg-red-50 p-6 rounded-lg mb-6 border-2 border-red-500">
+                                <div class="flex items-start">
+                                    <span class="text-3xl mr-4">⚠️</span>
+                                    <div>
+                                        <p class="text-xl font-bold text-red-800 mb-3">ここが最重要ポイント！</p>
+                                        <p class="text-gray-700">
+                                            これから<strong>まだ存在しないCalculatorクラス</strong>のテストを書きます。<br>
+                                            「え？存在しないクラスのテスト？」と思うかもしれませんが、<strong>それがTDDです！</strong><br>
+                                            <strong>先にテストを書いて、後から実装を作ります。</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                <code>test_example()</code> メソッドを削除して、以下のコードに置き換えてください：
+                            </p>
+
+                            <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> Tests\Unit;
+
+<span class="text-purple-400">use</span> PHPUnit\Framework\TestCase;
+<span class="text-purple-400">use</span> PHPUnit\Framework\Attributes\Test;
+<span class="text-purple-400">use</span> App\Services\Calculator;  <span class="text-gray-500">// ← まだ存在しないクラス！</span>
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">CalculatorTest</span> <span class="text-purple-400">extends</span> <span class="text-yellow-300">TestCase</span>
+{
+    <span class="text-gray-500">/**
+     * 2つの数を足し算できることをテストする
+     */</span>
+    #[Test]
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_add_two_numbers</span>()
+    {
+        <span class="text-gray-500">// Arrange（準備）: テストに必要なオブジェクトを用意</span>
+        <span class="text-blue-300">$calculator</span> = <span class="text-purple-400">new</span> Calculator();
+
+        <span class="text-gray-500">// Act（実行）: テストしたい機能を実行</span>
+        <span class="text-blue-300">$result</span> = <span class="text-blue-300">$calculator</span>-><span class="text-yellow-300">add</span>(2, 3);
+
+        <span class="text-gray-500">// Assert（検証）: 期待通りの結果になっているか確認</span>
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(5, <span class="text-blue-300">$result</span>);
+    }
+}</pre>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800 mb-4">📖 コードの詳しい解説:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">use PHPUnit\Framework\Attributes\Test;</p>
+                                        <p class="text-sm">
+                                            <strong>アトリビュート（属性）</strong>を使うために必要なインポート。<br>
+                                            <code>#[Test]</code> と書くことで「これはテストメソッドです」とPHPUnitに伝えます。<br>
+                                            PHP 8.0以降の標準機能で、旧方式の<code>@test</code>（アノテーション）より推奨されます。
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">#[Test]</p>
+                                        <p class="text-sm">
+                                            <strong>アトリビュート記法</strong>。このメソッドがテストであることを示します。<br>
+                                            <code>#[...]</code> という形式はPHP 8.0で追加された機能です。<br>
+                                            <span class="bg-yellow-100 px-2 py-1 rounded">旧方式の <code>@test</code> は使わないでください（PHPUnit 12で廃止予定）</span>
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">use App\Services\Calculator;</p>
+                                        <p class="text-sm">まだ存在しないクラスをインポートしています。TDDでは「こういうクラスが欲しい」という期待を先に書きます。</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">public function it_can_add_two_numbers()</p>
+                                        <p class="text-sm">
+                                            メソッド名を<code>it_can_add_two_numbers</code>にしています。<br>
+                                            この命名は「それは2つの数を足すことができる」という<strong>仕様を表現</strong>しています。<br>
+                                            テストメソッド名は<strong>仕様書の役割</strong>も果たします。
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">AAA パターン（Arrange-Act-Assert）</p>
+                                        <p class="text-sm mb-3">テストを書く際の標準的なパターンです：</p>
+                                        <ul class="text-sm space-y-2 ml-4">
+                                            <li><strong>Arrange（準備）:</strong> テストに必要なデータやオブジェクトを用意</li>
+                                            <li><strong>Act（実行）:</strong> テストしたい機能を実際に実行</li>
+                                            <li><strong>Assert（検証）:</strong> 結果が期待通りか確認</li>
+                                        </ul>
+                                        <p class="text-sm mt-3 bg-yellow-50 p-2 rounded">このパターンを使うことで、テストが読みやすく、理解しやすくなります。</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">$this->assertEquals(5, $result);</p>
+                                        <p class="text-sm">
+                                            <strong>assertEquals</strong>は「等しいことを確認する」アサーションメソッドです。<br>
+                                            <code>assertEquals(期待値, 実際の値)</code>の形式で使います。<br>
+                                            この場合、2 + 3 の結果が 5 であることを確認しています。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-600">
+                                <p class="font-bold text-red-800 mb-3">⚠️ 現時点での状況:</p>
+                                <ul class="text-gray-700 space-y-2">
+                                    <li>❌ <code>App\Services\Calculator</code> クラスは存在しない</li>
+                                    <li>❌ <code>add()</code> メソッドも存在しない</li>
+                                    <li>✅ でもテストは書けた！</li>
+                                    <li>✅ 「どんな機能が必要か」が明確になった</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 手順4: テストを実行して失敗させる -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">4</span>
+                                <h3 class="text-3xl font-bold text-gray-800">テストを実行して失敗させる</h3>
+                            </div>
+
+                            <div class="bg-red-50 p-6 rounded-lg mb-6 border-2 border-red-600">
+                                <p class="text-xl font-bold text-red-800 mb-3">🎯 このステップの目的</p>
+                                <p class="text-gray-700">
+                                    テストを実行して<strong>意図的に失敗させます</strong>。<br>
+                                    これにより、「テストが正しく機能している」「何を実装すべきか明確」であることを確認します。
+                                </p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 実行するコマンド:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">php artisan test tests/Unit/CalculatorTest.php</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-3">
+                                    <strong>ヒント:</strong> ファイルパスを指定すると、そのファイルのテストだけを実行できます。
+                                </p>
+                            </div>
+
+                            <div class="bg-red-50 p-6 rounded-lg mb-6 border-l-4 border-red-600">
+                                <p class="font-bold text-red-800 mb-4">❌ 期待される失敗メッセージ:</p>
+                                <div class="bg-gray-900 text-red-400 p-4 rounded-lg font-mono text-xs mb-4">
+<pre class="text-red-400">FAILED  Tests\Unit\CalculatorTest > it can add two numbers
+
+Error: Class "App\Services\Calculator" not found
+
+at tests/Unit/CalculatorTest.php:15
+   11▕      * 2つの数を足し算できることをテストする
+   12▕      */
+   13▕     #[Test]
+   14▕     public function it_can_add_two_numbers()
+➜  15▕         $calculator = new Calculator();
+   15▕         $result = $calculator->add(2, 3);
+   16▕         $this->assertEquals(5, $result);
+   17▕     }
+   18▕ }
+
+Tests:    1 failed
+Duration: 0.05s</pre>
+                                </div>
+                                <p class="text-gray-700">
+                                    エラーメッセージを読むと<code>"Class "App\Services\Calculator" not found"</code>と書かれています。<br>
+                                    つまり「Calculatorクラスが見つからない」ということです。
+                                </p>
+                            </div>
+
+                            <div class="bg-yellow-50 p-6 rounded-lg mb-6 border-2 border-yellow-500">
+                                <div class="flex items-start">
+                                    <span class="text-4xl mr-4">🎉</span>
+                                    <div>
+                                        <p class="text-2xl font-bold text-yellow-800 mb-3">おめでとうございます！</p>
+                                        <p class="text-gray-700 mb-4">
+                                            <strong>テストが失敗しました！</strong> これは正しいステップです。
+                                        </p>
+                                        <div class="bg-white p-4 rounded">
+                                            <p class="font-bold text-gray-800 mb-2">📚 ここで学んだこと:</p>
+                                            <ul class="text-sm text-gray-700 space-y-2">
+                                                <li>✓ TDDでは<strong>失敗するテストから始める</strong></li>
+                                                <li>✓ 失敗メッセージを読むと<strong>何を作ればいいか</strong>が分かる</li>
+                                                <li>✓ テストが失敗することで、テストが<strong>正しく機能している</strong>と確認できる</li>
+                                                <li>✓ 次にやるべきことは「Calculatorクラスを作る」と明確になった</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <p class="font-bold text-green-800 mb-4">✅ REDフェーズ 完了チェックリスト:</p>
+                                <div class="space-y-2">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-red-1" class="w-5 h-5">
+                                        <span class="text-gray-700">CalculatorTest.php を作成した</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-red-2" class="w-5 h-5">
+                                        <span class="text-gray-700">it_can_add_two_numbers() メソッドを書いた</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-red-3" class="w-5 h-5">
+                                        <span class="text-gray-700">AAA パターン（Arrange-Act-Assert）を理解した</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-red-4" class="w-5 h-5">
+                                        <span class="text-gray-700">テストを実行して失敗させた</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-red-5" class="w-5 h-5">
+                                        <span class="text-gray-700">失敗メッセージを読んで何を作るべきか理解した</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 次へ -->
+                        <div class="text-center py-8">
+                            <p class="text-xl text-gray-600 mb-6">REDフェーズが完了しました。次はGREENフェーズです。</p>
+                            <a href="#green-phase" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-full inline-block transition transform hover:scale-105 shadow-lg text-xl">
+                                GREENフェーズへ進む →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GREENフェーズ -->
+        <section id="green-phase" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <span class="bg-green-500 text-white px-8 py-3 rounded-full text-3xl font-bold inline-block shadow-lg">🟢 GREEN フェーズ</span>
+                        <h2 class="text-5xl font-bold text-gray-800 mt-8 mb-4">最小限の実装でテストを通す</h2>
+                        <p class="text-2xl text-gray-600">Calculatorクラスを作ってテストを成功させます</p>
+                    </div>
+
+                    <!-- なぜ最小限なのか -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-t-4 border-green-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">🤔 なぜ「最小限の実装」なのか？</h3>
+                        <div class="space-y-4 text-gray-700">
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="font-bold text-green-800 mb-2">1. まずはテストを通すことに集中</p>
+                                <p class="text-sm">完璧なコードを書こうとすると時間がかかります。まずは動くコードを書き、後で改善します（Refactorフェーズ）。</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="font-bold text-green-800 mb-2">2. 過剰な実装を防ぐ（YAGNI原則）</p>
+                                <p class="text-sm">"You Aren't Gonna Need It"（それは必要にならない）- テストで要求されていない機能は追加しません。</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <p class="font-bold text-green-800 mb-2">3. 小さなステップで確実に進む</p>
+                                <p class="text-sm">大きな変更より小さな変更を積み重ねる方が、問題が起きたときに原因を特定しやすいです。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 実装手順 -->
+                    <div class="space-y-8">
+                        <!-- 手順1: ディレクトリ作成 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                                <h3 class="text-3xl font-bold text-gray-800">Servicesディレクトリを作成</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">Calculatorクラスを配置するディレクトリを作成します。</p>
+
+                            <div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500 mb-6">
+                                <p class="font-bold text-red-800 mb-2">⚠️ 重要：コンテナから一旦出ます</p>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    <strong>ディレクトリ作成はホスト側（ローカル）で行います。</strong><br>
+                                    コンテナ内で作成するとマウントの問題が発生する可能性があります。
+                                </p>
+                                <div class="bg-gray-900 text-green-400 p-3 rounded font-mono text-sm">
+<pre class="text-white">exit</pre>
+                                </div>
+                                <p class="text-xs text-gray-600 mt-2">コンテナから出てホスト側のターミナルに戻ります</p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 ホスト側で実行するコマンド:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">mkdir -p src/app/Services</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-3">
+                                    <strong>-p</strong> オプション：親ディレクトリがなければ作成、既に存在してもエラーにならない
+                                </p>
+                            </div>
+
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                                <p class="text-sm font-bold text-yellow-800 mb-2">📚 補足：なぜServicesディレクトリ？</p>
+                                <p class="text-sm text-gray-700">
+                                    Laravelでは、ビジネスロジックを<code>app/Services</code>に配置することが一般的です。<br>
+                                    Controllerは軽く保ち、複雑なロジックはServiceクラスに分離します。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順2: Calculatorクラス作成 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                                <h3 class="text-3xl font-bold text-gray-800">Calculator.php ファイルを作成</h3>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                                <p class="font-bold text-blue-800 mb-2">💡 ヒント</p>
+                                <p class="text-sm text-gray-700">
+                                    ファイルはホスト側（ローカル）のエディタ（VSCode等）で作成します。<br>
+                                    Dockerのボリュームマウントにより、ホスト側で作成したファイルはコンテナ内からも見えます。
+                                </p>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                エディタで新しいファイルを作成します：<br>
+                                <code class="bg-gray-100 px-3 py-1 rounded text-base">src/app/Services/Calculator.php</code>
+                            </p>
+
+                            <p class="text-gray-700 mb-6 text-lg">以下のコードを書いてください：</p>
+
+                            <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> App\Services;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">Calculator</span>
+{
+    <span class="text-gray-500">/**
+     * 2つの数を足す
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">add</span>(<span class="text-blue-300">$a</span>, <span class="text-blue-300">$b</span>)
+    {
+        <span class="text-purple-400">return</span> <span class="text-blue-300">$a</span> + <span class="text-blue-300">$b</span>;
+    }
+}</pre>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800 mb-4">📖 コードの詳しい解説:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">namespace App\Services;</p>
+                                        <p class="text-sm">
+                                            名前空間を定義。テストで<code>use App\Services\Calculator</code>と書いたのと対応しています。<br>
+                                            Laravelの<code>app/Services</code>ディレクトリは<code>App\Services</code>名前空間にマッピングされます。
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">class Calculator</p>
+                                        <p class="text-sm">シンプルなPHPクラスの定義。特別な継承やインターフェース実装は不要です。</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">public function add($a, $b)</p>
+                                        <p class="text-sm">
+                                            2つの引数を受け取るpublicメソッド。<br>
+                                            今は型ヒントをつけていません（最小限の実装）。型ヒントは後のRefactorフェーズで追加します。
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">return $a + $b;</p>
+                                        <p class="text-sm">
+                                            単純に足し算して返すだけ。<br>
+                                            これが「最小限の実装」です。バリデーションやエラーハンドリングはまだ追加しません。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-2 border-green-600">
+                                <div class="flex items-start">
+                                    <span class="text-3xl mr-4">✨</span>
+                                    <div>
+                                        <p class="text-xl font-bold text-green-800 mb-3">TDDの重要な考え方</p>
+                                        <p class="text-gray-700 mb-3">
+                                            <strong>「最小限の実装でテストを通す」</strong>
+                                        </p>
+                                        <ul class="text-sm text-gray-700 space-y-2">
+                                            <li>❌ 型ヒントを追加（まだ不要）</li>
+                                            <li>❌ バリデーション追加（テストで要求されていない）</li>
+                                            <li>❌ エラーハンドリング（今は必要ない）</li>
+                                            <li>❌ ドキュメントコメント詳細化（後で追加）</li>
+                                            <li>✅ テストが通る最小限のコード</li>
+                                        </ul>
+                                        <p class="text-sm text-gray-700 mt-3 bg-white p-3 rounded">
+                                            完璧を求めず、まずはテストを通すことに集中します。<br>
+                                            コードの改善は次の<strong>Refactorフェーズ</strong>で行います。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 手順3: テスト実行 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
+                                <h3 class="text-3xl font-bold text-gray-800">テストを実行して成功させる</h3>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                                <p class="font-bold text-blue-800 mb-2">🐳 コンテナに再度入ります</p>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    ディレクトリとファイルを作成したので、再びコンテナ内に入ってテストを実行します。
+                                </p>
+                                <div class="bg-gray-900 text-green-400 p-3 rounded font-mono text-sm">
+<pre class="text-white">docker compose exec app bash</pre>
+                                </div>
+                                <p class="text-xs text-gray-600 mt-2">コンテナ内のシェルに戻ります</p>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg mb-6 border-2 border-green-600">
+                                <p class="text-xl font-bold text-green-800 mb-3">🎯 いよいよテストを通します！</p>
+                                <p class="text-gray-700">
+                                    Calculatorクラスとaddメソッドを実装したので、テストが成功するはずです。
+                                </p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 実行するコマンド:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">php artisan test tests/Unit/CalculatorTest.php</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg mb-6 border-l-4 border-green-600">
+                                <p class="font-bold text-green-800 mb-4">✅ 期待される成功メッセージ:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+<pre class="text-green-400">  PASS  Tests\Unit\CalculatorTest
+  ✓ it can add two numbers                                 0.02s
+
+  Tests:    1 passed (3 assertions)
+  Duration: 0.05s</pre>
+                                </div>
+                                <p class="text-gray-700">
+                                    <strong>PASS</strong>と表示され、緑色のチェックマーク✓が付いていれば成功です！
+                                </p>
+                            </div>
+
+                            <div class="bg-yellow-50 p-8 rounded-lg border-2 border-yellow-400">
+                                <div class="flex items-start">
+                                    <span class="text-5xl mr-4">🎉</span>
+                                    <div class="flex-1">
+                                        <p class="text-3xl font-bold text-yellow-800 mb-4">おめでとうございます！</p>
+                                        <p class="text-xl text-gray-700 mb-4">
+                                            <strong>テストが成功しました（グリーンになりました）！</strong>
+                                        </p>
+                                        <p class="text-gray-700 mb-4">
+                                            これがTDDの「<strong>Green</strong>」フェーズです。<br>
+                                            Red（失敗）→ Green（成功）というサイクルを体験できました。
+                                        </p>
+                                        <div class="bg-white p-6 rounded-lg mt-6">
+                                            <p class="font-bold text-gray-800 mb-4 text-xl">🧠 ここで学んだこと:</p>
+                                            <ul class="text-gray-700 space-y-3">
+                                                <li class="flex items-start">
+                                                    <span class="mr-2">✓</span>
+                                                    <span><strong>RED → GREEN のサイクル：</strong>失敗するテストを書いてから実装を追加</span>
+                                                </li>
+                                                <li class="flex items-start">
+                                                    <span class="mr-2">✓</span>
+                                                    <span><strong>最小限の実装：</strong>完璧を求めず、まずはテストを通すことに集中</span>
+                                                </li>
+                                                <li class="flex items-start">
+                                                    <span class="mr-2">✓</span>
+                                                    <span><strong>テストが保証する安心感：</strong>テストが通れば、その機能は動いている証拠</span>
+                                                </li>
+                                                <li class="flex items-start">
+                                                    <span class="mr-2">✓</span>
+                                                    <span><strong>assertEquals の基本：</strong>期待値と実際の値が等しいか検証</span>
+                                                </li>
+                                                <li class="flex items-start">
+                                                    <span class="mr-2">✓</span>
+                                                    <span><strong>AAA パターン：</strong>Arrange-Act-Assertでテストを構造化</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 手順4: 動作確認（オプション） -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">4</span>
+                                <h3 class="text-3xl font-bold text-gray-800">実際に動かしてみる（オプション）</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                作成したCalculatorクラスが本当に動くか、LaravelのTinkerで試してみましょう。
+                            </p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800 mb-3">📚 Tinkerとは？</p>
+                                <p class="text-sm text-gray-700">
+                                    Laravelに付属の対話型REPL（Read-Eval-Print Loop）です。<br>
+                                    コマンドラインでPHPコードを実行して、すぐに結果を確認できます。<br>
+                                    開発中の動作確認やデバッグに便利です。
+                                </p>
+                            </div>
+
+                            <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500"># Tinkerを起動</span>
+php artisan tinker
+
+<span class="text-gray-500"># 以下をTinkerで実行</span>
+<span class="text-blue-300">$calc</span> = <span class="text-purple-400">new</span> App\Services\Calculator();
+<span class="text-gray-500">// => App\Services\Calculator {#...}</span>
+
+<span class="text-blue-300">$calc</span>-><span class="text-yellow-300">add</span>(10, 20);
+<span class="text-gray-500">// => 30</span>
+
+<span class="text-blue-300">$calc</span>-><span class="text-yellow-300">add</span>(100, 250);
+<span class="text-gray-500">// => 350</span>
+
+<span class="text-gray-500"># 終了する場合</span>
+exit</pre>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <p class="font-bold text-green-800 mb-4">✅ GREENフェーズ 完了チェックリスト:</p>
+                                <div class="space-y-2">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-green-1" class="w-5 h-5">
+                                        <span class="text-gray-700">Servicesディレクトリを作成した</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-green-2" class="w-5 h-5">
+                                        <span class="text-gray-700">Calculator.php を作成した</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-green-3" class="w-5 h-5">
+                                        <span class="text-gray-700">add() メソッドを実装した</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-green-4" class="w-5 h-5">
+                                        <span class="text-gray-700">テストを実行して成功した（グリーン）</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-green-5" class="w-5 h-5">
+                                        <span class="text-gray-700">「最小限の実装」の考え方を理解した</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" id="check-green-6" class="w-5 h-5">
+                                        <span class="text-gray-700">Red → Green のサイクルを体験した</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- まとめと次へ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎓 基礎編のまとめ</h2>
+
+                    <div class="bg-gradient-to-br from-red-50 via-green-50 to-green-100 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Red-Greenサイクルを体験しました！</h3>
+
+                        <div class="grid md:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-red-600 mb-4">🔴 RED（失敗）で学んだこと</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ テストファイルの作り方（php artisan make:test）</li>
+                                    <li>✓ 存在しないコードのテストを先に書く</li>
+                                    <li>✓ AAA パターン（Arrange-Act-Assert）</li>
+                                    <li>✓ エラーメッセージの読み方</li>
+                                    <li>✓ 何を実装すべきか明確にする方法</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-green-600 mb-4">🟢 GREEN（成功）で学んだこと</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ 最小限の実装でテストを通す</li>
+                                    <li>✓ assertEquals の使い方</li>
+                                    <li>✓ テストが保証する安心感</li>
+                                    <li>✓ YAGNI原則（必要ないものは作らない）</li>
+                                    <li>✓ 小さなステップで確実に進む</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-6 rounded-lg border-2 border-yellow-400">
+                            <p class="font-bold text-yellow-800 mb-3 text-lg">💡 重要なポイント</p>
+                            <p class="text-gray-700 mb-3">
+                                今回は<strong>Refactor（改善）フェーズ</strong>を行いませんでした。<br>
+                                これは意図的なものです。まずは「Red → Green」の基本サイクルに慣れることが大切です。
+                            </p>
+                            <p class="text-gray-700">
+                                次の<strong>改善編</strong>では、グリーンになったコードをさらに良くする<strong>Refactorフェーズ</strong>を学びます。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">次のステップ</h3>
+                        <p class="text-gray-600 mb-8 text-lg">
+                            Red-Greenサイクルを体験できました。<br>
+                            次は<strong>Refactorフェーズ</strong>でコードを改善します。
+                        </p>
+
+                        <a href="handson-refactor.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                            改善編へ進む →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-6 text-center">
+                <p class="mb-4">TDD ハンズオン講座 - Test-Driven Development</p>
+                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

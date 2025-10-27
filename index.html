@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDD ハンズオン講座 - スクラム開発（完全版）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーションバー -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">TDD ハンズオン講座 - 理論編</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="index.html" class="hover:text-blue-200">理論編</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="handson-basic.html" class="hover:text-blue-200">基礎：Red-Green</a>
+                    <a href="handson-refactor.html" class="hover:text-blue-200">改善：Refactor</a>
+                    <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
+                    <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="handson-basic.html" class="block hover:text-blue-200">基礎：Red-Green</a>
+            <a href="handson-refactor.html" class="block hover:text-blue-200">改善：Refactor</a>
+            <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
+            <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-4">Test-Driven Development</h2>
+                <p class="text-xl mb-4">テスト駆動開発で品質の高いコードを書こう</p>
+                <p class="text-sm mb-8 opacity-90">スクラム開発における技術プラクティスとして</p>
+                <div class="flex justify-center space-x-4 flex-wrap">
+                    <span class="bg-white text-blue-600 px-4 py-2 rounded-full font-semibold mb-2">Red</span>
+                    <span class="text-2xl">→</span>
+                    <span class="bg-green-500 text-white px-4 py-2 rounded-full font-semibold mb-2">Green</span>
+                    <span class="text-2xl">→</span>
+                    <span class="bg-yellow-500 text-white px-4 py-2 rounded-full font-semibold mb-2">Refactor</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- イントロダクション -->
+        <section id="intro" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">TDDとは？</h2>
+
+                <div class="max-w-4xl mx-auto mb-12">
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-6">📘 正式な定義</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-6">
+                            <strong>テスト駆動開発（Test-Driven Development、TDD）</strong>は、ソフトウェア開発の手法の一つで、
+                            <span class="bg-yellow-200 px-2 py-1 rounded">実装コードを書く前にテストコードを書く</span>という、
+                            従来の開発手順を逆転させたアプローチです。
+                        </p>
+
+                        <div class="bg-white p-6 rounded-lg border-l-4 border-blue-600 mb-6">
+                            <h4 class="font-bold text-gray-800 mb-3">🎯 核となる考え方</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• <strong>テストファースト</strong>: 「何を作るか」を明確にするため、まずテストを書く</li>
+                                <li>• <strong>小さなステップ</strong>: 一度に一つの機能だけに集中する</li>
+                                <li>• <strong>継続的なフィードバック</strong>: テストを頻繁に実行して即座に問題を発見</li>
+                                <li>• <strong>設計の改善</strong>: テストしやすいコードは、良い設計のコードでもある</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-100 p-6 rounded-lg mb-6">
+                            <p class="text-gray-700 italic">
+                                💡 <strong>重要:</strong> TDDは単なる「テストを書く」手法ではありません。
+                                テストを<strong>設計ツール</strong>として使い、より良いコードを書くための開発プロセスです。
+                            </p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border border-gray-300">
+                            <p class="text-sm text-gray-600 mb-2">📖 公式参考資料</p>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• <a href="https://martinfowler.com/bliki/TestDrivenDevelopment.html" target="_blank" class="text-blue-600 hover:underline">Martin Fowler - Test Driven Development</a> - TDDの定義と実践方法</li>
+                                <li>• <a href="https://phpunit.de/documentation.html" target="_blank" class="text-blue-600 hover:underline">PHPUnit 公式ドキュメント</a> - PHP向けテストフレームワーク</li>
+                                <li>• Kent Beck "Test Driven Development: By Example" (書籍) - TDDの提唱者による解説書</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg mt-4 border-l-4 border-blue-600">
+                            <p class="text-sm text-gray-700 mb-2"><strong>💡 これらの資料に基づく重要な概念：</strong></p>
+                            <ul class="text-xs text-gray-600 space-y-1">
+                                <li>• <strong>Martin Fowler</strong>: TDDは設計ツールであり、テストは副産物であると説明</li>
+                                <li>• <strong>Kent Beck</strong>: Red-Green-Refactorサイクルと3つの法則を確立</li>
+                                <li>• <strong>PHPUnit</strong>: xUnit系フレームワークの一つで、JUnitから派生した標準的な構造を採用</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TDDサイクル（Red-Green-Refactor） -->
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-lg shadow-lg mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">🔄 Red-Green-Refactorサイクル</h3>
+                    <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+                        <strong>Red-Green-Refactor</strong>は、TDDの最も基本的で普遍的なサイクルです。
+                        Kent Beck（TDDの提唱者）によって広められ、現在では<strong>すべてのTDD実践者が使う標準的なプロセス</strong>となっています。
+                    </p>
+
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="cycle-card bg-white p-6 rounded-lg shadow-md border-t-4 border-red-500 transform transition hover:scale-105">
+                            <div class="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mx-auto mb-4">
+                                <span class="text-3xl">🔴</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-red-600 text-center mb-3">Red（レッド）</h4>
+                            <p class="text-gray-700 text-center mb-4 font-semibold">失敗するテストを書く</p>
+
+                            <div class="bg-red-50 p-4 rounded mb-4">
+                                <p class="text-sm text-gray-700 mb-2"><strong>何をする？</strong></p>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• まだ存在しない機能のテストを書く</li>
+                                    <li>• テストを実行して失敗を確認</li>
+                                    <li>• 失敗メッセージを読んで理解する</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-gray-50 p-4 rounded">
+                                <p class="text-sm text-gray-700 mb-2"><strong>なぜ重要？</strong></p>
+                                <p class="text-xs text-gray-600">
+                                    「何を作るべきか」を明確にし、テスト自体が正しく失敗することを確認します。
+                                    これにより、後でテストが成功したときに「本当に動いている」と確信できます。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="cycle-card bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500 transform transition hover:scale-105">
+                            <div class="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mx-auto mb-4">
+                                <span class="text-3xl">🟢</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-green-600 text-center mb-3">Green（グリーン）</h4>
+                            <p class="text-gray-700 text-center mb-4 font-semibold">テストを通す最小限の実装</p>
+
+                            <div class="bg-green-50 p-4 rounded mb-4">
+                                <p class="text-sm text-gray-700 mb-2"><strong>何をする？</strong></p>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• とにかくテストを通すコードを書く</li>
+                                    <li>• 完璧さは求めない（まずは動かす）</li>
+                                    <li>• ハードコードでもOK</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-gray-50 p-4 rounded">
+                                <p class="text-sm text-gray-700 mb-2"><strong>なぜ重要？</strong></p>
+                                <p class="text-xs text-gray-600">
+                                    まずは「動くコード」を作ることに集中します。美しさや効率は後で考えます。
+                                    これにより、過度な設計を避け、本当に必要な機能だけを実装できます。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="cycle-card bg-white p-6 rounded-lg shadow-md border-t-4 border-yellow-500 transform transition hover:scale-105">
+                            <div class="flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-full mx-auto mb-4">
+                                <span class="text-3xl">🟡</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-yellow-600 text-center mb-3">Refactor（リファクタ）</h4>
+                            <p class="text-gray-700 text-center mb-4 font-semibold">コードを改善する</p>
+
+                            <div class="bg-yellow-50 p-4 rounded mb-4">
+                                <p class="text-sm text-gray-700 mb-2"><strong>何をする？</strong></p>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• 重複コードを削除</li>
+                                    <li>• 変数名・関数名を改善</li>
+                                    <li>• 構造を整理</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-gray-50 p-4 rounded">
+                                <p class="text-sm text-gray-700 mb-2"><strong>なぜ重要？</strong></p>
+                                <p class="text-xs text-gray-600">
+                                    テストがあるから安心してコードを変更できます。
+                                    リファクタリング後もテストが通れば、機能が壊れていないことが保証されます。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="animateBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg">
+                            サイクルアニメーションを見る
+                        </button>
+                    </div>
+
+                    <!-- サイクルの流れ図 -->
+                    <div class="mt-12 bg-white p-6 rounded-lg shadow">
+                        <h4 class="text-xl font-bold text-gray-800 mb-4 text-center">📊 実際のワークフロー</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center font-bold mr-4">1</div>
+                                <div class="flex-1 bg-red-50 p-4 rounded">
+                                    <p class="font-bold text-red-700">テストを書いて実行 → 失敗を確認</p>
+                                    <p class="text-sm text-gray-600">例: "Class 'Calculator' not found"</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold mr-4">2</div>
+                                <div class="flex-1 bg-green-50 p-4 rounded">
+                                    <p class="font-bold text-green-700">最小限のコードを書いてテストを通す</p>
+                                    <p class="text-sm text-gray-600">例: Calculatorクラスを作成してaddメソッドを実装</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center font-bold mr-4">3</div>
+                                <div class="flex-1 bg-yellow-50 p-4 rounded">
+                                    <p class="font-bold text-yellow-700">コードを改善（テストは常にグリーン）</p>
+                                    <p class="text-sm text-gray-600">例: 型ヒント追加、ドキュメント追加、変数名改善</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold mr-4">↻</div>
+                                <div class="flex-1 bg-blue-50 p-4 rounded">
+                                    <p class="font-bold text-blue-700">1に戻って次の機能を追加</p>
+                                    <p class="text-sm text-gray-600">このサイクルを繰り返す</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- なぜTDDなのか -->
+        <section id="why-tdd" class="py-16 bg-gradient-to-br from-indigo-50 to-blue-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">なぜTDDが重要なのか？</h2>
+
+                <div class="max-w-5xl mx-auto">
+                    <!-- メリット・デメリット -->
+                    <div class="grid md:grid-cols-2 gap-8 mb-12">
+                        <!-- メリット -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                            <h3 class="text-2xl font-bold text-green-700 mb-6 flex items-center">
+                                <span class="text-3xl mr-3">✅</span>
+                                メリット
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-green-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">1. バグの早期発見・低コスト修正</h4>
+                                    <p class="text-sm text-gray-600">
+                                        実装直後にテストを実行するため、バグを数分以内に発見できます。
+                                        後工程で見つかるバグの修正コストは10〜100倍と言われています。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-green-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">2. リファクタリングの安全性</h4>
+                                    <p class="text-sm text-gray-600">
+                                        テストが動作を保証するため、安心してコードを改善できます。
+                                        「変更したら何かが壊れるかも」という恐怖がなくなります。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-green-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">3. 仕様の明文化</h4>
+                                    <p class="text-sm text-gray-600">
+                                        テストコードは「生きたドキュメント」です。
+                                        コードがどう動くべきかが、実行可能な形で記述されています。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-green-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">4. 設計の改善</h4>
+                                    <p class="text-sm text-gray-600">
+                                        テストしやすいコードを書くことで、自然と疎結合で単一責任のコードになります。
+                                        依存関係が明確になり、保守しやすくなります。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-green-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">5. 開発スピードの向上（長期的に）</h4>
+                                    <p class="text-sm text-gray-600">
+                                        初期は遅く感じますが、バグ修正時間の削減、安全なリファクタリング、
+                                        デバッグ時間の短縮により、長期的には開発が速くなります。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-green-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">6. 開発者の自信</h4>
+                                    <p class="text-sm text-gray-600">
+                                        「テストが通っている」という事実が心理的安全性を生み、
+                                        より大胆な改善やチャレンジができるようになります。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- デメリット・課題 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                            <h3 class="text-2xl font-bold text-red-700 mb-6 flex items-center">
+                                <span class="text-3xl mr-3">⚠️</span>
+                                デメリット・課題
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-red-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">1. 学習コスト</h4>
+                                    <p class="text-sm text-gray-600">
+                                        TDDの習得には時間がかかります。「テストファースト」の考え方に慣れるまで、
+                                        数週間〜数ヶ月かかることもあります。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-red-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">2. 初期開発速度の低下</h4>
+                                    <p class="text-sm text-gray-600">
+                                        テストを書く時間が追加されるため、最初は開発が遅く感じます。
+                                        ただし長期的には速くなります（数週間〜数ヶ月後）。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-red-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">3. テストのメンテナンス</h4>
+                                    <p class="text-sm text-gray-600">
+                                        要件変更時にテストも更新が必要です。
+                                        テストコードも「コード」なので、保守コストがかかります。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-red-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">4. すべてに適用できるわけではない</h4>
+                                    <p class="text-sm text-gray-600">
+                                        UI、デザイン、プロトタイピングなど、TDDが向かない領域もあります。
+                                        適材適所で使い分けが必要です。
+                                    </p>
+                                </div>
+
+                                <div class="border-l-4 border-red-500 pl-4">
+                                    <h4 class="font-bold text-gray-800 mb-2">5. チーム全体での採用が必要</h4>
+                                    <p class="text-sm text-gray-600">
+                                        一人だけがTDDを実践しても効果は限定的です。
+                                        チーム全体の合意と文化醸成が重要です。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 bg-yellow-50 p-4 rounded border-l-4 border-yellow-500">
+                                <p class="text-sm text-gray-700">
+                                    <strong>💡 重要:</strong> デメリットを理解した上で、
+                                    プロジェクトに適しているか判断することが大切です。
+                                    すべてのプロジェクトでTDDが最適解とは限りません。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- スクラム開発との関係 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-purple-700 mb-6">🔄 スクラム開発とTDDの関係</h3>
+
+                        <div class="bg-purple-50 p-6 rounded-lg mb-6">
+                            <p class="text-gray-700 leading-relaxed mb-4">
+                                <strong>スクラム</strong>と<strong>TDD</strong>は、どちらも<strong>アジャイル開発</strong>の実践手法です。
+                                しかし、役割が異なります：
+                            </p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-white p-4 rounded shadow">
+                                    <h4 class="font-bold text-purple-700 mb-2">スクラム（プロセス）</h4>
+                                    <p class="text-sm text-gray-600">
+                                        「<strong>何を、いつ、どう進めるか</strong>」を管理するフレームワーク。
+                                        スプリント、デイリースクラム、レビューなど。
+                                    </p>
+                                </div>
+                                <div class="bg-white p-4 rounded shadow">
+                                    <h4 class="font-bold text-purple-700 mb-2">TDD（技術プラクティス）</h4>
+                                    <p class="text-sm text-gray-600">
+                                        「<strong>どうやって品質を担保するか</strong>」の具体的な技術手法。
+                                        コードレベルでの実践方法。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-4">なぜセットで語られるのか？</h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <span class="text-purple-600 font-bold mr-3">1.</span>
+                                    <div>
+                                        <strong class="text-gray-800">短期間イテレーションとの相性</strong>
+                                        <p class="text-sm text-gray-600">
+                                            スクラムは1〜4週間のスプリントで動くソフトウェアを届けます。
+                                            TDDはバグを早期発見し、常にリリース可能な品質を保ちます。
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-purple-600 font-bold mr-3">2.</span>
+                                    <div>
+                                        <strong class="text-gray-800">変化への対応</strong>
+                                        <p class="text-sm text-gray-600">
+                                            スクラムは要件変更を歓迎します。
+                                            TDDのテストがあれば、変更時の影響を素早く検証できます。
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-purple-600 font-bold mr-3">3.</span>
+                                    <div>
+                                        <strong class="text-gray-800">透明性の向上</strong>
+                                        <p class="text-sm text-gray-600">
+                                            デイリースクラムでテストの合格/不合格を共有することで、
+                                            進捗状況が客観的に把握できます。
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-purple-600 font-bold mr-3">4.</span>
+                                    <div>
+                                        <strong class="text-gray-800">Definition of Done（完了の定義）</strong>
+                                        <p class="text-sm text-gray-600">
+                                            「すべてのテストが通っている」を完了条件に含めることで、
+                                            品質基準が明確になります。
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 基本原則（続き） -->
+        <section id="principles" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">TDDの基本原則とルール</h2>
+
+                <div class="max-w-5xl mx-auto">
+                    <!-- 3つの法則 -->
+                    <div class="bg-gradient-to-r from-red-50 to-orange-50 p-8 rounded-lg shadow-lg mb-12">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">📜 TDDの3つの法則（Uncle Bob）</h3>
+                        <p class="text-center text-gray-600 mb-8">
+                            Robert C. Martin（Uncle Bob）が提唱した、TDDを実践する際の厳格なルール
+                        </p>
+
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center font-bold text-xl mr-4 flex-shrink-0">1</div>
+                                    <div>
+                                        <h4 class="text-xl font-bold text-gray-800 mb-2">失敗するテストを書くまで、実装コードを書いてはいけない</h4>
+                                        <p class="text-gray-600 mb-3">
+                                            You may not write production code until you have written a failing unit test.
+                                        </p>
+                                        <div class="bg-gray-50 p-4 rounded">
+                                            <p class="text-sm text-gray-700">
+                                                <strong>意味:</strong> 実装を先に書いてはダメ。必ずテストから始める。
+                                                これにより「何を作るべきか」が明確になります。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center font-bold text-xl mr-4 flex-shrink-0">2</div>
+                                    <div>
+                                        <h4 class="text-xl font-bold text-gray-800 mb-2">失敗させるのに十分な量だけテストを書く</h4>
+                                        <p class="text-gray-600 mb-3">
+                                            You may not write more of a unit test than is sufficient to fail.
+                                        </p>
+                                        <div class="bg-gray-50 p-4 rounded">
+                                            <p class="text-sm text-gray-700">
+                                                <strong>意味:</strong> 一度に大量のテストを書かない。
+                                                一つの失敗を確認したら、すぐに実装に移る。小さなステップが重要。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <div class="flex items-start">
+                                    <div class="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center font-bold text-xl mr-4 flex-shrink-0">3</div>
+                                    <div>
+                                        <h4 class="text-xl font-bold text-gray-800 mb-2">テストを通すのに十分な量だけ実装コードを書く</h4>
+                                        <p class="text-gray-600 mb-3">
+                                            You may not write more production code than is sufficient to pass the failing test.
+                                        </p>
+                                        <div class="bg-gray-50 p-4 rounded">
+                                            <p class="text-sm text-gray-700">
+                                                <strong>意味:</strong> 必要以上のコードを書かない。
+                                                テストが通ったらすぐにリファクタリングフェーズへ。過剰設計を防ぎます。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 bg-yellow-100 p-4 rounded">
+                            <p class="text-sm text-gray-700">
+                                💡 <strong>この3つの法則を守ると:</strong>
+                                Red-Green-Refactorのサイクルが30秒〜2分程度の超短期サイクルになります。
+                                これが「テスト駆動」の本質です。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- ベストプラクティス -->
+                    <div class="grid md:grid-cols-3 gap-6 mb-12">
+                        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+                            <div class="text-4xl mb-4">🥇</div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">テストファースト</h3>
+                            <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                                実装コードを書く前に、必ずテストコードを書きます。
+                            </p>
+                            <div class="bg-blue-50 p-3 rounded text-sm">
+                                <p class="text-gray-700 mb-2"><strong>なぜ？</strong></p>
+                                <ul class="text-xs text-gray-600 space-y-1">
+                                    <li>• 何を作るべきかが明確になる</li>
+                                    <li>• 不要な機能を作らない（YAGNI原則）</li>
+                                    <li>• インターフェースを使う側の視点で設計できる</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+                            <div class="text-4xl mb-4">👣</div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">小さなステップ</h3>
+                            <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                                一度に一つの機能だけを実装します。小さく、頻繁にテストを実行します。
+                            </p>
+                            <div class="bg-green-50 p-3 rounded text-sm">
+                                <p class="text-gray-700 mb-2"><strong>なぜ？</strong></p>
+                                <ul class="text-xs text-gray-600 space-y-1">
+                                    <li>• 問題の原因を特定しやすい</li>
+                                    <li>• デバッグが容易</li>
+                                    <li>• 進捗が可視化される</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition">
+                            <div class="text-4xl mb-4">♻️</div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">継続的リファクタリング</h3>
+                            <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                                テストが通ったら、コードの品質を向上させます。
+                            </p>
+                            <div class="bg-yellow-50 p-3 rounded text-sm">
+                                <p class="text-gray-700 mb-2"><strong>なぜ？</strong></p>
+                                <ul class="text-xs text-gray-600 space-y-1">
+                                    <li>• 技術的負債を防ぐ</li>
+                                    <li>• 長期的な保守性を確保</li>
+                                    <li>• テストがあるから安心して変更できる</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AAAパターン -->
+                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-lg shadow-lg mb-12">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🎯 AAAパターン（Arrange-Act-Assert）</h3>
+                        <p class="text-gray-600 mb-6">
+                            <strong>業界標準のテスト構造パターン</strong>。ほぼ全てのプログラミング言語・テストフレームワークで採用されています。
+                        </p>
+
+                        <div class="grid md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-white p-5 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-purple-700 mb-2">
+                                    <span class="bg-purple-100 px-3 py-1 rounded mr-2">1</span>Arrange（準備）
+                                </h4>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    テストに必要なオブジェクトや変数を準備します。
+                                </p>
+                                <div class="bg-gray-50 p-3 rounded text-xs">
+                                    <p class="text-gray-700 mb-1"><strong>例:</strong></p>
+                                    <code class="text-purple-600">$calc = new Calculator();</code>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-blue-700 mb-2">
+                                    <span class="bg-blue-100 px-3 py-1 rounded mr-2">2</span>Act（実行）
+                                </h4>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    テスト対象のメソッドを実行します。
+                                </p>
+                                <div class="bg-gray-50 p-3 rounded text-xs">
+                                    <p class="text-gray-700 mb-1"><strong>例:</strong></p>
+                                    <code class="text-blue-600">$result = $calc->add(2, 3);</code>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-green-700 mb-2">
+                                    <span class="bg-green-100 px-3 py-1 rounded mr-2">3</span>Assert（検証）
+                                </h4>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    結果が期待通りかを検証します。
+                                </p>
+                                <div class="bg-gray-50 p-3 rounded text-xs">
+                                    <p class="text-gray-700 mb-1"><strong>例:</strong></p>
+                                    <code class="text-green-600">$this->assertEquals(5, $result);</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow mb-6">
+                            <h4 class="font-bold text-gray-800 mb-3">🌍 各言語・フレームワークでの採用例</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold mr-3">PHP</span>
+                                    <p class="text-sm text-gray-700">PHPUnit - 本講座で使用</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-bold mr-3">JS</span>
+                                    <p class="text-sm text-gray-700">Jest, Mocha, Vitest - JavaScriptで最もポピュラー</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold mr-3">Java</span>
+                                    <p class="text-sm text-gray-700">JUnit - AAAパターンの起源となったxUnitファミリー</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold mr-3">C#</span>
+                                    <p class="text-sm text-gray-700">NUnit, xUnit.net - Microsoftが推奨するパターン</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded text-xs font-bold mr-3">Python</span>
+                                    <p class="text-sm text-gray-700">pytest, unittest - Pythonコミュニティでも標準</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold mr-3">Ruby</span>
+                                    <p class="text-sm text-gray-700">RSpec - Given-When-Then（AAAと同じ概念）</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded border-l-4 border-yellow-500">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 重要:</strong> AAAパターンは<strong>言語やフレームワークに依存しない普遍的なパターン</strong>です。
+                                一度身につければ、どの技術スタックでも応用できます。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- PHPUnitのアトリビュート -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 p-8 rounded-lg shadow-lg mb-12">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🏷️ アノテーションとアトリビュート</h3>
+                        <p class="text-gray-600 mb-6">
+                            PHPUnitでは、テストメソッドに「メタ情報」を付けるために<strong>アトリビュート</strong>を使います。
+                        </p>
+
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <!-- 旧方式：アノテーション -->
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded text-sm font-bold mr-3">❌ 旧方式</span>
+                                    <h4 class="text-lg font-bold text-gray-800">アノテーション（非推奨）</h4>
+                                </div>
+                                <p class="text-sm text-gray-700 mb-4">
+                                    PHPUnit 10以前で使われていた方式。<br>
+                                    docコメント内に <code>@test</code> と書く。
+                                </p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded font-mono text-xs">
+<pre class="text-white"><span class="text-gray-500">/**
+ * @test
+ */</span>
+<span class="text-purple-400">public function</span> it_works()
+{
+    <span class="text-gray-500">// テストコード</span>
+}</pre>
+                                </div>
+                                <div class="bg-red-50 p-3 rounded mt-3">
+                                    <p class="text-xs text-red-700">
+                                        <strong>⚠️ PHPUnit 12で廃止予定</strong><br>
+                                        使わないでください
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 新方式：アトリビュート -->
+                            <div class="bg-white p-6 rounded-lg shadow border-2 border-green-500">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-sm font-bold mr-3">✅ 新方式</span>
+                                    <h4 class="text-lg font-bold text-gray-800">アトリビュート（推奨）</h4>
+                                </div>
+                                <p class="text-sm text-gray-700 mb-4">
+                                    PHP 8.0以降の標準機能。<br>
+                                    <code>#[Test]</code> のように書く。
+                                </p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded font-mono text-xs">
+<pre class="text-white"><span class="text-purple-400">use</span> PHPUnit\Framework\Attributes\Test;
+
+<span class="text-gray-500">/**
+ * テストの説明
+ */</span>
+#[Test]
+<span class="text-purple-400">public function</span> it_works()
+{
+    <span class="text-gray-500">// テストコード</span>
+}</pre>
+                                </div>
+                                <div class="bg-green-50 p-3 rounded mt-3">
+                                    <p class="text-xs text-green-700">
+                                        <strong>✅ 本講座で使用する方式</strong><br>
+                                        PHPUnit 11以降で推奨
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <h4 class="font-bold text-blue-800 mb-3">📖 用語解説</h4>
+                            <div class="space-y-3">
+                                <div class="bg-white p-4 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">アノテーション（Annotation）とは？</p>
+                                    <p class="text-sm text-gray-700">
+                                        「注釈」という意味。コメント内に特殊な書き方（<code>@test</code>など）をして、<br>
+                                        コードに追加情報を付ける<strong>古い方式</strong>。<br>
+                                        PHPUnitが独自にコメントを解析していました。
+                                    </p>
+                                </div>
+                                <div class="bg-white p-4 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">アトリビュート（Attribute）とは？</p>
+                                    <p class="text-sm text-gray-700">
+                                        「属性」という意味。PHP 8.0で<strong>言語機能として追加</strong>された正式な記法。<br>
+                                        <code>#[Test]</code> のように書きます。<br>
+                                        PHPが標準でサポートしているため、IDEの補完やエラーチェックが効きます。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h4 class="font-bold text-gray-800 mb-3">🔄 なぜ移行が必要なのか？</h4>
+                            <div class="space-y-2 text-sm text-gray-700">
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 font-bold mr-2">1.</span>
+                                    <p><strong>PHP言語の正式機能</strong> - アトリビュートはPHP 8.0の標準機能なので、より信頼性が高い</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 font-bold mr-2">2.</span>
+                                    <p><strong>IDEサポート</strong> - エディタの自動補完や型チェックが効く</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 font-bold mr-2">3.</span>
+                                    <p><strong>パフォーマンス</strong> - コメント解析が不要になり、わずかに高速</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="text-blue-600 font-bold mr-2">4.</span>
+                                    <p><strong>将来性</strong> - PHPUnit 12では旧方式（アノテーション）が完全に削除される</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded border-l-4 border-yellow-500 mt-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 覚えておくこと:</strong><br>
+                                本講座では<strong>新方式のアトリビュート（<code>#[Test]</code>）</strong>のみを使います。<br>
+                                古いコードで <code>@test</code> を見かけたら、それはアノテーション形式です。
+                            </p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow mt-6">
+                            <h4 class="font-bold text-gray-800 mb-4">❓ よくある質問</h4>
+
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-purple-500 pl-4 py-2">
+                                    <p class="font-bold text-purple-800 mb-2">Q1: アトリビュート（<code>#[Test]</code>）を付けないとどうなる？</p>
+                                    <div class="bg-purple-50 p-4 rounded text-sm text-gray-700">
+                                        <p class="mb-2"><strong>A: テストとして認識されず、実行されません。</strong></p>
+                                        <div class="bg-white p-3 rounded mb-2">
+                                            <p class="text-xs font-bold mb-1">例：アトリビュートなし</p>
+<pre class="text-xs"><code>public function it_can_add_two_numbers()  // ❌ 実行されない
+{
+    $this->assertEquals(5, 2 + 3);
+}</code></pre>
+                                        </div>
+                                        <p class="text-xs">PHPUnitは「普通のメソッド」として扱い、テストを実行しません。<br>
+                                        結果：テストが0件になり、バグが見逃される危険があります。</p>
+                                    </div>
+                                </div>
+
+                                <div class="border-l-4 border-blue-500 pl-4 py-2">
+                                    <p class="font-bold text-blue-800 mb-2">Q2: テストとして認識させる方法は2つある</p>
+                                    <div class="bg-blue-50 p-4 rounded text-sm text-gray-700">
+                                        <p class="mb-3"><strong>方法1: アトリビュート <code>#[Test]</code> を付ける（推奨）</strong></p>
+                                        <div class="bg-white p-3 rounded mb-3">
+<pre class="text-xs"><code>#[Test]
+public function it_can_add_two_numbers()  // ✅ 実行される
+{
+    $this->assertEquals(5, 2 + 3);
+}</code></pre>
+                                        </div>
+                                        <p class="mb-3"><strong>方法2: メソッド名を <code>test</code> で始める</strong></p>
+                                        <div class="bg-white p-3 rounded mb-2">
+<pre class="text-xs"><code>public function testItCanAddTwoNumbers()  // ✅ 実行される
+{
+    $this->assertEquals(5, 2 + 3);
+}</code></pre>
+                                        </div>
+                                        <p class="text-xs bg-yellow-50 p-2 rounded">
+                                            💡 <strong>どちらでもOK</strong>ですが、本講座では<code>#[Test]</code> + 読みやすい名前（<code>it_can_add</code>）の組み合わせを使います。
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="border-l-4 border-green-500 pl-4 py-2">
+                                    <p class="font-bold text-green-800 mb-2">Q3: PHPDocとは？ないと問題になる？</p>
+                                    <div class="bg-green-50 p-4 rounded text-sm text-gray-700">
+                                        <p class="mb-3"><strong>A: PHPDocは「コメントのドキュメント形式」です。なくてもコードは動きます。</strong></p>
+
+                                        <div class="bg-white p-3 rounded mb-3">
+                                            <p class="text-xs font-bold mb-2">PHPDocの例：</p>
+<pre class="text-xs"><code><span class="text-gray-500">/**
+ * 2つの数を足し算する
+ *
+ * @param int|float $a 第1の加算数
+ * @param int|float $b 第2の加算数
+ * @return int|float 加算結果
+ */</span>
+public function add($a, $b)
+{
+    return $a + $b;
+}</code></pre>
+                                        </div>
+
+                                        <p class="mb-2 font-bold text-gray-800">PHPDocの役割：</p>
+                                        <ul class="text-xs space-y-1 mb-3 ml-4">
+                                            <li>✅ <strong>人間のための説明</strong> - 何をするメソッドか説明</li>
+                                            <li>✅ <strong>IDEのヒント</strong> - エディタが型を推測して補完してくれる</li>
+                                            <li>✅ <strong>ドキュメント生成</strong> - 自動でAPIドキュメントを作れる</li>
+                                        </ul>
+
+                                        <div class="bg-white p-3 rounded border-2 border-yellow-500">
+                                            <p class="text-xs font-bold mb-1">⚠️ 重要：</p>
+                                            <p class="text-xs mb-2">
+                                                <strong>PHPDocがなくてもコードは動きます。</strong><br>
+                                                ただし、あると<strong>コードが読みやすく</strong>なり、<strong>IDEの補完も効く</strong>ようになります。
+                                            </p>
+                                            <p class="text-xs bg-blue-50 p-2 rounded">
+                                                💡 <strong>本講座では</strong>、テストメソッドには簡単な説明だけ書き、<br>
+                                                実装コードには詳しいPHPDocを書くスタイルを採用します。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FIRST原則 -->
+                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📝 良いテストの原則: FIRST</h3>
+                        <p class="text-gray-600 mb-6">
+                            良いユニットテストが満たすべき5つの特性を頭文字で覚えます
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="bg-white p-5 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-blue-700 mb-2">
+                                    <span class="bg-blue-100 px-3 py-1 rounded mr-2">F</span>Fast（高速）
+                                </h4>
+                                <p class="text-sm text-gray-700 mb-2">
+                                    テストは高速に実行されるべきです。理想は数ミリ秒〜数秒。
+                                </p>
+                                <div class="bg-gray-50 p-3 rounded text-xs">
+                                    <strong>理由:</strong> 遅いテストは頻繁に実行されなくなり、フィードバックサイクルが遅くなります。
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-green-700 mb-2">
+                                    <span class="bg-green-100 px-3 py-1 rounded mr-2">I</span>Independent（独立）
+                                </h4>
+                                <p class="text-sm text-gray-700 mb-2">
+                                    各テストは他のテストに依存せず、どんな順番でも実行できるべきです。
+                                </p>
+                                <div class="bg-gray-50 p-3 rounded text-xs">
+                                    <strong>理由:</strong> テスト間の依存関係があると、デバッグが困難になり、並列実行ができません。
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-yellow-700 mb-2">
+                                    <span class="bg-yellow-100 px-3 py-1 rounded mr-2">R</span>Repeatable（再現可能）
+                                </h4>
+                                <p class="text-sm text-gray-700 mb-2">
+                                    どんな環境でも同じ結果が得られるべきです（本番、開発、CI環境）。
+                                </p>
+                                <div class="bg-gray-50 p-3 rounded text-xs">
+                                    <strong>理由:</strong> 環境依存のテストは信頼できず、「たまに失敗する」テストは無視されるようになります。
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-purple-700 mb-2">
+                                    <span class="bg-purple-100 px-3 py-1 rounded mr-2">S</span>Self-Validating（自己検証）
+                                </h4>
+                                <p class="text-sm text-gray-700 mb-2">
+                                    テストは成功/失敗を自動的に判定するべきです。手動確認は不要。
+                                </p>
+                                <div class="bg-gray-50 p-3 rounded text-xs">
+                                    <strong>理由:</strong> 人間が結果を確認する必要があると、自動化の意味がなくなります。
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-lg shadow">
+                                <h4 class="text-lg font-bold text-red-700 mb-2">
+                                    <span class="bg-red-100 px-3 py-1 rounded mr-2">T</span>Timely（適時）
+                                </h4>
+                                <p class="text-sm text-gray-700 mb-2">
+                                    テストは実装コードの直前に書かれるべきです（テストファースト）。
+                                </p>
+                                <div class="bg-gray-50 p-3 rounded text-xs">
+                                    <strong>理由:</strong> 後からテストを書くと、テストしにくいコードになっており、結局書かれないことが多いです。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- テストの種類 -->
+        <section id="test-types" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">テストの種類とテストピラミッド</h2>
+
+                <div class="max-w-5xl mx-auto">
+                    <!-- テストピラミッド -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-12">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">🔺 テストピラミッド</h3>
+                        <p class="text-center text-gray-600 mb-8">
+                            効果的なテスト戦略は、ピラミッド型のバランスが理想的です
+                        </p>
+
+                        <div class="relative mb-8">
+                            <!-- ピラミッド図 -->
+                            <div class="flex flex-col items-center space-y-2">
+                                <div class="w-full max-w-xs bg-red-100 border-4 border-red-500 rounded p-4 text-center">
+                                    <h4 class="font-bold text-red-700 mb-1">E2Eテスト / UIテスト</h4>
+                                    <p class="text-xs text-gray-600">少数（遅い、壊れやすい、高コスト）</p>
+                                </div>
+                                <div class="w-full max-w-md bg-yellow-100 border-4 border-yellow-500 rounded p-4 text-center">
+                                    <h4 class="font-bold text-yellow-700 mb-1">統合テスト / APIテスト</h4>
+                                    <p class="text-xs text-gray-600">中程度（適度な速度、適度なコスト）</p>
+                                </div>
+                                <div class="w-full max-w-lg bg-green-100 border-4 border-green-500 rounded p-4 text-center">
+                                    <h4 class="font-bold text-green-700 mb-1">ユニットテスト</h4>
+                                    <p class="text-xs text-gray-600">多数（高速、安定、低コスト）</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-blue-800 mb-3">📊 理想的なバランス</h4>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li>• <strong>ユニットテスト: 70%</strong> - 最も多く書く。高速で安定している</li>
+                                <li>• <strong>統合テスト: 20%</strong> - 適度に書く。コンポーネント間の連携を確認</li>
+                                <li>• <strong>E2Eテスト: 10%</strong> - 最小限に。重要なユーザーシナリオのみ</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 各テストの詳細 -->
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <!-- ユニットテスト -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-green-500">
+                            <div class="text-center mb-4">
+                                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-3xl">🧪</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-green-700">ユニットテスト</h3>
+                                <p class="text-sm text-gray-600">Unit Test</p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">📝 定義</h4>
+                                    <p class="text-sm text-gray-600">
+                                        最小単位（クラス、メソッド）を独立してテストします。
+                                        外部依存（DB、API等）はモック化します。
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">✅ メリット</h4>
+                                    <ul class="text-xs text-gray-600 space-y-1">
+                                        <li>• 高速（ミリ秒単位）</li>
+                                        <li>• 安定している</li>
+                                        <li>• 問題の特定が容易</li>
+                                        <li>• 設計の改善につながる</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">📂 Laravel での配置</h4>
+                                    <div class="bg-gray-900 text-green-400 p-2 rounded font-mono text-xs">
+                                        tests/Unit/
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">💡 例</h4>
+                                    <p class="text-xs text-gray-600">
+                                        Calculatorクラスのaddメソッドをテスト。
+                                        入力と期待される出力だけを検証。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 統合テスト -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-yellow-500">
+                            <div class="text-center mb-4">
+                                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-3xl">🔗</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-yellow-700">統合テスト</h3>
+                                <p class="text-sm text-gray-600">Integration Test</p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">📝 定義</h4>
+                                    <p class="text-sm text-gray-600">
+                                        複数のコンポーネントやシステムの連携をテストします。
+                                        DB、外部APIなど実際の環境を使います。
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">✅ メリット</h4>
+                                    <ul class="text-xs text-gray-600 space-y-1">
+                                        <li>• 実環境に近い検証</li>
+                                        <li>• コンポーネント間の問題を発見</li>
+                                        <li>• ビジネスロジック全体を確認</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">⚠️ デメリット</h4>
+                                    <ul class="text-xs text-gray-600 space-y-1">
+                                        <li>• ユニットより遅い</li>
+                                        <li>• セットアップが複雑</li>
+                                        <li>• 問題の特定が難しい</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">📂 Laravel での配置</h4>
+                                    <div class="bg-gray-900 text-green-400 p-2 rounded font-mono text-xs">
+                                        tests/Feature/
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">💡 例</h4>
+                                    <p class="text-xs text-gray-600">
+                                        ユーザー登録API：DB保存、メール送信、
+                                        バリデーションを含めた一連の流れをテスト。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- E2Eテスト -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-red-500">
+                            <div class="text-center mb-4">
+                                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-3xl">🌐</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-red-700">E2Eテスト</h3>
+                                <p class="text-sm text-gray-600">End-to-End Test</p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">📝 定義</h4>
+                                    <p class="text-sm text-gray-600">
+                                        ユーザーの視点で、アプリ全体を通してテストします。
+                                        ブラウザ操作を自動化します。
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">✅ メリット</h4>
+                                    <ul class="text-xs text-gray-600 space-y-1">
+                                        <li>• ユーザー体験を検証</li>
+                                        <li>• 本番環境に最も近い</li>
+                                        <li>• クリティカルパスを保護</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">⚠️ デメリット</h4>
+                                    <ul class="text-xs text-gray-600 space-y-1">
+                                        <li>• 非常に遅い（分単位）</li>
+                                        <li>• 壊れやすい（Flaky）</li>
+                                        <li>• メンテナンスコスト大</li>
+                                        <li>• 問題の特定が最も困難</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">🛠️ ツール例</h4>
+                                    <p class="text-xs text-gray-600">
+                                        Laravel Dusk, Selenium, Cypress, Playwright
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">💡 例</h4>
+                                    <p class="text-xs text-gray-600">
+                                        ECサイトで商品を検索→カートに追加→購入
+                                        までの一連の流れをブラウザで自動テスト。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TDDで重要なのは？ -->
+                    <div class="mt-12 bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-green-800 mb-4 text-center">💡 TDDで重要なのはユニットテスト！</h3>
+                        <p class="text-gray-700 text-center mb-6">
+                            TDDは主に<strong>ユニットテスト</strong>を扱います。
+                            高速なフィードバックサイクルが、TDDの最大の利点だからです。
+                        </p>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded shadow">
+                                <h4 class="font-bold text-green-700 mb-3">ユニットテスト中心の理由</h4>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• 数秒で数百のテストを実行できる</li>
+                                    <li>• Red-Green-Refactorサイクルが回せる</li>
+                                    <li>• 設計のフィードバックが即座に得られる</li>
+                                    <li>• 開発中に何度も実行できる</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white p-6 rounded shadow">
+                                <h4 class="font-bold text-yellow-700 mb-3">統合・E2Eテストは後から</h4>
+                                <ul class="text-sm text-gray-600 space-y-2">
+                                    <li>• ユニットテストの後に追加</li>
+                                    <li>• CI/CDパイプラインで自動実行</li>
+                                    <li>• 本講座では主にユニットテストを扱う</li>
+                                    <li>• 次回のCI/CD講座で統合を学ぶ</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 次は実践へ -->
+        <section id="next-step" class="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-5xl font-bold mb-6">理論はここまで</h2>
+                    <p class="text-2xl mb-12">
+                        次は実践で手を動かして理解しよう
+                    </p>
+
+                    <a href="handson-basic.html" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-6 px-12 rounded-full text-2xl transition transform hover:scale-110 shadow-2xl inline-block">
+                        ハンズオンを始める
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-6 text-center">
+                <p class="mb-4">TDD ハンズオン講座（完全版）- Test-Driven Development</p>
+                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>検証編：様々なアサーション - TDD実践ハンズオン</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">TDD ハンズオン講座 - 検証編</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="index.html" class="hover:text-blue-200">理論編</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="handson-basic.html" class="hover:text-blue-200">基礎：Red-Green</a>
+                    <a href="handson-refactor.html" class="hover:text-blue-200">改善：Refactor</a>
+                    <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
+                    <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="handson-basic.html" class="block hover:text-blue-200">基礎：Red-Green</a>
+            <a href="handson-refactor.html" class="block hover:text-blue-200">改善：Refactor</a>
+            <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
+            <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">検証編：様々なアサーション</h2>
+                <p class="text-2xl mb-4">引き算・掛け算・割り算を追加しながらアサーションメソッドを学ぶ</p>
+            </div>
+        </section>
+
+        <!-- イントロ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">アサーションとは？</h2>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">📘 定義</h3>
+                        <p class="text-gray-700 text-lg mb-4">
+                            <strong>アサーション（Assertion）</strong>とは、<br>
+                            <span class="bg-yellow-200 px-2 py-1 rounded">「〜であることを確認する」という検証のこと</span>です。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg border-l-4 border-blue-600">
+                            <p class="text-gray-700 mb-3">
+                                例えば、<code>assertEquals(5, $result)</code>は<br>
+                                「$resultが5と等しいことを確認する」という意味です。
+                            </p>
+                            <p class="text-gray-700">
+                                PHPUnitには様々なアサーションメソッドがあり、<br>
+                                状況に応じて適切なものを使い分けます。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                        <p class="font-bold text-yellow-800 mb-3">💡 このセクションの進め方</p>
+                        <p class="text-gray-700">
+                            Calculatorクラスに引き算・掛け算・割り算を追加しながら、<br>
+                            それぞれに適したアサーションメソッドを1つずつ学んでいきます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 引き算でassertTrue/assertFalseを学ぶ -->
+        <section id="subtract" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">引き算：assertTrue / assertFalse</h2>
+                        <p class="text-xl text-gray-600">真偽値の検証を学ぶ</p>
+                    </div>
+
+                    <!-- RED -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                            <h3 class="text-3xl font-bold text-gray-800">RED：テストを追加</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>CalculatorTest.php</code>に引き算のテストを追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 引き算ができることをテストする
+ */</span>
+#[Test]
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_subtract_two_numbers</span>()
+{
+    <span class="text-gray-500">// Arrange</span>
+    <span class="text-blue-300">$calculator</span> = <span class="text-purple-400">new</span> Calculator();
+
+    <span class="text-gray-500">// Act</span>
+    <span class="text-blue-300">$result</span> = <span class="text-blue-300">$calculator</span>-><span class="text-yellow-300">subtract</span>(10, 3);
+
+    <span class="text-gray-500">// Assert - 結果が正の数であることを確認</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertTrue</span>(<span class="text-blue-300">$result</span> > 0);
+
+    <span class="text-gray-500">// Assert - 結果が負の数でないことを確認</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertFalse</span>(<span class="text-blue-300">$result</span> < 0);
+
+    <span class="text-gray-500">// Assert - 正確な値も確認</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(7, <span class="text-blue-300">$result</span>);
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-4">📖 新しいアサーション:</p>
+                            <div class="space-y-4 text-gray-700">
+                                <div class="bg-white p-4 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">assertTrue($condition)</p>
+                                    <p class="text-sm">条件が<code>true</code>であることを確認します。</p>
+                                </div>
+                                <div class="bg-white p-4 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">assertFalse($condition)</p>
+                                    <p class="text-sm">条件が<code>false</code>であることを確認します。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">テストを実行すると失敗します（subtractメソッドがまだ存在しない）。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-4">
+<pre class="text-white">php artisan test tests/Unit/CalculatorTest.php</pre>
+                        </div>
+                    </div>
+
+                    <!-- GREEN -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                            <h3 class="text-3xl font-bold text-gray-800">GREEN：実装を追加</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>Calculator.php</code>に<code>subtract</code>メソッドを追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 2つの数値を減算する
+ *
+ * @param int|float $a 被減数
+ * @param int|float $b 減数
+ * @return int|float 減算結果
+ */</span>
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">subtract</span>(<span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$a</span>, <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$b</span>): <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span>
+{
+    <span class="text-purple-400">return</span> <span class="text-blue-300">$a</span> - <span class="text-blue-300">$b</span>;
+}</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">テストを実行すると成功します。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">php artisan test tests/Unit/CalculatorTest.php</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 掛け算でassertGreaterThan/assertLessThanを学ぶ -->
+        <section id="multiply" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">掛け算：assertGreaterThan / assertLessThan</h2>
+                        <p class="text-xl text-gray-600">大小比較の検証を学ぶ</p>
+                    </div>
+
+                    <!-- RED -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                            <h3 class="text-3xl font-bold text-gray-800">RED：テストを追加</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>CalculatorTest.php</code>に掛け算のテストを追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 掛け算ができることをテストする
+ */</span>
+#[Test]
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_multiply_two_numbers</span>()
+{
+    <span class="text-gray-500">// Arrange</span>
+    <span class="text-blue-300">$calculator</span> = <span class="text-purple-400">new</span> Calculator();
+
+    <span class="text-gray-500">// Act</span>
+    <span class="text-blue-300">$result</span> = <span class="text-blue-300">$calculator</span>-><span class="text-yellow-300">multiply</span>(3, 4);
+
+    <span class="text-gray-500">// Assert - 結果が10より大きいことを確認</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertGreaterThan</span>(10, <span class="text-blue-300">$result</span>);
+
+    <span class="text-gray-500">// Assert - 結果が15より小さいことを確認</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertLessThan</span>(15, <span class="text-blue-300">$result</span>);
+
+    <span class="text-gray-500">// Assert - 正確な値も確認</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(12, <span class="text-blue-300">$result</span>);
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-4">📖 新しいアサーション:</p>
+                            <div class="space-y-4 text-gray-700">
+                                <div class="bg-white p-4 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">assertGreaterThan($expected, $actual)</p>
+                                    <p class="text-sm"><code>$actual</code>が<code>$expected</code>より大きいことを確認します。</p>
+                                </div>
+                                <div class="bg-white p-4 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">assertLessThan($expected, $actual)</p>
+                                    <p class="text-sm"><code>$actual</code>が<code>$expected</code>より小さいことを確認します。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GREEN -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                            <h3 class="text-3xl font-bold text-gray-800">GREEN：実装を追加</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>Calculator.php</code>に<code>multiply</code>メソッドを追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 2つの数値を乗算する
+ *
+ * @param int|float $a 第1の乗数
+ * @param int|float $b 第2の乗数
+ * @return int|float 乗算結果
+ */</span>
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">multiply</span>(<span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$a</span>, <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$b</span>): <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span>
+{
+    <span class="text-purple-400">return</span> <span class="text-blue-300">$a</span> * <span class="text-blue-300">$b</span>;
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 割り算で例外テストを学ぶ -->
+        <section id="divide" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">割り算：例外のテスト</h2>
+                        <p class="text-xl text-gray-600">エラーケースを検証する</p>
+                    </div>
+
+                    <!-- RED -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                            <h3 class="text-3xl font-bold text-gray-800">RED：正常系のテスト</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            まずは通常の割り算のテストを追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 割り算ができることをテストする
+ */</span>
+#[Test]
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_divide_two_numbers</span>()
+{
+    <span class="text-gray-500">// Arrange</span>
+    <span class="text-blue-300">$calculator</span> = <span class="text-purple-400">new</span> Calculator();
+
+    <span class="text-gray-500">// Act</span>
+    <span class="text-blue-300">$result</span> = <span class="text-blue-300">$calculator</span>-><span class="text-yellow-300">divide</span>(10, 2);
+
+    <span class="text-gray-500">// Assert</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(5, <span class="text-blue-300">$result</span>);
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- RED: 例外テスト -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                            <h3 class="text-3xl font-bold text-gray-800">RED：例外のテスト</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            0で割ろうとした場合、例外が投げられることをテストします。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 0で割ると例外が投げられることをテストする
+ */</span>
+#[Test]
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">it_throws_exception_when_dividing_by_zero</span>()
+{
+    <span class="text-gray-500">// Arrange</span>
+    <span class="text-blue-300">$calculator</span> = <span class="text-purple-400">new</span> Calculator();
+
+    <span class="text-gray-500">// Assert - 例外が投げられることを期待</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">expectException</span>(InvalidArgumentException::<span class="text-purple-400">class</span>);
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">expectExceptionMessage</span>(<span class="text-green-300">'0で割ることはできません'</span>);
+
+    <span class="text-gray-500">// Act - 例外が投げられるはず</span>
+    <span class="text-blue-300">$calculator</span>-><span class="text-yellow-300">divide</span>(10, 0);
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-4">📖 例外テスト用のメソッド:</p>
+                            <div class="space-y-4 text-gray-700">
+                                <div class="bg-white p-4 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">expectException($exception)</p>
+                                    <p class="text-sm">指定した例外が投げられることを期待します。</p>
+                                </div>
+                                <div class="bg-white p-4 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">expectExceptionMessage($message)</p>
+                                    <p class="text-sm">例外メッセージが指定した文字列を含むことを期待します。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 重要:</strong> 例外テストでは、<code>expectException</code>を<strong>Actの前</strong>に書きます。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- GREEN -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
+                            <h3 class="text-3xl font-bold text-gray-800">GREEN：実装を追加</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>Calculator.php</code>に<code>divide</code>メソッドを追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 2つの数値を除算する
+ *
+ * @param int|float $a 被除数
+ * @param int|float $b 除数
+ * @return int|float 除算結果
+ * @throws \InvalidArgumentException 除数が0の場合
+ */</span>
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">divide</span>(<span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$a</span>, <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$b</span>): <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span>
+{
+    <span class="text-purple-400">if</span> (<span class="text-blue-300">$b</span> === 0) {
+        <span class="text-purple-400">throw new</span> \InvalidArgumentException(<span class="text-green-300">'0で割ることはできません'</span>);
+    }
+
+    <span class="text-purple-400">return</span> <span class="text-blue-300">$a</span> / <span class="text-blue-300">$b</span>;
+}</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">全てのテストを実行します。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan test tests/Unit/CalculatorTest.php</pre>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                            <p class="font-bold text-green-800 mb-3">✅ 期待される結果:</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-green-400">  PASS  Tests\Unit\CalculatorTest
+  ✓ it can add two numbers
+  ✓ it can subtract two numbers
+  ✓ it can multiply two numbers
+  ✓ it can divide two numbers
+  ✓ it throws exception when dividing by zero
+
+  Tests:    5 passed
+  Duration: 0.05s</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- その他のアサーション -->
+        <section id="other-assertions" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">その他の便利なアサーション</h2>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-blue-50 p-6 rounded-lg shadow">
+                            <h3 class="text-xl font-bold text-blue-800 mb-4">Null チェック</h3>
+                            <div class="space-y-2 text-sm text-gray-700">
+                                <p><code>assertNull($value)</code></p>
+                                <p><code>assertNotNull($value)</code></p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg shadow">
+                            <h3 class="text-xl font-bold text-blue-800 mb-4">型チェック</h3>
+                            <div class="space-y-2 text-sm text-gray-700">
+                                <p><code>assertIsInt($value)</code></p>
+                                <p><code>assertIsFloat($value)</code></p>
+                                <p><code>assertIsString($value)</code></p>
+                                <p><code>assertIsArray($value)</code></p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg shadow">
+                            <h3 class="text-xl font-bold text-blue-800 mb-4">配列関連</h3>
+                            <div class="space-y-2 text-sm text-gray-700">
+                                <p><code>assertCount($n, $array)</code></p>
+                                <p><code>assertContains($item, $array)</code></p>
+                                <p><code>assertEmpty($array)</code></p>
+                                <p><code>assertNotEmpty($array)</code></p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg shadow">
+                            <h3 class="text-xl font-bold text-blue-800 mb-4">文字列関連</h3>
+                            <div class="space-y-2 text-sm text-gray-700">
+                                <p><code>assertStringContains($needle, $haystack)</code></p>
+                                <p><code>assertStringStartsWith($prefix, $string)</code></p>
+                                <p><code>assertStringEndsWith($suffix, $string)</code></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                        <p class="font-bold text-yellow-800 mb-3">💡 アサーション選びのコツ</p>
+                        <p class="text-gray-700">
+                            「何を確認したいか」を明確にして、それに最も適したアサーションを選びましょう。<br>
+                            例えば、「5と等しい」なら<code>assertEquals</code>、「5より大きい」なら<code>assertGreaterThan</code>を使います。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">検証編のまとめ</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">学んだアサーション</h3>
+
+                        <div class="space-y-4">
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ 実装した機能とアサーション</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• <strong>足し算:</strong> assertEquals（等価性の確認）</li>
+                                    <li>• <strong>引き算:</strong> assertTrue / assertFalse（真偽値の確認）</li>
+                                    <li>• <strong>掛け算:</strong> assertGreaterThan / assertLessThan（大小比較）</li>
+                                    <li>• <strong>割り算:</strong> expectException（例外テスト）</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ テストの基本パターン</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• 正常系のテスト（期待通りの動作）</li>
+                                    <li>• 異常系のテスト（エラーケース）</li>
+                                    <li>• 境界値のテスト（0、負の数など）</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">次のステップ</h3>
+                        <p class="text-gray-600 mb-8 text-lg">
+                            基本的なアサーションを習得しました。<br>
+                            次は実践的な<strong>Todo機能</strong>をTDDで開発してみましょう。
+                        </p>
+
+                        <a href="handson-advanced.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                            応用編へ進む →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-6 text-center">
+                <p class="mb-4">TDD ハンズオン講座 - Test-Driven Development</p>
+                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

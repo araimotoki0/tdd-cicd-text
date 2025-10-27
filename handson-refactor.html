@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>改善編：Refactorフェーズ - TDD実践ハンズオン</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">TDD ハンズオン講座 - 改善編</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="index.html" class="hover:text-blue-200">理論編</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="handson-basic.html" class="hover:text-blue-200">基礎：Red-Green</a>
+                    <a href="handson-refactor.html" class="hover:text-blue-200">改善：Refactor</a>
+                    <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
+                    <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="handson-basic.html" class="block hover:text-blue-200">基礎：Red-Green</a>
+            <a href="handson-refactor.html" class="block hover:text-blue-200">改善：Refactor</a>
+            <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
+            <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">改善編：Refactorフェーズ</h2>
+                <p class="text-2xl mb-4">テストが通ったコードをより良くする</p>
+            </div>
+        </section>
+
+        <!-- イントロ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Refactorとは？</h2>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">📘 定義</h3>
+                        <p class="text-gray-700 text-lg mb-4">
+                            <strong>Refactor（リファクタリング）</strong>とは、<br>
+                            <span class="bg-yellow-200 px-2 py-1 rounded">外部から見た動作を変えずに、内部のコード構造を改善すること</span>です。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg border-l-4 border-blue-600">
+                            <h4 class="font-bold text-gray-800 mb-3">🎯 Refactorの目的</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• コードの可読性を高める</li>
+                                <li>• 保守しやすくする</li>
+                                <li>• バグを減らす</li>
+                                <li>• 将来の機能追加を容易にする</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-8">
+                        <p class="font-bold text-yellow-800 mb-3">⚠️ 重要なルール</p>
+                        <p class="text-gray-700">
+                            Refactorは<strong>テストがグリーン（成功）の状態でのみ行います</strong>。<br>
+                            テストが失敗している状態でRefactorしてはいけません。<br>
+                            なぜなら、変更によってバグが混入したかどうか判断できないからです。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Refactorフェーズ -->
+        <section id="refactor-phase" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">REFACTOR：コードを改善する</h2>
+                        <p class="text-xl text-gray-600">基礎編で作ったCalculatorクラスを改善します</p>
+                    </div>
+
+                    <!-- 現状確認 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">現在のコード</h3>
+                        <p class="text-gray-700 mb-4">基礎編で作成したCalculatorクラスを見てみましょう。</p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-4">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> App\Services;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">Calculator</span>
+{
+    <span class="text-gray-500">/**
+     * 2つの数を足す
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">add</span>(<span class="text-blue-300">$a</span>, <span class="text-blue-300">$b</span>)
+    {
+        <span class="text-purple-400">return</span> <span class="text-blue-300">$a</span> + <span class="text-blue-300">$b</span>;
+    }
+}</pre>
+                        </div>
+
+                        <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-bold text-yellow-800 mb-3">🤔 改善できるポイント</p>
+                            <ul class="text-gray-700 space-y-2">
+                                <li>❌ 型ヒントがない（どんな型を受け取るか不明確）</li>
+                                <li>❌ 戻り値の型が宣言されていない</li>
+                                <li>❌ ドキュメントコメントが簡素</li>
+                                <li>✅ でもテストは通っている！</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 実装手順 -->
+                    <div class="space-y-8">
+                        <!-- 手順1: テストが通っていることを確認 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                                <h3 class="text-3xl font-bold text-gray-800">テストが通っていることを確認</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">Refactorの前に、必ずテストが成功していることを確認します。</p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 実行するコマンド:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">php artisan test tests/Unit/CalculatorTest.php</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                                <p class="font-bold text-green-800 mb-3">✅ 期待される結果:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-green-400">  PASS  Tests\Unit\CalculatorTest
+  ✓ it can add two numbers
+
+  Tests:    1 passed
+  Duration: 0.03s</pre>
+                                </div>
+                                <p class="text-gray-700 mt-3">
+                                    <strong>グリーン（成功）</strong>であることを確認したら、Refactorを開始できます。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順2: 型ヒントを追加 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                                <h3 class="text-3xl font-bold text-gray-800">型ヒントを追加する</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                引数と戻り値に型ヒントを追加して、コードを明確にします。
+                            </p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📚 型ヒントとは？</p>
+                                <p class="text-sm text-gray-700">
+                                    PHPでは、関数の引数や戻り値の型を明示的に宣言できます。<br>
+                                    これにより、間違った型が渡された場合にエラーで気付けます。<br>
+                                    また、IDEの補完機能も効くようになり、開発が効率化します。
+                                </p>
+                            </div>
+
+                            <p class="text-gray-700 mb-4 text-lg">
+                                <code class="bg-gray-100 px-2 py-1 rounded">src/app/Services/Calculator.php</code> を以下のように修正してください：
+                            </p>
+
+                            <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> App\Services;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">Calculator</span>
+{
+    <span class="text-gray-500">/**
+     * 2つの数を足す
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">add</span>(<span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$a</span>, <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$b</span>): <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span>
+    {
+        <span class="text-purple-400">return</span> <span class="text-blue-300">$a</span> + <span class="text-blue-300">$b</span>;
+    }
+}</pre>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800 mb-4">📖 変更点の解説:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">int|float $a, int|float $b</p>
+                                        <p class="text-sm">
+                                            引数の型を指定。<code>int|float</code>は「整数または小数」という意味（Union型）。<br>
+                                            PHP 8.0以降で使えます。
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">: int|float</p>
+                                        <p class="text-sm">
+                                            戻り値の型を指定。この関数は整数または小数を返します。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                                <p class="font-bold text-yellow-800 mb-3">💡 Refactorのポイント</p>
+                                <p class="text-gray-700">
+                                    型ヒントを追加しても、<strong>外部から見た動作は変わりません</strong>。<br>
+                                    これがRefactorの重要な特徴です。機能は同じまま、コードの品質だけを高めています。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順3: テストを再実行 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
+                                <h3 class="text-3xl font-bold text-gray-800">テストを再実行</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                Refactor後は<strong>必ずテストを実行</strong>します。
+                            </p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 実行するコマンド:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">php artisan test tests/Unit/CalculatorTest.php</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg mb-6 border-l-4 border-green-600">
+                                <p class="font-bold text-green-800 mb-4">✅ 期待される結果:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+<pre class="text-green-400">  PASS  Tests\Unit\CalculatorTest
+  ✓ it can add two numbers
+
+  Tests:    1 passed
+  Duration: 0.03s</pre>
+                                </div>
+                                <p class="text-gray-700">
+                                    引き続き<strong>グリーン（成功）</strong>のままであれば、Refactorは成功です！
+                                </p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg border-2 border-blue-600">
+                                <div class="flex items-start">
+                                    <span class="text-3xl mr-4">🎉</span>
+                                    <div>
+                                        <p class="text-xl font-bold text-blue-800 mb-3">Refactor成功！</p>
+                                        <p class="text-gray-700 mb-3">
+                                            型ヒントを追加することで、コードがより明確になりました。
+                                        </p>
+                                        <div class="bg-white p-4 rounded">
+                                            <p class="font-bold text-gray-800 mb-2">📚 学んだこと:</p>
+                                            <ul class="text-sm text-gray-700 space-y-2">
+                                                <li>✓ Refactorはテストがグリーンの時だけ行う</li>
+                                                <li>✓ 外部の動作を変えずに内部構造を改善</li>
+                                                <li>✓ Refactor後は必ずテストを実行</li>
+                                                <li>✓ 型ヒントでコードを明確にできる</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 手順4: さらなる改善（オプション） -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">4</span>
+                                <h3 class="text-3xl font-bold text-gray-800">さらなる改善（オプション）</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                ドキュメントコメントをより詳細にしてみましょう。
+                            </p>
+
+                            <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> App\Services;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">Calculator</span>
+{
+    <span class="text-gray-500">/**
+     * 2つの数値を加算する
+     *
+     * @param int|float $a 第1の加算数
+     * @param int|float $b 第2の加算数
+     * @return int|float 加算結果
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">add</span>(<span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$a</span>, <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$b</span>): <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span>
+    {
+        <span class="text-purple-400">return</span> <span class="text-blue-300">$a</span> + <span class="text-blue-300">$b</span>;
+    }
+}</pre>
+                            </div>
+
+                            <p class="text-gray-700 mb-4">変更後、再度テストを実行します。</p>
+
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan test tests/Unit/CalculatorTest.php</pre>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                                <p class="text-gray-700">
+                                    引き続きグリーンであれば完璧です！<br>
+                                    このように、Refactorは<strong>小さな改善を繰り返す</strong>プロセスです。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">改善編のまとめ</h2>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Refactorフェーズで学んだこと</h3>
+
+                        <div class="space-y-4">
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ Refactorの基本ルール</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• テストがグリーンの状態でのみ実施</li>
+                                    <li>• 外部の動作を変えない</li>
+                                    <li>• 変更後は必ずテストを実行</li>
+                                    <li>• 小さな改善を繰り返す</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ 実践した改善</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• 型ヒントの追加（int|float）</li>
+                                    <li>• 戻り値の型宣言</li>
+                                    <li>• PHPDocコメントの改善</li>
+                                    <li>• コードの可読性向上</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ Red-Green-Refactorサイクル完成</h4>
+                                <div class="flex items-center justify-center space-x-4 mt-4">
+                                    <span class="bg-red-100 text-red-600 px-4 py-2 rounded-full font-semibold">Red</span>
+                                    <span class="text-2xl">→</span>
+                                    <span class="bg-green-100 text-green-600 px-4 py-2 rounded-full font-semibold">Green</span>
+                                    <span class="text-2xl">→</span>
+                                    <span class="bg-blue-100 text-blue-600 px-4 py-2 rounded-full font-semibold">Refactor</span>
+                                </div>
+                                <p class="text-gray-700 mt-4 text-center">
+                                    これで完全なTDDサイクルを体験できました！
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">次のステップ</h3>
+                        <p class="text-gray-600 mb-8 text-lg">
+                            基本サイクルを習得しました。<br>
+                            次は様々な<strong>アサーションメソッド</strong>を使ってテストの幅を広げましょう。
+                        </p>
+
+                        <a href="handson-assertions.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                            検証編へ進む →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-6 text-center">
+                <p class="mb-4">TDD ハンズオン講座 - Test-Driven Development</p>
+                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

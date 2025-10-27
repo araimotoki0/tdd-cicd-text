@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>応用編：Todo機能開発 - TDD実践ハンズオン</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">TDD ハンズオン講座 - 応用編</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="index.html" class="hover:text-blue-200">理論編</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="handson-basic.html" class="hover:text-blue-200">基礎：Red-Green</a>
+                    <a href="handson-refactor.html" class="hover:text-blue-200">改善：Refactor</a>
+                    <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
+                    <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="handson-basic.html" class="block hover:text-blue-200">基礎：Red-Green</a>
+            <a href="handson-refactor.html" class="block hover:text-blue-200">改善：Refactor</a>
+            <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
+            <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">応用編：Todo機能をTDDで開発</h2>
+                <p class="text-2xl mb-4">実践的な機能を最初から最後までTDDで作る</p>
+            </div>
+        </section>
+
+        <!-- イントロ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">何を作るか？</h2>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">📋 Todo管理クラス</h3>
+                        <p class="text-gray-700 text-lg mb-6">
+                            シンプルなTodoリストを管理するクラスを作ります。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg border-l-4 border-blue-600">
+                            <h4 class="font-bold text-gray-800 mb-3">実装する機能</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• Todoを追加する</li>
+                                <li>• Todoを完了にする</li>
+                                <li>• 全Todoを取得する</li>
+                                <li>• 未完了のTodoだけを取得する</li>
+                                <li>• 完了したTodoだけを取得する</li>
+                                <li>• Todoを削除する</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                        <p class="font-bold text-yellow-800 mb-3">💡 学べること</p>
+                        <p class="text-gray-700">
+                            これまで学んだTDDの知識を総動員して、実践的な機能を開発します。<br>
+                            配列操作、オブジェクト管理、状態管理など、実務で使うスキルが身につきます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 機能1: Todoを追加する -->
+        <section id="add-todo" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">機能1：Todoを追加する</h2>
+                        <p class="text-xl text-gray-600">基本機能を実装する</p>
+                    </div>
+
+                    <!-- RED -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">RED</span>
+                            <h3 class="text-3xl font-bold text-gray-800">テストを作成</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            まずはテストファイルを作成します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan make:test TodoListTest --unit</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>tests/Unit/TodoListTest.php</code>を開いて、最初のテストを書きます。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> Tests\Unit;
+
+<span class="text-purple-400">use</span> PHPUnit\Framework\TestCase;
+<span class="text-purple-400">use</span> PHPUnit\Framework\Attributes\Test;
+<span class="text-purple-400">use</span> App\Services\TodoList;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">TodoListTest</span> <span class="text-purple-400">extends</span> <span class="text-yellow-300">TestCase</span>
+{
+    <span class="text-gray-500">/**
+     * Todoを追加できることをテストする
+     */</span>
+    #[Test]
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_add_a_todo</span>()
+    {
+        <span class="text-gray-500">// Arrange</span>
+        <span class="text-blue-300">$todoList</span> = <span class="text-purple-400">new</span> TodoList();
+
+        <span class="text-gray-500">// Act</span>
+        <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">add</span>(<span class="text-green-300">'買い物に行く'</span>);
+
+        <span class="text-gray-500">// Assert</span>
+        <span class="text-blue-300">$todos</span> = <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">getAll</span>();
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertCount</span>(1, <span class="text-blue-300">$todos</span>);
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(<span class="text-green-300">'買い物に行く'</span>, <span class="text-blue-300">$todos</span>[0][<span class="text-green-300">'title'</span>]);
+    }
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg mb-4 border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 使用しているアサーション:</p>
+                            <div class="space-y-2 text-gray-700">
+                                <p><strong>assertCount(1, $todos)</strong> - 配列の要素数が1であることを確認</p>
+                                <p><strong>assertEquals(...)</strong> - Todoのタイトルが正しいことを確認</p>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">テストを実行すると失敗します。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">php artisan test tests/Unit/TodoListTest.php</pre>
+                        </div>
+                    </div>
+
+                    <!-- GREEN -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">GREEN</span>
+                            <h3 class="text-3xl font-bold text-gray-800">実装を追加</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>src/app/Services/TodoList.php</code>を作成します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> App\Services;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">TodoList</span>
+{
+    <span class="text-purple-400">private array</span> <span class="text-blue-300">$todos</span> = [];
+
+    <span class="text-gray-500">/**
+     * Todoを追加する
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">add</span>(<span class="text-purple-400">string</span> <span class="text-blue-300">$title</span>): <span class="text-purple-400">void</span>
+    {
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span>[] = [
+            <span class="text-green-300">'title'</span> => <span class="text-blue-300">$title</span>,
+            <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>,
+        ];
+    }
+
+    <span class="text-gray-500">/**
+     * 全てのTodoを取得する
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">getAll</span>(): <span class="text-purple-400">array</span>
+    {
+        <span class="text-purple-400">return</span> <span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span>;
+    }
+}</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">テストを実行すると成功します。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">php artisan test tests/Unit/TodoListTest.php</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 機能2: Todoを完了にする -->
+        <section id="complete-todo" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">機能2：Todoを完了にする</h2>
+                        <p class="text-xl text-gray-600">状態を変更する機能を追加</p>
+                    </div>
+
+                    <!-- RED -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">RED</span>
+                            <h3 class="text-3xl font-bold text-gray-800">テストを追加</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            Todoを完了にする機能のテストを追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * Todoを完了できることをテストする
+ */</span>
+#[Test]
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_complete_a_todo</span>()
+{
+    <span class="text-gray-500">// Arrange</span>
+    <span class="text-blue-300">$todoList</span> = <span class="text-purple-400">new</span> TodoList();
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">add</span>(<span class="text-green-300">'買い物に行く'</span>);
+
+    <span class="text-gray-500">// Act</span>
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">complete</span>(0); <span class="text-gray-500">// インデックス0のTodoを完了にする</span>
+
+    <span class="text-gray-500">// Assert</span>
+    <span class="text-blue-300">$todos</span> = <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">getAll</span>();
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertTrue</span>(<span class="text-blue-300">$todos</span>[0][<span class="text-green-300">'completed'</span>]);
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- GREEN -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">GREEN</span>
+                            <h3 class="text-3xl font-bold text-gray-800">実装を追加</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>TodoList.php</code>に<code>complete</code>メソッドを追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * Todoを完了にする
+ */</span>
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">complete</span>(<span class="text-purple-400">int</span> <span class="text-blue-300">$index</span>): <span class="text-purple-400">void</span>
+{
+    <span class="text-purple-400">if</span> (<span class="text-purple-400">isset</span>(<span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span>[<span class="text-blue-300">$index</span>])) {
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span>[<span class="text-blue-300">$index</span>][<span class="text-green-300">'completed'</span>] = <span class="text-purple-400">true</span>;
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 機能3: 未完了のTodoだけを取得 -->
+        <section id="pending-todos" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">機能3：未完了のTodoを取得</h2>
+                        <p class="text-xl text-gray-600">フィルタリング機能を追加</p>
+                    </div>
+
+                    <!-- RED -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">RED</span>
+                            <h3 class="text-3xl font-bold text-gray-800">テストを追加</h3>
+                        </div>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 未完了のTodoだけを取得できることをテストする
+ */</span>
+#[Test]
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_get_pending_todos_only</span>()
+{
+    <span class="text-gray-500">// Arrange</span>
+    <span class="text-blue-300">$todoList</span> = <span class="text-purple-400">new</span> TodoList();
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">add</span>(<span class="text-green-300">'買い物に行く'</span>);
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">add</span>(<span class="text-green-300">'掃除をする'</span>);
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">add</span>(<span class="text-green-300">'勉強する'</span>);
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">complete</span>(1); <span class="text-gray-500">// 2つ目を完了にする</span>
+
+    <span class="text-gray-500">// Act</span>
+    <span class="text-blue-300">$pending</span> = <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">getPending</span>();
+
+    <span class="text-gray-500">// Assert</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertCount</span>(2, <span class="text-blue-300">$pending</span>); <span class="text-gray-500">// 未完了は2つ</span>
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(<span class="text-green-300">'買い物に行く'</span>, <span class="text-blue-300">$pending</span>[0][<span class="text-green-300">'title'</span>]);
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(<span class="text-green-300">'勉強する'</span>, <span class="text-blue-300">$pending</span>[1][<span class="text-green-300">'title'</span>]);
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- GREEN -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">GREEN</span>
+                            <h3 class="text-3xl font-bold text-gray-800">実装を追加</h3>
+                        </div>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * 未完了のTodoだけを取得する
+ */</span>
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">getPending</span>(): <span class="text-purple-400">array</span>
+{
+    <span class="text-purple-400">return</span> <span class="text-yellow-300">array_values</span>(<span class="text-yellow-300">array_filter</span>(
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span>,
+        <span class="text-purple-400">fn</span>(<span class="text-blue-300">$todo</span>) => !<span class="text-blue-300">$todo</span>[<span class="text-green-300">'completed'</span>]
+    ));
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 コードの解説:</p>
+                            <p class="text-sm text-gray-700">
+                                <strong>array_filter</strong>で完了していないTodoだけをフィルタリング。<br>
+                                <strong>array_values</strong>でインデックスを振り直しています。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 機能4: Todoを削除する -->
+        <section id="remove-todo" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">機能4：Todoを削除する</h2>
+                        <p class="text-xl text-gray-600">削除機能を追加</p>
+                    </div>
+
+                    <!-- RED -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">RED</span>
+                            <h3 class="text-3xl font-bold text-gray-800">テストを追加</h3>
+                        </div>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * Todoを削除できることをテストする
+ */</span>
+#[Test]
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_remove_a_todo</span>()
+{
+    <span class="text-gray-500">// Arrange</span>
+    <span class="text-blue-300">$todoList</span> = <span class="text-purple-400">new</span> TodoList();
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">add</span>(<span class="text-green-300">'買い物に行く'</span>);
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">add</span>(<span class="text-green-300">'掃除をする'</span>);
+
+    <span class="text-gray-500">// Act</span>
+    <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">remove</span>(0);
+
+    <span class="text-gray-500">// Assert</span>
+    <span class="text-blue-300">$todos</span> = <span class="text-blue-300">$todoList</span>-><span class="text-yellow-300">getAll</span>();
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertCount</span>(1, <span class="text-blue-300">$todos</span>);
+    <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(<span class="text-green-300">'掃除をする'</span>, <span class="text-blue-300">$todos</span>[0][<span class="text-green-300">'title'</span>]);
+}</pre>
+                        </div>
+                    </div>
+
+                    <!-- GREEN -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">GREEN</span>
+                            <h3 class="text-3xl font-bold text-gray-800">実装を追加</h3>
+                        </div>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">/**
+ * Todoを削除する
+ */</span>
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">remove</span>(<span class="text-purple-400">int</span> <span class="text-blue-300">$index</span>): <span class="text-purple-400">void</span>
+{
+    <span class="text-purple-400">if</span> (<span class="text-purple-400">isset</span>(<span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span>[<span class="text-blue-300">$index</span>])) {
+        <span class="text-purple-400">unset</span>(<span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span>[<span class="text-blue-300">$index</span>]);
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span> = <span class="text-yellow-300">array_values</span>(<span class="text-blue-300">$this</span>-><span class="text-blue-300">todos</span>); <span class="text-gray-500">// インデックスを振り直す</span>
+    }
+}</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">全てのテストを実行します。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan test tests/Unit/TodoListTest.php</pre>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                            <p class="font-bold text-green-800 mb-3">✅ 期待される結果:</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-green-400">  PASS  Tests\Unit\TodoListTest
+  ✓ it can add a todo
+  ✓ it can complete a todo
+  ✓ it can get pending todos only
+  ✓ it can remove a todo
+
+  Tests:    4 passed
+  Duration: 0.05s</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 追加課題 -->
+        <section class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">追加課題にチャレンジ</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🚀 さらに機能を追加してみよう</h3>
+                        <p class="text-gray-700 mb-6">
+                            TDDのサイクルを使って、以下の機能を自分で実装してみましょう。
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-blue-600 mb-3">課題1：完了したTodoだけを取得</h4>
+                                <p class="text-gray-700 mb-2">
+                                    <code>getCompleted()</code>メソッドを実装してください。
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    ヒント：<code>getPending()</code>の逆の条件でフィルタリングします。
+                                </p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-blue-600 mb-3">課題2：Todoの総数を取得</h4>
+                                <p class="text-gray-700 mb-2">
+                                    <code>count()</code>メソッドを実装してください。
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    ヒント：配列の<code>count()</code>関数を使います。
+                                </p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-blue-600 mb-3">課題3：全Todoをクリア</h4>
+                                <p class="text-gray-700 mb-2">
+                                    <code>clear()</code>メソッドを実装してください。
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    ヒント：配列を空にします。テストでは<code>assertEmpty()</code>が使えます。
+                                </p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-blue-600 mb-3">課題4：タイトルでTodoを検索</h4>
+                                <p class="text-gray-700 mb-2">
+                                    <code>search($keyword)</code>メソッドを実装してください。
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    ヒント：<code>str_contains()</code>関数で部分一致検索ができます。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                        <p class="font-bold text-yellow-800 mb-3">💡 TDDで実装する手順</p>
+                        <ol class="text-gray-700 space-y-2 list-decimal list-inside">
+                            <li>まずテストを書く（RED）</li>
+                            <li>テストを実行して失敗を確認</li>
+                            <li>最小限の実装でテストを通す（GREEN）</li>
+                            <li>必要に応じてRefactor</li>
+                            <li>次の機能へ</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎓 ハンズオン完了</h2>
+
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-3xl font-bold mb-6 text-center">おめでとうございます！</h3>
+                        <p class="text-xl text-center mb-6">
+                            TDDの基礎から応用まで、全てのハンズオンを完了しました。
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">学んだこと</h3>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">基礎編</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ Red-Greenサイクル</li>
+                                    <li>✓ テストファイルの作り方</li>
+                                    <li>✓ assertEquals</li>
+                                    <li>✓ AAAパターン</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">改善編</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ Refactorフェーズ</li>
+                                    <li>✓ 型ヒント</li>
+                                    <li>✓ PHPDoc</li>
+                                    <li>✓ コード品質向上</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">検証編</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ 様々なアサーション</li>
+                                    <li>✓ 真偽値の検証</li>
+                                    <li>✓ 大小比較</li>
+                                    <li>✓ 例外テスト</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">応用編</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ 実践的な機能開発</li>
+                                    <li>✓ 配列操作</li>
+                                    <li>✓ 状態管理</li>
+                                    <li>✓ フィルタリング</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-8 rounded-lg border-l-4 border-yellow-500 mb-8">
+                        <h3 class="text-2xl font-bold text-yellow-800 mb-4">🚀 次のステップ</h3>
+                        <p class="text-gray-700 mb-4">
+                            TDDの基礎を習得できました。次は以下のステップに進みましょう：
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li>• 実際のプロジェクトでTDDを実践する</li>
+                            <li>• モックやスタブを使った高度なテスト</li>
+                            <li>• データベースを使った統合テスト</li>
+                            <li>• CI/CDでのテスト自動化</li>
+                        </ul>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                            理論編に戻る
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-6 text-center">
+                <p class="mb-4">TDD ハンズオン講座 - Test-Driven Development</p>
+                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
