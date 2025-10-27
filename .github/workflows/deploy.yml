@@ -1,3 +1,46 @@
+# =============================================================================
+# S3 + CloudFront 自動デプロイワークフロー
+# =============================================================================
+#
+# 【メカニズム概要】
+# このワークフローは、masterブランチへのpush時に自動的にトリガーされ、
+# 静的ファイルをS3にデプロイし、CloudFrontのキャッシュを無効化します。
+#
+# 【処理フロー】
+# 1. トリガー (on.push)
+#    - masterブランチにpushされた際に自動実行
+#
+# 2. コードチェックアウト (Checkout code)
+#    - GitHubリポジトリの最新コードをワークフロー実行環境に取得
+#    - actions/checkout@v4を使用
+#
+# 3. AWS認証情報の設定 (Configure AWS credentials)
+#    - GitHub Secretsに保存されたIAM認証情報を使用してAWS CLIを設定
+#    - 必要なSecrets:
+#      * AWS_ACCESS_KEY_ID: IAMユーザーのアクセスキー
+#      * AWS_SECRET_ACCESS_KEY: IAMユーザーのシークレットキー
+#    - 必要なIAM権限:
+#      * S3: s3:PutObject, s3:DeleteObject, s3:ListBucket
+#      * CloudFront: cloudfront:CreateInvalidation
+#
+# 4. S3へのデプロイ (Deploy to S3)
+#    - aws s3 syncコマンドでファイルを同期
+#    - --exclude: .gitと.githubディレクトリを除外
+#    - --delete: S3にあってローカルにないファイルを削除（完全同期）
+#
+# 5. CloudFrontキャッシュ無効化 (Invalidate CloudFront)
+#    - S3のファイルが更新されても、CloudFrontにキャッシュが残っている場合、
+#      古いコンテンツが表示され続けるため、キャッシュを強制的に無効化
+#    - すべてのパス (/*) に対してInvalidationを実行
+#    - 無効化は通常数分で完了するが、即座に反映される
+#
+# 【セキュリティ考慮事項】
+# - 認証情報はGitHub Secretsで暗号化して保存
+# - IAMユーザーには最小権限の原則を適用（S3とCloudFrontのみ）
+# - リポジトリへのpush権限を持つユーザーのみがデプロイ可能
+#
+# =============================================================================
+
 name: Deploy to S3
 
 on:
@@ -10,9 +53,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ステップ1: リポジトリのコードをチェックアウト
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # ステップ2: AWS認証情報を設定
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -20,6 +65,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
 
+      # ステップ3: S3バケットにファイルを同期
       - name: Deploy to S3
         run: |
           aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} \
@@ -27,6 +73,7 @@ jobs:
             --exclude ".github/*" \
             --delete
 
+      # ステップ4: CloudFrontのキャッシュを無効化
       - name: Invalidate CloudFront
         run: |
           aws cloudfront create-invalidation \
