@@ -27,8 +27,7 @@ jobs:
             --exclude ".github/*" \
             --delete
 
-      - name: Invalidate CloudFront (optional)
-        if: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID != '' }}
+      - name: Invalidate CloudFront
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
