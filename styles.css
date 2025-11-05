@@ -1,0 +1,249 @@
+/* 上に戻るボタン */
+.scroll-to-top-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 999;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(100px);
+}
+
+.scroll-to-top-button.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}
+
+.scroll-to-top-button svg {
+    stroke: white;
+}
+
+/* ヘッダーナビゲーション - アクティブページのハイライト */
+nav a.nav-active {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* グローバルハンバーガーメニュー */
+.global-menu-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s ease;
+}
+
+.global-menu-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}
+
+.global-menu-button svg {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+}
+
+.global-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.global-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.global-menu {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 320px;
+    height: 100%;
+    background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
+    z-index: 1000;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.global-menu.active {
+    left: 0;
+}
+
+.global-menu-header {
+    padding: 30px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.global-menu-title {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.global-menu-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.global-menu-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.global-menu-content {
+    padding: 20px;
+}
+
+.global-menu-section {
+    margin-bottom: 30px;
+}
+
+.global-menu-section-title {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.global-menu-item {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+    font-size: 15px;
+}
+
+.global-menu-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
+}
+
+.global-menu-item.active {
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+/* コピーボタンのスタイル */
+.copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.copy-button:hover {
+    background-color: #ffffff;
+    border-color: #3b82f6;
+    color: #3b82f6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.copy-button:active {
+    transform: scale(0.95);
+}
+
+.copy-button.copied {
+    background-color: #10b981;
+    border-color: #10b981;
+    color: white;
+}
+
+.copy-button.copied:hover {
+    background-color: #059669;
+    border-color: #059669;
+}
+
+.copy-icon {
+    flex-shrink: 0;
+}
+
+.copy-text {
+    white-space: nowrap;
+}
+
+/* コードブロックの親要素の調整 */
+.bg-gray-900 {
+    position: relative;
+}
+
+/* モバイル対応 */
+@media (max-width: 640px) {
+    .copy-button {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .copy-text {
+        display: none;
+    }
+}

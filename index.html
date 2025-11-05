@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TDD ハンズオン講座 - スクラム開発（完全版）</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐳</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -20,6 +21,7 @@
                     <a href="handson-refactor.html" class="hover:text-blue-200">改善：Refactor</a>
                     <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
                     <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
+                    <a href="handson-database.html" class="hover:text-blue-200">実践：DB版Todo</a>
                 </div>
                 <button id="menuBtn" class="md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,6 +40,7 @@
             <a href="handson-refactor.html" class="block hover:text-blue-200">改善：Refactor</a>
             <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
             <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
+            <a href="handson-database.html" class="block hover:text-blue-200">実践：DB版Todo</a>
         </div>
     </div>
 
@@ -192,12 +195,6 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="text-center">
-                        <button id="animateBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg">
-                            サイクルアニメーションを見る
-                        </button>
                     </div>
 
                     <!-- サイクルの流れ図 -->
@@ -1187,6 +1184,9 @@ public function add($a, $b)
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script src="code-copy.js"></script>
+    <script src="global-menu.js"></script>
+    <script src="nav-highlight.js"></script>
+    <script src="scroll-to-top.js"></script>
 </body>
 </html>

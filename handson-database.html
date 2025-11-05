@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実践編：データベースでTodo管理 - TDD実践ハンズオン</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐳</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">TDD ハンズオン講座 - 実践編</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="index.html" class="hover:text-blue-200">理論編</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="handson-basic.html" class="hover:text-blue-200">基礎：Red-Green</a>
+                    <a href="handson-refactor.html" class="hover:text-blue-200">改善：Refactor</a>
+                    <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
+                    <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
+                    <a href="handson-database.html" class="hover:text-blue-200">実践：DB版Todo</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="handson-basic.html" class="block hover:text-blue-200">基礎：Red-Green</a>
+            <a href="handson-refactor.html" class="block hover:text-blue-200">改善：Refactor</a>
+            <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
+            <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
+            <a href="handson-database.html" class="block hover:text-blue-200">実践：DB版Todo</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">実践編：データベースでTodo管理</h2>
+                <p class="text-2xl mb-4">マイグレーション・モデル・リポジトリをTDDで構築</p>
+                <p class="text-lg">実務で使える本格的なデータベース連携をテスト駆動で学ぶ</p>
+            </div>
+        </section>
+
+        <!-- イントロ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">配列からデータベースへ</h2>
+
+                    <div class="bg-yellow-50 p-8 rounded-lg shadow-lg mb-8 border-l-4 border-yellow-500">
+                        <h3 class="text-2xl font-bold text-yellow-800 mb-4">🎯 この章の目的</h3>
+                        <p class="text-gray-700 text-lg mb-6">
+                            前章では配列でTodo管理を実装しました。<br>
+                            しかし、実際のアプリケーションでは<strong>データベース</strong>を使います。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-3">配列版の問題点</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>❌ アプリを再起動するとデータが消える</li>
+                                <li>❌ 複数のユーザーでデータを共有できない</li>
+                                <li>❌ 大量のデータを扱えない</li>
+                                <li>❌ 実務では使えない</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">📚 学べること</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-lg">
+                                <h4 class="font-bold text-gray-800 mb-2">Laravel基礎</h4>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• マイグレーションの作成</li>
+                                    <li>• Eloquentモデル</li>
+                                    <li>• データベース操作</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg">
+                                <h4 class="font-bold text-gray-800 mb-2">テスト技術</h4>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• RefreshDatabaseトレイト</li>
+                                    <li>• テストデータの作成</li>
+                                    <li>• DBトランザクション</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg">
+                                <h4 class="font-bold text-gray-800 mb-2">設計パターン</h4>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• リポジトリパターン</li>
+                                    <li>• 依存性注入（DI）</li>
+                                    <li>• レイヤードアーキテクチャ</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg">
+                                <h4 class="font-bold text-gray-800 mb-2">実践スキル</h4>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li>• SQLite（テスト用DB）</li>
+                                    <li>• データベース設計</li>
+                                    <li>• 実務レベルのTDD</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg border-l-4 border-green-500">
+                        <p class="font-bold text-green-800 mb-3">💡 TDDの流れ</p>
+                        <p class="text-gray-700">
+                            まずテストを書いてから、マイグレーション→モデル→リポジトリの順に実装します。<br>
+                            <strong>テストファーストで進めることで、設計ミスを早期に発見できます。</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ0: 環境準備 -->
+        <section id="setup" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ0：環境準備</h2>
+                        <p class="text-xl text-gray-600">テスト用データベースを設定する</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📝 phpunit.xml の設定</h3>
+                        <p class="text-gray-700 mb-4">
+                            テスト用にSQLiteデータベースを使います。<br>
+                            プロジェクトルートの<code class="bg-gray-100 px-2 py-1 rounded">phpunit.xml</code>を開き、以下の設定を確認してください。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;!-- phpunit.xml --&gt;</span>
+<span class="text-purple-400">&lt;php&gt;</span>
+    <span class="text-blue-300">&lt;env</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"DB_CONNECTION"</span> <span class="text-yellow-300">value=</span><span class="text-green-300">"sqlite"</span><span class="text-blue-300">/&gt;</span>
+    <span class="text-blue-300">&lt;env</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"DB_DATABASE"</span> <span class="text-yellow-300">value=</span><span class="text-green-300">":memory:"</span><span class="text-blue-300">/&gt;</span>
+<span class="text-purple-400">&lt;/php&gt;</span></pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 設定の意味：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>DB_CONNECTION="sqlite"</strong> - SQLiteを使用（軽量・高速）</li>
+                                <li><strong>DB_DATABASE=":memory:"</strong> - メモリ上にDBを作成（テスト後に自動削除）</li>
+                                <li>この設定により、テストが本番DBに影響を与えません</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                        <p class="font-bold text-green-800 mb-3">✅ 準備完了</p>
+                        <p class="text-gray-700">
+                            これでテスト用のデータベース環境が整いました。次は実装に進みます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ1: マイグレーション作成 -->
+        <section id="migration" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ1：マイグレーション作成</h2>
+                        <p class="text-xl text-gray-600">todosテーブルを設計する</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-blue-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📊 テーブル設計</h3>
+                        <p class="text-gray-700 mb-4">
+                            まず、どんなデータを保存するか決めます。
+                        </p>
+
+                        <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                            <h4 class="font-bold text-gray-800 mb-3">todosテーブルのカラム</h4>
+                            <table class="w-full text-sm">
+                                <thead class="bg-blue-100">
+                                    <tr>
+                                        <th class="p-2 text-left">カラム名</th>
+                                        <th class="p-2 text-left">型</th>
+                                        <th class="p-2 text-left">説明</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-700">
+                                    <tr class="border-b">
+                                        <td class="p-2"><code>id</code></td>
+                                        <td class="p-2">BIGINT</td>
+                                        <td class="p-2">主キー（自動採番）</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-2"><code>title</code></td>
+                                        <td class="p-2">VARCHAR(255)</td>
+                                        <td class="p-2">Todoのタイトル</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-2"><code>completed</code></td>
+                                        <td class="p-2">BOOLEAN</td>
+                                        <td class="p-2">完了フラグ（デフォルトfalse）</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-2"><code>created_at</code></td>
+                                        <td class="p-2">TIMESTAMP</td>
+                                        <td class="p-2">作成日時</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2"><code>updated_at</code></td>
+                                        <td class="p-2">TIMESTAMP</td>
+                                        <td class="p-2">更新日時</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">🔧 マイグレーションファイルを作成</h3>
+                        <p class="text-gray-700 mb-4">
+                            以下のコマンドを実行します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan make:migration create_todos_table</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">
+                            <code class="bg-gray-100 px-2 py-1 rounded">database/migrations/YYYY_MM_DD_HHMMSS_create_todos_table.php</code>が作成されます。
+                        </p>
+
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">✏️ マイグレーションファイルを編集</h3>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">use</span> Illuminate\Database\Migrations\Migration;
+<span class="text-purple-400">use</span> Illuminate\Database\Schema\Blueprint;
+<span class="text-purple-400">use</span> Illuminate\Support\Facades\Schema;
+
+<span class="text-purple-400">return new class extends</span> <span class="text-yellow-300">Migration</span>
+{
+    <span class="text-gray-500">/**
+     * マイグレーションを実行
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">up</span>(): <span class="text-purple-400">void</span>
+    {
+        Schema::<span class="text-yellow-300">create</span>(<span class="text-green-300">'todos'</span>, <span class="text-purple-400">function</span> (Blueprint <span class="text-blue-300">$table</span>) {
+            <span class="text-blue-300">$table</span>-><span class="text-yellow-300">id</span>();
+            <span class="text-blue-300">$table</span>-><span class="text-yellow-300">string</span>(<span class="text-green-300">'title'</span>);
+            <span class="text-blue-300">$table</span>-><span class="text-yellow-300">boolean</span>(<span class="text-green-300">'completed'</span>)-><span class="text-yellow-300">default</span>(<span class="text-purple-400">false</span>);
+            <span class="text-blue-300">$table</span>-><span class="text-yellow-300">timestamps</span>();
+        });
+    }
+
+    <span class="text-gray-500">/**
+     * マイグレーションをロールバック
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">down</span>(): <span class="text-purple-400">void</span>
+    {
+        Schema::<span class="text-yellow-300">dropIfExists</span>(<span class="text-green-300">'todos'</span>);
+    }
+};</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 コードの解説：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>$table->id()</strong> - 主キー（BIGINT UNSIGNED AUTO_INCREMENT）</li>
+                                <li><strong>$table->string('title')</strong> - VARCHAR(255)</li>
+                                <li><strong>$table->boolean('completed')->default(false)</strong> - BOOLEAN型、デフォルト値false</li>
+                                <li><strong>$table->timestamps()</strong> - created_atとupdated_atを自動追加</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">▶️ マイグレーションを実行</h3>
+                        <p class="text-gray-700 mb-4">
+                            開発環境のデータベースにテーブルを作成します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan migrate</pre>
+                        </div>
+
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-700">
+                                ✅ 成功すると「Migration table created successfully」と表示されます。<br>
+                                これで<code>todos</code>テーブルがデータベースに作成されました。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ2: モデル作成 -->
+        <section id="model" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ2：Eloquentモデル作成</h2>
+                        <p class="text-xl text-gray-600">Todoデータを扱うモデルを作る</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🔧 モデルファイルを作成</h3>
+                        <p class="text-gray-700 mb-4">
+                            以下のコマンドを実行します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan make:model Todo</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-6">
+                            <code class="bg-gray-100 px-2 py-1 rounded">app/Models/Todo.php</code>が作成されます。
+                        </p>
+
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">✏️ モデルファイルを編集</h3>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> App\Models;
+
+<span class="text-purple-400">use</span> Illuminate\Database\Eloquent\Model;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">Todo</span> <span class="text-purple-400">extends</span> <span class="text-yellow-300">Model</span>
+{
+    <span class="text-gray-500">/**
+     * 複数代入可能な属性
+     */</span>
+    <span class="text-purple-400">protected</span> <span class="text-blue-300">$fillable</span> = [
+        <span class="text-green-300">'title'</span>,
+        <span class="text-green-300">'completed'</span>,
+    ];
+
+    <span class="text-gray-500">/**
+     * 属性のキャスト
+     */</span>
+    <span class="text-purple-400">protected</span> <span class="text-blue-300">$casts</span> = [
+        <span class="text-green-300">'completed'</span> => <span class="text-green-300">'boolean'</span>,
+    ];
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 コードの解説：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>$fillable</strong> - 一括代入を許可するカラムを指定（セキュリティ対策）</li>
+                                <li><strong>$casts</strong> - データベースの値をPHPの型に変換（'0'/'1' → true/false）</li>
+                                <li><strong>extends Model</strong> - Eloquentの機能を継承（CRUD操作が簡単に）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                        <p class="font-bold text-yellow-800 mb-3">💡 Eloquentとは？</p>
+                        <p class="text-gray-700 mb-4">
+                            LaravelのORM（Object-Relational Mapping）です。<br>
+                            SQLを書かずに、PHPのメソッドでデータベース操作ができます。
+                        </p>
+                        <div class="bg-white p-4 rounded-lg">
+                            <p class="text-sm font-bold text-gray-800 mb-2">例：</p>
+                            <code class="text-sm text-gray-700">
+                                Todo::create(['title' => '買い物']);<br>
+                                $todos = Todo::all();<br>
+                                $todo->update(['completed' => true]);
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ3: 最初のテスト -->
+        <section id="first-test" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ3：最初のテストを書く</h2>
+                        <p class="text-xl text-gray-600">Todoを作成できることをテストする</p>
+                    </div>
+
+                    <!-- RED -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">RED</span>
+                            <h3 class="text-3xl font-bold text-gray-800">テストファイルを作成</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            Todoモデルのテストを作成します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan make:test TodoTest --unit</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>tests/Unit/TodoTest.php</code>を開いて、最初のテストを書きます。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> Tests\Unit;
+
+<span class="text-purple-400">use</span> Tests\TestCase;
+<span class="text-purple-400">use</span> PHPUnit\Framework\Attributes\Test;
+<span class="text-purple-400">use</span> Illuminate\Foundation\Testing\RefreshDatabase;
+<span class="text-purple-400">use</span> App\Models\Todo;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">TodoTest</span> <span class="text-purple-400">extends</span> <span class="text-yellow-300">TestCase</span>
+{
+    <span class="text-purple-400">use</span> RefreshDatabase;
+
+    <span class="text-gray-500">/**
+     * Todoを作成できることをテストする
+     */</span>
+    #[Test]
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_create_a_todo</span>()
+    {
+        <span class="text-gray-500">// Arrange & Act</span>
+        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">create</span>([
+            <span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物に行く'</span>,
+        ]);
+
+        <span class="text-gray-500">// Assert</span>
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertDatabaseHas</span>(<span class="text-green-300">'todos'</span>, [
+            <span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物に行く'</span>,
+            <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>,
+        ]);
+
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(<span class="text-green-300">'買い物に行く'</span>, <span class="text-blue-300">$todo</span>->title);
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertFalse</span>(<span class="text-blue-300">$todo</span>->completed);
+    }
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg mb-4 border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 重要な要素の解説:</p>
+                            <div class="space-y-3 text-gray-700 text-sm">
+                                <div>
+                                    <p class="font-bold">use RefreshDatabase;</p>
+                                    <p>テスト実行時にデータベースをリフレッシュ（テーブルを再作成）します。<br>
+                                    これにより、テスト間でデータが干渉しません。</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold">assertDatabaseHas('todos', [...])</p>
+                                    <p>データベースに指定したデータが存在することを確認します。</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold">Todo::create([...])</p>
+                                    <p>Eloquentでデータを作成します。SQLのINSERT文を自動生成します。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">テストを実行します。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan test tests/Unit/TodoTest.php</pre>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                            <p class="font-bold text-green-800 mb-3">✅ 成功するはず：</p>
+                            <p class="text-gray-700">
+                                マイグレーションとモデルがすでに作成されているため、テストは成功します。<br>
+                                これが<strong>データベーステスト</strong>の基本形です。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ4: リポジトリパターン -->
+        <section id="repository" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ4：リポジトリパターンを導入</h2>
+                        <p class="text-xl text-gray-600">ビジネスロジックとDB操作を分離する</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🤔 なぜリポジトリパターンが必要？</h3>
+
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+                                <h4 class="font-bold text-red-800 mb-3">❌ 悪い例：コントローラで直接DB操作</h4>
+                                <div class="bg-white p-4 rounded font-mono text-xs">
+<pre class="text-gray-800">public function store(Request $request)
+{
+    $todo = Todo::create([
+        'title' => $request->title
+    ]);
+
+    return response()->json($todo);
+}</pre>
+                                </div>
+                                <p class="text-sm text-gray-700 mt-3">
+                                    問題点：<br>
+                                    • コントローラが肥大化<br>
+                                    • テストが書きにくい<br>
+                                    • 再利用できない
+                                </p>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                                <h4 class="font-bold text-green-800 mb-3">✅ 良い例：リポジトリ経由でDB操作</h4>
+                                <div class="bg-white p-4 rounded font-mono text-xs">
+<pre class="text-gray-800">public function store(
+    Request $request,
+    TodoRepository $repo
+) {
+    $todo = $repo->create(
+        $request->title
+    );
+
+    return response()->json($todo);
+}</pre>
+                                </div>
+                                <p class="text-sm text-gray-700 mt-3">
+                                    メリット：<br>
+                                    • 役割が明確<br>
+                                    • テストしやすい<br>
+                                    • 再利用可能
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📚 リポジトリパターンとは？</p>
+                            <p class="text-gray-700">
+                                データベース操作を専用のクラス（リポジトリ）にまとめるデザインパターンです。<br>
+                                <strong>レイヤードアーキテクチャ</strong>の一部で、実務では標準的に使われます。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- RED: リポジトリのテスト -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-red-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">RED</span>
+                            <h3 class="text-3xl font-bold text-gray-800">リポジトリのテストを書く</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            まずはテストを書きます。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan make:test TodoRepositoryTest --unit</pre>
+                        </div>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> Tests\Unit;
+
+<span class="text-purple-400">use</span> Tests\TestCase;
+<span class="text-purple-400">use</span> PHPUnit\Framework\Attributes\Test;
+<span class="text-purple-400">use</span> Illuminate\Foundation\Testing\RefreshDatabase;
+<span class="text-purple-400">use</span> App\Repositories\TodoRepository;
+<span class="text-purple-400">use</span> App\Models\Todo;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">TodoRepositoryTest</span> <span class="text-purple-400">extends</span> <span class="text-yellow-300">TestCase</span>
+{
+    <span class="text-purple-400">use</span> RefreshDatabase;
+
+    <span class="text-purple-400">private</span> TodoRepository <span class="text-blue-300">$repository</span>;
+
+    <span class="text-purple-400">protected function</span> <span class="text-yellow-300">setUp</span>(): <span class="text-purple-400">void</span>
+    {
+        <span class="text-purple-400">parent</span>::<span class="text-yellow-300">setUp</span>();
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span> = <span class="text-purple-400">new</span> TodoRepository();
+    }
+
+    <span class="text-gray-500">/**
+     * Todoを作成できることをテストする
+     */</span>
+    #[Test]
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_create_a_todo</span>()
+    {
+        <span class="text-gray-500">// Arrange & Act</span>
+        <span class="text-blue-300">$todo</span> = <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">create</span>(<span class="text-green-300">'買い物に行く'</span>);
+
+        <span class="text-gray-500">// Assert</span>
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertDatabaseHas</span>(<span class="text-green-300">'todos'</span>, [
+            <span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物に行く'</span>,
+            <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>,
+        ]);
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertInstanceOf</span>(Todo::<span class="text-purple-400">class</span>, <span class="text-blue-300">$todo</span>);
+    }
+
+    <span class="text-gray-500">/**
+     * 全Todoを取得できることをテストする
+     */</span>
+    #[Test]
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_get_all_todos</span>()
+    {
+        <span class="text-gray-500">// Arrange</span>
+        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>]);
+        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'掃除'</span>]);
+
+        <span class="text-gray-500">// Act</span>
+        <span class="text-blue-300">$todos</span> = <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">getAll</span>();
+
+        <span class="text-gray-500">// Assert</span>
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertCount</span>(2, <span class="text-blue-300">$todos</span>);
+    }
+
+    <span class="text-gray-500">/**
+     * Todoを完了にできることをテストする
+     */</span>
+    #[Test]
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_complete_a_todo</span>()
+    {
+        <span class="text-gray-500">// Arrange</span>
+        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>]);
+
+        <span class="text-gray-500">// Act</span>
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">complete</span>(<span class="text-blue-300">$todo</span>->id);
+
+        <span class="text-gray-500">// Assert</span>
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertDatabaseHas</span>(<span class="text-green-300">'todos'</span>, [
+            <span class="text-green-300">'id'</span> => <span class="text-blue-300">$todo</span>->id,
+            <span class="text-green-300">'completed'</span> => <span class="text-purple-400">true</span>,
+        ]);
+    }
+
+    <span class="text-gray-500">/**
+     * 未完了Todoだけを取得できることをテストする
+     */</span>
+    #[Test]
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_get_pending_todos</span>()
+    {
+        <span class="text-gray-500">// Arrange</span>
+        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>]);
+        <span class="text-blue-300">$completed</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'掃除'</span>]);
+        <span class="text-blue-300">$completed</span>-><span class="text-yellow-300">update</span>([<span class="text-green-300">'completed'</span> => <span class="text-purple-400">true</span>]);
+
+        <span class="text-gray-500">// Act</span>
+        <span class="text-blue-300">$pending</span> = <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">getPending</span>();
+
+        <span class="text-gray-500">// Assert</span>
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertCount</span>(1, <span class="text-blue-300">$pending</span>);
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertEquals</span>(<span class="text-green-300">'買い物'</span>, <span class="text-blue-300">$pending</span>[0]->title);
+    }
+
+    <span class="text-gray-500">/**
+     * Todoを削除できることをテストする
+     */</span>
+    #[Test]
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_delete_a_todo</span>()
+    {
+        <span class="text-gray-500">// Arrange</span>
+        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>]);
+
+        <span class="text-gray-500">// Act</span>
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">delete</span>(<span class="text-blue-300">$todo</span>->id);
+
+        <span class="text-gray-500">// Assert</span>
+        <span class="text-blue-300">$this</span>-><span class="text-yellow-300">assertDatabaseMissing</span>(<span class="text-green-300">'todos'</span>, [
+            <span class="text-green-300">'id'</span> => <span class="text-blue-300">$todo</span>->id,
+        ]);
+    }
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 新しいアサーション：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>assertInstanceOf(Todo::class, $todo)</strong> - 返り値がTodoクラスのインスタンスか確認</li>
+                                <li><strong>assertDatabaseMissing('todos', [...])</strong> - データベースに指定データが存在しないことを確認</li>
+                                <li><strong>setUp()</strong> - 各テスト実行前に呼ばれるメソッド（リポジトリを初期化）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- GREEN: リポジトリの実装 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <div class="flex items-center mb-6">
+                            <span class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">GREEN</span>
+                            <h3 class="text-3xl font-bold text-gray-800">リポジトリを実装</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            <code>app/Repositories/TodoRepository.php</code>を作成します。<br>
+                            （Repositoriesディレクトリを手動で作成してください）
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> App\Repositories;
+
+<span class="text-purple-400">use</span> App\Models\Todo;
+<span class="text-purple-400">use</span> Illuminate\Database\Eloquent\Collection;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">TodoRepository</span>
+{
+    <span class="text-gray-500">/**
+     * Todoを作成する
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">create</span>(<span class="text-purple-400">string</span> <span class="text-blue-300">$title</span>): Todo
+    {
+        <span class="text-purple-400">return</span> Todo::<span class="text-yellow-300">create</span>([
+            <span class="text-green-300">'title'</span> => <span class="text-blue-300">$title</span>,
+        ]);
+    }
+
+    <span class="text-gray-500">/**
+     * 全てのTodoを取得する
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">getAll</span>(): Collection
+    {
+        <span class="text-purple-400">return</span> Todo::<span class="text-yellow-300">all</span>();
+    }
+
+    <span class="text-gray-500">/**
+     * Todoを完了にする
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">complete</span>(<span class="text-purple-400">int</span> <span class="text-blue-300">$id</span>): <span class="text-purple-400">bool</span>
+    {
+        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">find</span>(<span class="text-blue-300">$id</span>);
+
+        <span class="text-purple-400">if</span> (!<span class="text-blue-300">$todo</span>) {
+            <span class="text-purple-400">return</span> <span class="text-purple-400">false</span>;
+        }
+
+        <span class="text-purple-400">return</span> <span class="text-blue-300">$todo</span>-><span class="text-yellow-300">update</span>([<span class="text-green-300">'completed'</span> => <span class="text-purple-400">true</span>]);
+    }
+
+    <span class="text-gray-500">/**
+     * 未完了のTodoを取得する
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">getPending</span>(): Collection
+    {
+        <span class="text-purple-400">return</span> Todo::<span class="text-yellow-300">where</span>(<span class="text-green-300">'completed'</span>, <span class="text-purple-400">false</span>)-><span class="text-yellow-300">get</span>();
+    }
+
+    <span class="text-gray-500">/**
+     * Todoを削除する
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">delete</span>(<span class="text-purple-400">int</span> <span class="text-blue-300">$id</span>): <span class="text-purple-400">bool</span>
+    {
+        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">find</span>(<span class="text-blue-300">$id</span>);
+
+        <span class="text-purple-400">if</span> (!<span class="text-blue-300">$todo</span>) {
+            <span class="text-purple-400">return</span> <span class="text-purple-400">false</span>;
+        }
+
+        <span class="text-purple-400">return</span> <span class="text-blue-300">$todo</span>-><span class="text-yellow-300">delete</span>();
+    }
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <p class="font-bold text-blue-800 mb-3">📖 Eloquentメソッドの解説：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>Todo::create([...])</strong> - INSERT文を実行</li>
+                                <li><strong>Todo::all()</strong> - 全レコードをSELECT</li>
+                                <li><strong>Todo::find($id)</strong> - 主キーで検索（SELECT WHERE id = ?）</li>
+                                <li><strong>Todo::where('completed', false)->get()</strong> - 条件付きSELECT</li>
+                                <li><strong>$todo->update([...])</strong> - UPDATEを実行</li>
+                                <li><strong>$todo->delete()</strong> - DELETEを実行</li>
+                            </ul>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">テストを実行します。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan test tests/Unit/TodoRepositoryTest.php</pre>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                            <p class="font-bold text-green-800 mb-3">✅ 期待される結果:</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-green-400">  PASS  Tests\Unit\TodoRepositoryTest
+  ✓ it can create a todo
+  ✓ it can get all todos
+  ✓ it can complete a todo
+  ✓ it can get pending todos
+  ✓ it can delete a todo
+
+  Tests:    5 passed
+  Duration: 0.12s</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ5: コントローラーとView -->
+        <section id="controller-view" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ5：コントローラーとViewを作成</h2>
+                        <p class="text-xl text-gray-600">実際にブラウザで動くTodoアプリを作る</p>
+                    </div>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8 border-l-4 border-blue-500">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">🎯 ゴール</h3>
+                        <p class="text-gray-700 mb-4">
+                            これまで作ったリポジトリを使って、実際にブラウザで動くTodoアプリを作ります。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-3">実装する機能</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>✓ Todo一覧表示</li>
+                                <li>✓ Todo追加フォーム</li>
+                                <li>✓ Todo完了チェックボックス</li>
+                                <li>✓ Todo削除ボタン</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- コントローラー作成 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🔧 コントローラーを作成</h3>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan make:controller TodoController</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-6">
+                            <code class="bg-gray-100 px-2 py-1 rounded">app/Http/Controllers/TodoController.php</code>を編集します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> App\Http\Controllers;
+
+<span class="text-purple-400">use</span> Illuminate\Http\Request;
+<span class="text-purple-400">use</span> App\Repositories\TodoRepository;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">TodoController</span> <span class="text-purple-400">extends</span> <span class="text-yellow-300">Controller</span>
+{
+    <span class="text-purple-400">private</span> TodoRepository <span class="text-blue-300">$repository</span>;
+
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">__construct</span>(TodoRepository <span class="text-blue-300">$repository</span>)
+    {
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span> = <span class="text-blue-300">$repository</span>;
+    }
+
+    <span class="text-gray-500">/**
+     * Todo一覧を表示
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">index</span>()
+    {
+        <span class="text-blue-300">$todos</span> = <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">getAll</span>();
+        <span class="text-purple-400">return</span> <span class="text-yellow-300">view</span>(<span class="text-green-300">'todos.index'</span>, <span class="text-yellow-300">compact</span>(<span class="text-green-300">'todos'</span>));
+    }
+
+    <span class="text-gray-500">/**
+     * Todoを追加
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">store</span>(Request <span class="text-blue-300">$request</span>)
+    {
+        <span class="text-blue-300">$request</span>-><span class="text-yellow-300">validate</span>([
+            <span class="text-green-300">'title'</span> => <span class="text-green-300">'required|max:255'</span>,
+        ]);
+
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">create</span>(<span class="text-blue-300">$request</span>->title);
+
+        <span class="text-purple-400">return</span> <span class="text-yellow-300">redirect</span>()-><span class="text-yellow-300">route</span>(<span class="text-green-300">'todos.index'</span>)
+            -><span class="text-yellow-300">with</span>(<span class="text-green-300">'success'</span>, <span class="text-green-300">'Todoを追加しました'</span>);
+    }
+
+    <span class="text-gray-500">/**
+     * Todoを完了にする
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">complete</span>(<span class="text-purple-400">int</span> <span class="text-blue-300">$id</span>)
+    {
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">complete</span>(<span class="text-blue-300">$id</span>);
+
+        <span class="text-purple-400">return</span> <span class="text-yellow-300">redirect</span>()-><span class="text-yellow-300">route</span>(<span class="text-green-300">'todos.index'</span>)
+            -><span class="text-yellow-300">with</span>(<span class="text-green-300">'success'</span>, <span class="text-green-300">'Todoを完了にしました'</span>);
+    }
+
+    <span class="text-gray-500">/**
+     * Todoを削除
+     */</span>
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">destroy</span>(<span class="text-purple-400">int</span> <span class="text-blue-300">$id</span>)
+    {
+        <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">delete</span>(<span class="text-blue-300">$id</span>);
+
+        <span class="text-purple-400">return</span> <span class="text-yellow-300">redirect</span>()-><span class="text-yellow-300">route</span>(<span class="text-green-300">'todos.index'</span>)
+            -><span class="text-yellow-300">with</span>(<span class="text-green-300">'success'</span>, <span class="text-green-300">'Todoを削除しました'</span>);
+    }
+}</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 コードの解説：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>__construct(TodoRepository $repository)</strong> - 依存性注入（DI）でリポジトリを受け取る</li>
+                                <li><strong>$request->validate([...])</strong> - バリデーション（必須チェック、文字数制限）</li>
+                                <li><strong>view('todos.index', compact('todos'))</strong> - Bladeテンプレートにデータを渡す</li>
+                                <li><strong>redirect()->route('todos.index')->with(...)</strong> - リダイレクトとフラッシュメッセージ</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ルート設定 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-yellow-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🛤️ ルート設定</h3>
+
+                        <p class="text-gray-700 mb-4">
+                            <code class="bg-gray-100 px-2 py-1 rounded">routes/web.php</code>に以下を追加します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-purple-400">use</span> App\Http\Controllers\TodoController;
+
+Route::<span class="text-yellow-300">get</span>(<span class="text-green-300">'/todos'</span>, [TodoController::<span class="text-purple-400">class</span>, <span class="text-green-300">'index'</span>])-><span class="text-yellow-300">name</span>(<span class="text-green-300">'todos.index'</span>);
+Route::<span class="text-yellow-300">post</span>(<span class="text-green-300">'/todos'</span>, [TodoController::<span class="text-purple-400">class</span>, <span class="text-green-300">'store'</span>])-><span class="text-yellow-300">name</span>(<span class="text-green-300">'todos.store'</span>);
+Route::<span class="text-yellow-300">post</span>(<span class="text-green-300">'/todos/{id}/complete'</span>, [TodoController::<span class="text-purple-400">class</span>, <span class="text-green-300">'complete'</span>])-><span class="text-yellow-300">name</span>(<span class="text-green-300">'todos.complete'</span>);
+Route::<span class="text-yellow-300">delete</span>(<span class="text-green-300">'/todos/{id}'</span>, [TodoController::<span class="text-purple-400">class</span>, <span class="text-green-300">'destroy'</span>])-><span class="text-yellow-300">name</span>(<span class="text-green-300">'todos.destroy'</span>);</pre>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-700">
+                                <strong>RESTfulな設計：</strong><br>
+                                GET /todos → 一覧表示<br>
+                                POST /todos → 作成<br>
+                                POST /todos/{id}/complete → 完了<br>
+                                DELETE /todos/{id} → 削除
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- View作成 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-purple-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🎨 Viewを作成</h3>
+
+                        <p class="text-gray-700 mb-4">
+                            <code class="bg-gray-100 px-2 py-1 rounded">resources/views/todos/index.blade.php</code>を作成します。<br>
+                            （todosディレクトリを手動で作成してください）
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-xs mb-6" style="max-height: 600px; overflow-y: auto;">
+<pre class="text-white"><span class="text-gray-500">&lt;!DOCTYPE html&gt;</span>
+<span class="text-purple-400">&lt;html</span> <span class="text-yellow-300">lang=</span><span class="text-green-300">"ja"</span><span class="text-purple-400">&gt;</span>
+<span class="text-purple-400">&lt;head&gt;</span>
+    <span class="text-purple-400">&lt;meta</span> <span class="text-yellow-300">charset=</span><span class="text-green-300">"UTF-8"</span><span class="text-purple-400">&gt;</span>
+    <span class="text-purple-400">&lt;meta</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"viewport"</span> <span class="text-yellow-300">content=</span><span class="text-green-300">"width=device-width, initial-scale=1.0"</span><span class="text-purple-400">&gt;</span>
+    <span class="text-purple-400">&lt;title&gt;</span>Todo管理アプリ<span class="text-purple-400">&lt;/title&gt;</span>
+    <span class="text-purple-400">&lt;script</span> <span class="text-yellow-300">src=</span><span class="text-green-300">"https://cdn.tailwindcss.com"</span><span class="text-purple-400">&gt;&lt;/script&gt;</span>
+<span class="text-purple-400">&lt;/head&gt;</span>
+<span class="text-purple-400">&lt;body</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"bg-gray-100"</span><span class="text-purple-400">&gt;</span>
+    <span class="text-purple-400">&lt;div</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"container mx-auto px-4 py-8 max-w-2xl"</span><span class="text-purple-400">&gt;</span>
+        <span class="text-purple-400">&lt;h1</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"text-4xl font-bold text-gray-800 mb-8 text-center"</span><span class="text-purple-400">&gt;</span>
+            📝 Todo管理アプリ
+        <span class="text-purple-400">&lt;/h1&gt;</span>
+
+        <span class="text-gray-500">&lt;!-- 成功メッセージ --&gt;</span>
+        <span class="text-blue-300">@if</span>(session(<span class="text-green-300">'success'</span>))
+            <span class="text-purple-400">&lt;div</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded"</span><span class="text-purple-400">&gt;</span>
+                {{ session(<span class="text-green-300">'success'</span>) }}
+            <span class="text-purple-400">&lt;/div&gt;</span>
+        <span class="text-blue-300">@endif</span>
+
+        <span class="text-gray-500">&lt;!-- Todo追加フォーム --&gt;</span>
+        <span class="text-purple-400">&lt;div</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"bg-white rounded-lg shadow-lg p-6 mb-8"</span><span class="text-purple-400">&gt;</span>
+            <span class="text-purple-400">&lt;h2</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"text-2xl font-bold text-gray-800 mb-4"</span><span class="text-purple-400">&gt;</span>新しいTodoを追加<span class="text-purple-400">&lt;/h2&gt;</span>
+
+            <span class="text-purple-400">&lt;form</span> <span class="text-yellow-300">action=</span><span class="text-green-300">"{{ route('todos.store') }}"</span> <span class="text-yellow-300">method=</span><span class="text-green-300">"POST"</span><span class="text-purple-400">&gt;</span>
+                <span class="text-blue-300">@csrf</span>
+                <span class="text-purple-400">&lt;div</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"flex gap-2"</span><span class="text-purple-400">&gt;</span>
+                    <span class="text-purple-400">&lt;input</span>
+                        <span class="text-yellow-300">type=</span><span class="text-green-300">"text"</span>
+                        <span class="text-yellow-300">name=</span><span class="text-green-300">"title"</span>
+                        <span class="text-yellow-300">placeholder=</span><span class="text-green-300">"Todoを入力..."</span>
+                        <span class="text-yellow-300">class=</span><span class="text-green-300">"flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"</span>
+                        <span class="text-yellow-300">required</span>
+                    <span class="text-purple-400">&gt;</span>
+                    <span class="text-purple-400">&lt;button</span>
+                        <span class="text-yellow-300">type=</span><span class="text-green-300">"submit"</span>
+                        <span class="text-yellow-300">class=</span><span class="text-green-300">"bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-2 rounded-lg transition"</span>
+                    <span class="text-purple-400">&gt;</span>
+                        追加
+                    <span class="text-purple-400">&lt;/button&gt;</span>
+                <span class="text-purple-400">&lt;/div&gt;</span>
+
+                <span class="text-blue-300">@error</span>(<span class="text-green-300">'title'</span>)
+                    <span class="text-purple-400">&lt;p</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"text-red-500 text-sm mt-2"</span><span class="text-purple-400">&gt;</span>{{ <span class="text-blue-300">$message</span> }}<span class="text-purple-400">&lt;/p&gt;</span>
+                <span class="text-blue-300">@enderror</span>
+            <span class="text-purple-400">&lt;/form&gt;</span>
+        <span class="text-purple-400">&lt;/div&gt;</span>
+
+        <span class="text-gray-500">&lt;!-- Todo一覧 --&gt;</span>
+        <span class="text-purple-400">&lt;div</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"bg-white rounded-lg shadow-lg p-6"</span><span class="text-purple-400">&gt;</span>
+            <span class="text-purple-400">&lt;h2</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"text-2xl font-bold text-gray-800 mb-4"</span><span class="text-purple-400">&gt;</span>
+                Todo一覧 <span class="text-purple-400">&lt;span</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"text-lg text-gray-500"</span><span class="text-purple-400">&gt;</span>({{ <span class="text-blue-300">$todos</span>-&gt;count() }}件)<span class="text-purple-400">&lt;/span&gt;</span>
+            <span class="text-purple-400">&lt;/h2&gt;</span>
+
+            <span class="text-blue-300">@if</span>(<span class="text-blue-300">$todos</span>-&gt;isEmpty())
+                <span class="text-purple-400">&lt;p</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"text-gray-500 text-center py-8"</span><span class="text-purple-400">&gt;</span>Todoがありません<span class="text-purple-400">&lt;/p&gt;</span>
+            <span class="text-blue-300">@else</span>
+                <span class="text-purple-400">&lt;ul</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"space-y-3"</span><span class="text-purple-400">&gt;</span>
+                    <span class="text-blue-300">@foreach</span>(<span class="text-blue-300">$todos</span> <span class="text-blue-300">as</span> <span class="text-blue-300">$todo</span>)
+                        <span class="text-purple-400">&lt;li</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"flex items-center gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"</span><span class="text-purple-400">&gt;</span>
+                            <span class="text-gray-500">&lt;!-- 完了チェックボックス --&gt;</span>
+                            <span class="text-purple-400">&lt;form</span> <span class="text-yellow-300">action=</span><span class="text-green-300">"{{ route('todos.complete', $todo-&gt;id) }}"</span> <span class="text-yellow-300">method=</span><span class="text-green-300">"POST"</span><span class="text-purple-400">&gt;</span>
+                                <span class="text-blue-300">@csrf</span>
+                                <span class="text-purple-400">&lt;button</span>
+                                    <span class="text-yellow-300">type=</span><span class="text-green-300">"submit"</span>
+                                    <span class="text-yellow-300">class=</span><span class="text-green-300">"w-6 h-6 rounded border-2 flex items-center justify-center transition
+                                           {{ $todo-&gt;completed ? 'bg-green-500 border-green-500' : 'border-gray-300 hover:border-green-500' }}"</span>
+                                    {{ <span class="text-blue-300">$todo</span>-&gt;completed ? <span class="text-green-300">'disabled'</span> : <span class="text-green-300">''</span> }}
+                                <span class="text-purple-400">&gt;</span>
+                                    <span class="text-blue-300">@if</span>(<span class="text-blue-300">$todo</span>-&gt;completed)
+                                        <span class="text-purple-400">&lt;svg</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"w-4 h-4 text-white"</span> <span class="text-yellow-300">fill=</span><span class="text-green-300">"none"</span> <span class="text-yellow-300">stroke=</span><span class="text-green-300">"currentColor"</span> <span class="text-yellow-300">viewBox=</span><span class="text-green-300">"0 0 24 24"</span><span class="text-purple-400">&gt;</span>
+                                            <span class="text-purple-400">&lt;path</span> <span class="text-yellow-300">stroke-linecap=</span><span class="text-green-300">"round"</span> <span class="text-yellow-300">stroke-linejoin=</span><span class="text-green-300">"round"</span> <span class="text-yellow-300">stroke-width=</span><span class="text-green-300">"2"</span> <span class="text-yellow-300">d=</span><span class="text-green-300">"M5 13l4 4L19 7"</span><span class="text-purple-400">&gt;&lt;/path&gt;</span>
+                                        <span class="text-purple-400">&lt;/svg&gt;</span>
+                                    <span class="text-blue-300">@endif</span>
+                                <span class="text-purple-400">&lt;/button&gt;</span>
+                            <span class="text-purple-400">&lt;/form&gt;</span>
+
+                            <span class="text-gray-500">&lt;!-- Todoタイトル --&gt;</span>
+                            <span class="text-purple-400">&lt;span</span> <span class="text-yellow-300">class=</span><span class="text-green-300">"flex-1 {{ $todo-&gt;completed ? 'line-through text-gray-400' : 'text-gray-800' }}"</span><span class="text-purple-400">&gt;</span>
+                                {{ <span class="text-blue-300">$todo</span>-&gt;title }}
+                            <span class="text-purple-400">&lt;/span&gt;</span>
+
+                            <span class="text-gray-500">&lt;!-- 削除ボタン --&gt;</span>
+                            <span class="text-purple-400">&lt;form</span> <span class="text-yellow-300">action=</span><span class="text-green-300">"{{ route('todos.destroy', $todo-&gt;id) }}"</span> <span class="text-yellow-300">method=</span><span class="text-green-300">"POST"</span><span class="text-purple-400">&gt;</span>
+                                <span class="text-blue-300">@csrf</span>
+                                <span class="text-blue-300">@method</span>(<span class="text-green-300">'DELETE'</span>)
+                                <span class="text-purple-400">&lt;button</span>
+                                    <span class="text-yellow-300">type=</span><span class="text-green-300">"submit"</span>
+                                    <span class="text-yellow-300">class=</span><span class="text-green-300">"text-red-500 hover:text-red-700 font-bold transition"</span>
+                                    <span class="text-yellow-300">onclick=</span><span class="text-green-300">"return confirm('本当に削除しますか？')"</span>
+                                <span class="text-purple-400">&gt;</span>
+                                    削除
+                                <span class="text-purple-400">&lt;/button&gt;</span>
+                            <span class="text-purple-400">&lt;/form&gt;</span>
+                        <span class="text-purple-400">&lt;/li&gt;</span>
+                    <span class="text-blue-300">@endforeach</span>
+                <span class="text-purple-400">&lt;/ul&gt;</span>
+            <span class="text-blue-300">@endif</span>
+        <span class="text-purple-400">&lt;/div&gt;</span>
+    <span class="text-purple-400">&lt;/div&gt;</span>
+<span class="text-purple-400">&lt;/body&gt;</span>
+<span class="text-purple-400">&lt;/html&gt;</span></pre>
+                        </div>
+
+                        <div class="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
+                            <p class="font-bold text-purple-800 mb-3">📖 Bladeテンプレートの構文：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>@csrf</strong> - CSRF保護トークン（必須）</li>
+                                <li><strong>@if(条件) ... @endif</strong> - 条件分岐</li>
+                                <li><strong>@foreach($todos as $todo) ... @endforeach</strong> - ループ</li>
+                                <li><strong>@method('DELETE')</strong> - HTTPメソッド偽装</li>
+                                <li><strong>{{ $変数 }}</strong> - HTMLエスケープして出力</li>
+                                <li><strong>@error('フィールド名')</strong> - バリデーションエラー表示</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 動作確認 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8 border-l-4 border-green-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🚀 動作確認</h3>
+
+                        <p class="text-gray-700 mb-4">
+                            開発サーバーを起動します。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
+<pre class="text-white">php artisan serve</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">
+                            ブラウザで以下のURLにアクセスします。
+                        </p>
+
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <p class="font-bold text-blue-800">http://localhost:8000/todos</p>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                            <p class="font-bold text-green-800 mb-3">✅ できること：</p>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>✓ Todoを追加できる</li>
+                                <li>✓ チェックボックスで完了にできる</li>
+                                <li>✓ 削除ボタンでTodoを削除できる</li>
+                                <li>✓ 完了したTodoは取り消し線が表示される</li>
+                                <li>✓ 成功メッセージが表示される</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- スクリーンショット例 -->
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📸 完成イメージ</h3>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <p class="text-gray-700 mb-4 font-bold">画面構成：</p>
+                            <div class="space-y-3 text-sm text-gray-700">
+                                <div class="flex items-start">
+                                    <span class="font-bold mr-2">📝</span>
+                                    <div>
+                                        <p class="font-bold">タイトル「Todo管理アプリ」</p>
+                                        <p class="text-xs text-gray-600">中央に大きく表示</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="font-bold mr-2">✅</span>
+                                    <div>
+                                        <p class="font-bold">成功メッセージ</p>
+                                        <p class="text-xs text-gray-600">緑色の背景で「Todoを追加しました」など</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="font-bold mr-2">➕</span>
+                                    <div>
+                                        <p class="font-bold">追加フォーム</p>
+                                        <p class="text-xs text-gray-600">入力欄と「追加」ボタン</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="font-bold mr-2">📋</span>
+                                    <div>
+                                        <p class="font-bold">Todo一覧</p>
+                                        <p class="text-xs text-gray-600">チェックボックス、タイトル、削除ボタンが並ぶ</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎓 実践編完了</h2>
+
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-3xl font-bold mb-6 text-center">おめでとうございます！</h3>
+                        <p class="text-xl text-center mb-6">
+                            データベースを使った実践的なTDDを習得しました。
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">学んだこと</h3>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">Laravel基礎</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ マイグレーション作成</li>
+                                    <li>✓ Eloquentモデル</li>
+                                    <li>✓ データベース操作（CRUD）</li>
+                                    <li>✓ SQLiteテスト環境</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">テスト技術</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ RefreshDatabase</li>
+                                    <li>✓ assertDatabaseHas</li>
+                                    <li>✓ assertDatabaseMissing</li>
+                                    <li>✓ setUp()メソッド</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">設計パターン</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ リポジトリパターン</li>
+                                    <li>✓ レイヤードアーキテクチャ</li>
+                                    <li>✓ 関心の分離</li>
+                                    <li>✓ 依存性の管理</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">実践スキル</h4>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✓ データベース設計</li>
+                                    <li>✓ ORM操作（Eloquent）</li>
+                                    <li>✓ テストデータ作成</li>
+                                    <li>✓ 実務レベルのTDD</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-8 rounded-lg border-l-4 border-yellow-500 mb-8">
+                        <h3 class="text-2xl font-bold text-yellow-800 mb-4">🚀 次のステップ</h3>
+                        <p class="text-gray-700 mb-4">
+                            データベースを使ったTDDを習得できました。次は以下のステップに進みましょう：
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li>• APIエンドポイント（コントローラ）のテスト</li>
+                            <li>• Factory・Seederを使ったテストデータ作成</li>
+                            <li>• モックとスタブを使った高度なテスト</li>
+                            <li>• CI/CDでのテスト自動化</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green-50 p-8 rounded-lg border-l-4 border-green-500 mb-8">
+                        <h3 class="text-2xl font-bold text-green-800 mb-4">💪 実務での活用</h3>
+                        <p class="text-gray-700 mb-4">
+                            この章で学んだスキルは、実務でそのまま使えます：
+                        </p>
+                        <div class="bg-white p-6 rounded-lg">
+                            <ul class="space-y-2 text-gray-700">
+                                <li>✅ ユーザー管理システム → Userリポジトリ</li>
+                                <li>✅ 商品管理システム → Productリポジトリ</li>
+                                <li>✅ 注文管理システム → Orderリポジトリ</li>
+                                <li>✅ あらゆるデータベース操作に応用可能</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg mr-4">
+                            理論編に戻る
+                        </a>
+                        <a href="handson-advanced.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                            応用編に戻る
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-6 text-center">
+                <p class="mb-4">TDD ハンズオン講座（完全版）- Test-Driven Development</p>
+                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // モバイルメニュートグル
+        document.getElementById('menuBtn')?.addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu?.classList.toggle('hidden');
+        });
+    </script>
+    <script src="code-copy.js"></script>
+    <script src="global-menu.js"></script>
+    <script src="nav-highlight.js"></script>
+    <script src="scroll-to-top.js"></script>
+</body>
+</html>

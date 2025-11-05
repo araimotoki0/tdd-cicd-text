@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mac環境構築 - Laravel開発環境セットアップ</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐳</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーションバー -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">Mac環境構築</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-4">Mac環境構築ガイド</h2>
+                <p class="text-xl mb-4">Laravel開発環境をMacにセットアップしよう</p>
+                <p class="text-sm mb-8 opacity-90">VSCode、Docker、Git、Node.jsなどの必須ツールをインストール</p>
+            </div>
+        </section>
+
+        <!-- インストール対象ツール一覧 -->
+        <section id="tools" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">インストール対象ツール一覧</h2>
+
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">必須ツール</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-2xl mr-3">📝</span>
+                                    <h4 class="font-bold text-lg">VSCode</h4>
+                                </div>
+                                <p class="text-sm text-gray-600">コードエディタ</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-2xl mr-3">📦</span>
+                                    <h4 class="font-bold text-lg">Node.js と npm</h4>
+                                </div>
+                                <p class="text-sm text-gray-600">JavaScriptランタイム環境</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-2xl mr-3">🔧</span>
+                                    <h4 class="font-bold text-lg">Git</h4>
+                                </div>
+                                <p class="text-sm text-gray-600">バージョン管理システム</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-2xl mr-3">🐳</span>
+                                    <h4 class="font-bold text-lg">Docker Desktop</h4>
+                                </div>
+                                <p class="text-sm text-gray-600">コンテナ環境</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-2xl mr-3">🤖</span>
+                                    <h4 class="font-bold text-lg">Claude Code</h4>
+                                </div>
+                                <p class="text-sm text-gray-600">AIコーディングアシスタント</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-2xl mr-3">🗄️</span>
+                                    <h4 class="font-bold text-lg">Sequel Ace</h4>
+                                </div>
+                                <p class="text-sm text-gray-600">データベース管理ツール</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VSCodeのインストール -->
+        <section id="vscode" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">VSCode のインストール</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">📥 ダウンロード</h3>
+                        <p class="text-gray-700 mb-4">公式サイトからVSCodeをダウンロードします。</p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <p class="font-bold text-blue-800">公式サイト</p>
+                            <a href="https://code.visualstudio.com/" target="_blank" class="text-blue-600 hover:underline">https://code.visualstudio.com/</a>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストール手順</h4>
+                        <ol class="space-y-2 text-gray-700 mb-6">
+                            <li>1. 「Download for Mac」をクリック</li>
+                            <li>2. .zipファイルを解凍</li>
+                            <li>3. Visual Studio Code.appをアプリケーションフォルダに移動</li>
+                            <li>4. アプリケーションフォルダから起動</li>
+                        </ol>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                            <h4 class="font-bold text-green-800 mb-3">✅ PHP Intelephense 拡張機能をインストール</h4>
+                            <p class="text-sm text-gray-700 mb-3">高速なコード補完、型推論、エラー検出、定義ジャンプ、リファレンス検索が使えます。</p>
+                            <ol class="space-y-2 text-sm text-gray-700">
+                                <li>1. VSCodeで <code class="bg-gray-200 px-2 py-1 rounded">⌘+Shift+X</code> を押す</li>
+                                <li>2. 「PHP Intelephense」を検索</li>
+                                <li>3. 作成者: bmewburn のものをインストール</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Homebrewのインストール -->
+        <section id="homebrew" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Homebrew のインストール</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <p class="text-gray-700 mb-6">Homebrewは、Macで使えるパッケージ管理ツールです。これを使ってNode.js、Gitなどをインストールします。</p>
+
+                        <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>brew -v</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">バージョンが表示されれば既にインストール済みです。表示されない場合は以下のコマンドでインストールします。</p>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <p class="text-sm text-gray-700">
+                                <strong>⚠️ 注意:</strong> インストール中にMacのログインパスワードの入力を求められる場合があります。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Node.jsとnpmのインストール -->
+        <section id="nodejs" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Node.js と npm のインストール</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>brew install node</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>node -v
+npm -v</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 補足:</strong> Homebrewを使用してアップデート可能です: <code class="bg-gray-200 px-2 py-1 rounded">brew upgrade node</code>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gitのインストール -->
+        <section id="git" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Git のインストール</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>brew install git</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>git --version</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">初期設定</h4>
+                        <p class="text-gray-700 mb-4">Gitを使うために、ユーザー名とメールアドレスを設定します。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>git config --global user.name "あなたの名前"
+git config --global user.email "your.email@example.com"
+git config --list</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Docker Desktopのインストール -->
+        <section id="docker" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Docker Desktop for Mac のインストール</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">📥 ダウンロード</h3>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <p class="font-bold text-blue-800">公式サイト</p>
+                            <a href="https://www.docker.com/products/docker-desktop/" target="_blank" class="text-blue-600 hover:underline">https://www.docker.com/products/docker-desktop/</a>
+                        </div>
+
+                        <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <h4 class="font-bold text-yellow-800 mb-3">⚠️ Mac チップ別選択</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li><strong>M1/M2/M3/M4/M5など:</strong> 「Apple Chip」版を選択</li>
+                                <li><strong>Intel Mac:</strong> 「Intel Chip」版を選択</li>
+                            </ul>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストール手順</h4>
+                        <ol class="space-y-2 text-gray-700 mb-6">
+                            <li>1. .dmgファイルをダウンロード</li>
+                            <li>2. Docker.appをアプリケーションフォルダにドラッグ</li>
+                            <li>3. Docker Desktopを起動して利用規約に同意</li>
+                        </ol>
+
+                        <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+                            <pre>docker --version
+docker compose version</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Claude Codeのインストール -->
+        <section id="claude" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Claude Code のインストール</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
+                            <h4 class="font-bold text-red-800 mb-2">⚠️ 必須条件</h4>
+                            <p class="text-gray-700">Claude.ai Pro以上のプランまたはAPI従量課金が必要です。</p>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <p class="font-bold text-blue-800">公式ドキュメント</p>
+                            <a href="https://docs.claude.com/en/docs/claude-code/quickstart" target="_blank" class="text-blue-600 hover:underline">https://docs.claude.com/en/docs/claude-code/quickstart</a>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>npm install -g @anthropic-ai/claude-code</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">初回セットアップ</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+                            <pre>claude</pre>
+                        </div>
+                        <p class="text-gray-700 mb-6">ブラウザで認証を実行します。</p>
+
+                        <h4 class="font-bold text-gray-800 mb-3">基本コマンド</h4>
+                        <div class="bg-gray-100 p-6 rounded-lg">
+                            <ul class="space-y-2 text-gray-700">
+                                <li><code class="bg-gray-200 px-2 py-1 rounded">/help</code> - 利用可能なコマンド一覧</li>
+                                <li><code class="bg-gray-200 px-2 py-1 rounded">/login</code> - アカウント切り替え</li>
+                                <li>直接質問を入力することも可能</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mt-6">
+                            <h4 class="font-bold text-green-800 mb-3">対応機能</h4>
+                            <p class="text-gray-700">コード生成・修正、バグ発見、コード説明、リファクタリング、ファイル操作</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sequel Aceのインストール -->
+        <section id="sequel" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Sequel Ace のインストール</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <p class="font-bold text-blue-800">公式サイト</p>
+                            <a href="https://sequel-ace.com/" target="_blank" class="text-blue-600 hover:underline">https://sequel-ace.com/</a>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストール手順</h4>
+                        <ol class="space-y-2 text-gray-700 mb-6">
+                            <li>1. 公式サイトからダウンロード</li>
+                            <li>2. .zipファイルを解凍</li>
+                            <li>3. Sequel Ace.appをアプリケーションフォルダに移動</li>
+                        </ol>
+
+                        <div class="bg-gray-100 p-6 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-3">代替ツール</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• <strong>TablePlus</strong> - 有料、無料トライアルあり</li>
+                                <li>• <strong>DBeaver</strong> - 無料・オープンソース</li>
+                                <li>• <strong>phpMyAdmin</strong> - Webベース</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 環境構築確認チェック -->
+        <section id="check" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">環境構築確認チェック</h2>
+
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-green-800 mb-6">✅ 確認コマンド一覧</h3>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>node -v
+npm -v
+git --version
+docker --version
+docker compose version</pre>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-green-800 mb-6">📋 チェックリスト</h3>
+                        <div class="bg-white p-6 rounded-lg space-y-3">
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">VSCode起動確認</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">node -vでバージョン表示</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">npm -vでバージョン表示</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">git --versionでバージョン表示</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">Docker Desktop起動確認</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">docker --versionでバージョン表示</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">Claude Code ログイン確認</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">Sequel Ace 起動確認</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Laravelプロジェクト立ち上げ -->
+        <section id="laravel" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Laravelプロジェクト立ち上げ</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">📦 GitHubテンプレートを使う</h3>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <p class="font-bold text-blue-800 mb-2">GitHubリポジトリ</p>
+                            <a href="https://github.com/sbtest1218-oss/udemy-aws3-laravel-new" target="_blank" class="text-blue-600 hover:underline">https://github.com/sbtest1218-oss/udemy-aws3-laravel-new</a>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">手順</h4>
+                        <ol class="space-y-2 text-gray-700 mb-6">
+                            <li>1. 「Use this template」をクリック</li>
+                            <li>2. 自分のGitHubアカウントにコピー</li>
+                            <li>3. 「Public」を選択してリポジトリ作成</li>
+                        </ol>
+
+                        <h4 class="font-bold text-gray-800 mb-3">クローンコマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>cd ~/Documents
+git clone https://github.com/あなたのユーザー名/リポジトリ名.git
+cd リポジトリ名</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">環境ファイル準備</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>cp .env.example .env</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">Docker立ち上げ</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>docker compose up -d
+docker compose exec app bash
+composer create-project laravel/laravel:"^12.0" .
+exit</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 注記:</strong> バージョン指定により将来のメジャーアップデートを回避します。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- データベース設定 -->
+        <section id="database" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">データベース設定</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h4 class="font-bold text-gray-800 mb-3">編集ファイル</h4>
+                        <p class="text-gray-700 mb-4"><code class="bg-gray-200 px-2 py-1 rounded">src/.env</code> を編集します。</p>
+
+                        <h4 class="font-bold text-gray-800 mb-3">設定内容</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=udemy123
+DB_PASSWORD=pass123</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">コンテナ再起動</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>docker compose down -v
+docker compose up -d</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">マイグレーション実行</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>docker compose exec app bash
+php artisan migrate</pre>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                            <h4 class="font-bold text-green-800 mb-2">✅ 確認</h4>
+                            <p class="text-gray-700 mb-2">ブラウザで以下のURLにアクセス:</p>
+                            <a href="http://localhost" target="_blank" class="text-blue-600 hover:underline font-bold">http://localhost</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sequel Aceでの接続 -->
+        <section id="connection" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Sequel Aceでの接続</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h4 class="font-bold text-gray-800 mb-4">接続情報</h4>
+                        <div class="bg-gray-100 p-6 rounded-lg space-y-3">
+                            <div class="flex">
+                                <span class="font-bold text-gray-700 w-32">名前:</span>
+                                <span class="text-gray-600">Laravel Project</span>
+                            </div>
+                            <div class="flex">
+                                <span class="font-bold text-gray-700 w-32">ホスト:</span>
+                                <span class="text-gray-600">127.0.0.1 または localhost</span>
+                            </div>
+                            <div class="flex">
+                                <span class="font-bold text-gray-700 w-32">ユーザ名:</span>
+                                <span class="text-gray-600">udemy123</span>
+                            </div>
+                            <div class="flex">
+                                <span class="font-bold text-gray-700 w-32">パスワード:</span>
+                                <span class="text-gray-600">pass123</span>
+                            </div>
+                            <div class="flex">
+                                <span class="font-bold text-gray-700 w-32">データベース:</span>
+                                <span class="text-gray-600">laravel</span>
+                            </div>
+                            <div class="flex">
+                                <span class="font-bold text-gray-700 w-32">ポート:</span>
+                                <span class="text-gray-600">3306</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- よくあるトラブルと対処法 -->
+        <section id="troubleshooting" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">よくあるトラブルと対処法</h2>
+
+                    <div class="space-y-6">
+                        <!-- トラブル1 -->
+                        <div class="bg-red-50 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <h3 class="text-xl font-bold text-red-800 mb-3">トラブル1: ポート番号被り</h3>
+                            <p class="text-gray-700 mb-3"><strong>エラー:</strong> "address already in use"</p>
+                            <p class="text-gray-700 mb-4"><strong>解決策:</strong> docker-compose.ymlのポート番号左側を変更します。</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                                <pre>ports:
+  - 8080:80    # Webサーバー
+  - 3307:3306  # MySQL</pre>
+                            </div>
+                            <p class="text-sm text-gray-700">アクセスURL: <code class="bg-gray-200 px-2 py-1 rounded">http://localhost:8080</code></p>
+                        </div>
+
+                        <!-- トラブル2 -->
+                        <div class="bg-red-50 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <h3 class="text-xl font-bold text-red-800 mb-3">トラブル2: Docker未起動</h3>
+                            <p class="text-gray-700 mb-3"><strong>エラー:</strong> "Cannot connect to the Docker daemon"</p>
+                            <p class="text-gray-700"><strong>解決策:</strong> アプリケーションフォルダからDocker Desktopを起動します。</p>
+                        </div>
+
+                        <!-- トラブル3 -->
+                        <div class="bg-red-50 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <h3 class="text-xl font-bold text-red-800 mb-3">トラブル3: .env設定誤り</h3>
+                            <p class="text-gray-700 mb-3"><strong>エラー:</strong> "SQLSTATE[HY000]"</p>
+                            <p class="text-gray-700 mb-4"><strong>解決策:</strong> src/.envの設定値をdocker-compose.ymlと一致させて再起動します。</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+                                <pre>docker compose down -v
+docker compose up -d</pre>
+                            </div>
+                        </div>
+
+                        <!-- トラブル4 -->
+                        <div class="bg-red-50 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <h3 class="text-xl font-bold text-red-800 mb-3">トラブル4: ボリュームの問題</h3>
+                            <p class="text-gray-700 mb-3"><strong>症状:</strong> 古い設定が残っている</p>
+                            <p class="text-gray-700 mb-4"><strong>解決策:</strong> -vオプション付きで削除します。</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+                                <pre>docker compose down -v
+docker compose up -d
+docker compose exec app bash
+php artisan migrate</pre>
+                            </div>
+                            <div class="bg-yellow-100 p-4 rounded-lg">
+                                <p class="text-sm text-yellow-800">
+                                    <strong>⚠️ 警告:</strong> 本番環境では-vオプションは使用禁止です！
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Claude Code基本操作 -->
+        <section id="claude-basic" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Claude Code基本操作</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-6">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">主要コマンド</h3>
+                        <div class="bg-gray-100 p-6 rounded-lg space-y-2 text-sm">
+                            <div><code class="bg-gray-200 px-2 py-1 rounded">claude</code> - 起動</div>
+                            <div><code class="bg-gray-200 px-2 py-1 rounded">claude -r</code> - 前の会話再開（選択可能）</div>
+                            <div><code class="bg-gray-200 px-2 py-1 rounded">claude -c</code> - 最新会話を続ける</div>
+                            <div><code class="bg-gray-200 px-2 py-1 rounded">/init</code> - プロジェクト用CLAUDEファイル生成</div>
+                            <div><code class="bg-gray-200 px-2 py-1 rounded">/help</code> - ヘルプ表示</div>
+                            <div><code class="bg-gray-200 px-2 py-1 rounded">/model</code> - モデル確認・変更</div>
+                            <div><code class="bg-gray-200 px-2 py-1 rounded">/login</code> - ログイン</div>
+                            <div><code class="bg-gray-200 px-2 py-1 rounded">/logout</code> - ログアウト</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-6">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">日本語設定【最重要】</h3>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+                            <pre>vi ~/.claude/CLAUDE.md
+# または
+code ~/.claude/CLAUDE.md</pre>
+                        </div>
+                        <p class="text-gray-700 mb-3">ファイルに以下を記載:</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+                            <pre>Always respond in Japanese</pre>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-6">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">ファイル指定方法</h3>
+                        <div class="bg-gray-100 p-6 rounded-lg space-y-3">
+                            <div>
+                                <p class="text-gray-700 mb-2">単一ファイル:</p>
+                                <code class="bg-gray-200 px-2 py-1 rounded text-sm">@routes/web.php このファイルを解説して</code>
+                            </div>
+                            <div>
+                                <p class="text-gray-700 mb-2">複数ファイル:</p>
+                                <code class="bg-gray-200 px-2 py-1 rounded text-sm">@app/Models/User.php @app/Http/Controllers/UserController.php リレーション確認</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-4">パーミッションエラー対処</h3>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+                            <pre>chmod -R 755 .</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- よく使うDockerコマンド集 -->
+        <section id="docker-commands" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">よく使うDockerコマンド集</h2>
+
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
+                        <div class="bg-white p-6 rounded-lg space-y-4">
+                            <div>
+                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose up -d</code>
+                                <p class="text-sm text-gray-600">コンテナ起動</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose down</code>
+                                <p class="text-sm text-gray-600">コンテナ停止</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose down -v</code>
+                                <p class="text-sm text-gray-600">コンテナ停止＋ボリューム削除</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose exec app bash</code>
+                                <p class="text-sm text-gray-600">appコンテナに入る</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose ps</code>
+                                <p class="text-sm text-gray-600">起動中コンテナ確認</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose logs</code>
+                                <p class="text-sm text-gray-600">ログ確認</p>
+                            </div>
+                            <div class="border-t pt-4">
+                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">exit</code>
+                                <p class="text-sm text-gray-600">コンテナから出る</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-6 text-center">
+                <p class="mb-4">Mac環境構築ガイド - Laravel開発環境セットアップ</p>
+                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // モバイルメニュートグル
+        document.getElementById('menuBtn')?.addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu?.classList.toggle('hidden');
+        });
+    </script>
+    <script src="code-copy.js"></script>
+    <script src="global-menu.js"></script>
+    <script src="nav-highlight.js"></script>
+    <script src="scroll-to-top.js"></script>
+</body>
+</html>
