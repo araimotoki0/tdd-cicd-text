@@ -271,38 +271,33 @@
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">3️⃣ Node.js と npm のインストール</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
                             <p class="text-sm text-gray-700">
-                                <strong>💡 重要:</strong> Node.jsは<strong>WSL2（Ubuntu）内</strong>にインストールします。Windows側ではなくLinux側です。
+                                <strong>⚠️ WSL2では権限問題を避けるため、nvmを使います</strong>
                             </p>
                         </div>
 
-                        <h4 class="font-bold text-gray-800 mb-3">インストール手順</h4>
-                        <ol class="space-y-3 text-gray-700 mb-6">
-                            <li>
-                                <strong>1. WSL2（Ubuntu）を起動</strong>
-                                <p class="text-sm text-gray-600 ml-4">スタートメニューから「Ubuntu」を起動</p>
-                            </li>
-                            <li>
-                                <strong>2. 以下のコマンドを実行</strong>
-                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mt-2 ml-4">
-                                    <pre>sudo apt update
-sudo apt install -y nodejs npm</pre>
-                                </div>
-                            </li>
-                        </ol>
+                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
+                        <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre># curlをインストール
+sudo apt update && sudo apt install -y curl
+
+# nvmをインストール
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+
+# 設定を再読み込み
+source ~/.bashrc
+
+# Node.js 18をインストール
+nvm install 18
+nvm use 18</pre>
+                        </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
-                        <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
                             <pre>node -v
 npm -v</pre>
-                        </div>
-
-                        <div class="bg-green-50 p-4 rounded-lg">
-                            <p class="text-sm text-gray-700">
-                                <strong>✅ 成功:</strong> バージョンが表示されればインストール成功です。
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -416,16 +411,14 @@ docker compose version</pre>
                             <a href="https://geminicli.com/" target="_blank" class="text-blue-600 hover:underline">https://geminicli.com/</a>
                         </div>
 
-                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
-                            <p class="text-sm text-gray-700">
-                                <strong>💡 重要:</strong> Gemini CLIは<strong>WSL2（Ubuntu）内</strong>にインストールします。
-                            </p>
-                        </div>
-
                         <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
                         <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>npm install -g @google/gemini-cli</pre>
+                            <pre># Gemini CLIをインストール
+npm install -g @google/gemini-cli
+
+# 確認
+gemini --version</pre>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">初回セットアップ</h4>
