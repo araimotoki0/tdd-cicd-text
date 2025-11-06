@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mac環境構築 - Laravel開発環境セットアップ</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐳</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐳</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="bg-gray-50">
     <!-- ナビゲーションバー -->
     <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
@@ -18,7 +21,8 @@
                 </div>
                 <button id="menuBtn" class="md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
             </div>
@@ -81,7 +85,7 @@
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
                                     <span class="text-2xl mr-3">🤖</span>
-                                    <h4 class="font-bold text-lg">Claude Code</h4>
+                                    <h4 class="font-bold text-lg">Gemini CLI</h4>
                                 </div>
                                 <p class="text-sm text-gray-600">AIコーディングアシスタント</p>
                             </div>
@@ -109,7 +113,8 @@
                         <p class="text-gray-700 mb-4">公式サイトからVSCodeをダウンロードします。</p>
                         <div class="bg-blue-50 p-4 rounded-lg mb-6">
                             <p class="font-bold text-blue-800">公式サイト</p>
-                            <a href="https://code.visualstudio.com/" target="_blank" class="text-blue-600 hover:underline">https://code.visualstudio.com/</a>
+                            <a href="https://code.visualstudio.com/" target="_blank"
+                                class="text-blue-600 hover:underline">https://code.visualstudio.com/</a>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">インストール手順</h4>
@@ -185,7 +190,8 @@ npm -v</pre>
 
                         <div class="bg-blue-50 p-4 rounded-lg">
                             <p class="text-sm text-gray-700">
-                                <strong>💡 補足:</strong> Homebrewを使用してアップデート可能です: <code class="bg-gray-200 px-2 py-1 rounded">brew upgrade node</code>
+                                <strong>💡 補足:</strong> Homebrewを使用してアップデート可能です: <code
+                                    class="bg-gray-200 px-2 py-1 rounded">brew upgrade node</code>
                             </p>
                         </div>
                     </div>
@@ -232,7 +238,8 @@ git config --list</pre>
                         <h3 class="text-2xl font-bold text-blue-600 mb-4">📥 ダウンロード</h3>
                         <div class="bg-blue-50 p-4 rounded-lg mb-6">
                             <p class="font-bold text-blue-800">公式サイト</p>
-                            <a href="https://www.docker.com/products/docker-desktop/" target="_blank" class="text-blue-600 hover:underline">https://www.docker.com/products/docker-desktop/</a>
+                            <a href="https://www.docker.com/products/docker-desktop/" target="_blank"
+                                class="text-blue-600 hover:underline">https://www.docker.com/products/docker-desktop/</a>
                         </div>
 
                         <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-6">
@@ -260,47 +267,72 @@ docker compose version</pre>
             </div>
         </section>
 
-        <!-- Claude Codeのインストール -->
-        <section id="claude" class="py-16 bg-white">
+        <!-- Gemini CLIのインストール -->
+        <section id="gemini" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Claude Code のインストール</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Gemini CLI のインストールと基本操作</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-6">
+                            <h4 class="font-bold text-green-800 mb-2">✅ 無料で利用可能！</h4>
+                            <p class="text-gray-700 mb-2">個人のGoogleアカウントなら無料で利用できます。</p>
+                            <p class="text-sm text-gray-600">無料枠: 60リクエスト/分、1,000リクエスト/日</p>
+                        </div>
+
                         <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
-                            <h4 class="font-bold text-red-800 mb-2">⚠️ 必須条件</h4>
-                            <p class="text-gray-700">Claude.ai Pro以上のプランまたはAPI従量課金が必要です。</p>
+                            <h4 class="font-bold text-red-800 mb-2">⚠️ 重要: 個人アカウントでログイン</h4>
+                            <p class="text-gray-700">
+                                必ず個人のGmailアカウント（Workspaceではないアカウント）でログインしてください。Workspaceアカウントでは無料枠が利用できない場合があります。</p>
                         </div>
 
                         <div class="bg-blue-50 p-4 rounded-lg mb-6">
                             <p class="font-bold text-blue-800">公式ドキュメント</p>
-                            <a href="https://docs.claude.com/en/docs/claude-code/quickstart" target="_blank" class="text-blue-600 hover:underline">https://docs.claude.com/en/docs/claude-code/quickstart</a>
+                                                        <a href="https://geminicli.com/" target="_blank" class="text-blue-600 hover:underline">https://geminicli.com/</a>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>npm install -g @anthropic-ai/claude-code</pre>
+                            <pre>npm install -g @google/gemini-cli</pre>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">初回セットアップ</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                            <pre>claude</pre>
+                            <pre>gemini</pre>
                         </div>
-                        <p class="text-gray-700 mb-6">ブラウザで認証を実行します。</p>
+                        <ol class="space-y-2 text-gray-700 mb-6">
+                            <li>1. テーマカラーを選択</li>
+                            <li>2. 認証方法で「Login with Google」を選択</li>
+                            <li>3. ブラウザで個人のGoogleアカウントで認証</li>
+                        </ol>
 
-                        <h4 class="font-bold text-gray-800 mb-3">基本コマンド</h4>
-                        <div class="bg-gray-100 p-6 rounded-lg">
-                            <ul class="space-y-2 text-gray-700">
-                                <li><code class="bg-gray-200 px-2 py-1 rounded">/help</code> - 利用可能なコマンド一覧</li>
-                                <li><code class="bg-gray-200 px-2 py-1 rounded">/login</code> - アカウント切り替え</li>
-                                <li>直接質問を入力することも可能</li>
-                            </ul>
+                        <h4 class="font-bold text-gray-800 mb-3">パーミッションエラー対処はWindowsの人におこることがある。</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+                            <pre>chmod -R 755 .</pre>
                         </div>
 
-                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mt-6">
-                            <h4 class="font-bold text-green-800 mb-3">対応機能</h4>
-                            <p class="text-gray-700">コード生成・修正、バグ発見、コード説明、リファクタリング、ファイル操作</p>
+
+
+
+                        
+                        <div class="bg-white p-8 rounded-lg shadow-lg mb-6">
+                            <h3 class="text-2xl font-bold text-blue-600 mb-4">ファイル指定方法 (`@`マーク)</h3>
+                            <div class="bg-gray-100 p-6 rounded-lg space-y-3">
+                                <p class="text-gray-700 pb-2">プロンプト内で `@` に続けてファイルパスを入力すると、そのファイルをコンテキストとして Gemini
+                                    に渡すことができます。これにより、ファイルの内容に基づいた質問や指示が可能になります。</p>
+                                <div>
+                                    <p class="text-gray-700 mb-2"><strong>単一ファイルの例:</strong></p>
+                                    <code
+                                        class="bg-gray-200 px-2 py-1 rounded text-sm">@routes/web.php このファイルを解説して</code>
+                                </div>
+                                <div>
+                                    <p class="text-gray-700 mb-2"><strong>複数ファイルの例:</strong></p>
+                                    <code
+                                        class="bg-gray-200 px-2 py-1 rounded text-sm">@app/Models/User.php @app/Http/Controllers/UserController.php リレーション確認</code>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -315,7 +347,8 @@ docker compose version</pre>
                     <div class="bg-white p-8 rounded-lg shadow-lg">
                         <div class="bg-blue-50 p-4 rounded-lg mb-6">
                             <p class="font-bold text-blue-800">公式サイト</p>
-                            <a href="https://sequel-ace.com/" target="_blank" class="text-blue-600 hover:underline">https://sequel-ace.com/</a>
+                            <a href="https://sequel-ace.com/" target="_blank"
+                                class="text-blue-600 hover:underline">https://sequel-ace.com/</a>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">インストール手順</h4>
@@ -382,7 +415,7 @@ docker compose version</pre>
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
-                                <label class="text-gray-700">Claude Code ログイン確認</label>
+                                <label class="text-gray-700">Gemini CLI ログイン確認</label>
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
@@ -404,7 +437,8 @@ docker compose version</pre>
                         <h3 class="text-2xl font-bold text-blue-600 mb-4">📦 GitHubテンプレートを使う</h3>
                         <div class="bg-blue-50 p-4 rounded-lg mb-6">
                             <p class="font-bold text-blue-800 mb-2">GitHubリポジトリ</p>
-                            <a href="https://github.com/sbtest1218-oss/udemy-aws3-laravel-new" target="_blank" class="text-blue-600 hover:underline">https://github.com/sbtest1218-oss/udemy-aws3-laravel-new</a>
+                            <a href="https://github.com/sbtest1218-oss/udemy-aws3-laravel-new" target="_blank"
+                                class="text-blue-600 hover:underline">https://github.com/sbtest1218-oss/udemy-aws3-laravel-new</a>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">手順</h4>
@@ -452,7 +486,8 @@ exit</pre>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
                         <h4 class="font-bold text-gray-800 mb-3">編集ファイル</h4>
-                        <p class="text-gray-700 mb-4"><code class="bg-gray-200 px-2 py-1 rounded">src/.env</code> を編集します。</p>
+                        <p class="text-gray-700 mb-4"><code class="bg-gray-200 px-2 py-1 rounded">src/.env</code>
+                            を編集します。</p>
 
                         <h4 class="font-bold text-gray-800 mb-3">設定内容</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
@@ -479,7 +514,8 @@ php artisan migrate</pre>
                         <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
                             <h4 class="font-bold text-green-800 mb-2">✅ 確認</h4>
                             <p class="text-gray-700 mb-2">ブラウザで以下のURLにアクセス:</p>
-                            <a href="http://localhost" target="_blank" class="text-blue-600 hover:underline font-bold">http://localhost</a>
+                            <a href="http://localhost" target="_blank"
+                                class="text-blue-600 hover:underline font-bold">http://localhost</a>
                         </div>
                     </div>
                 </div>
@@ -542,13 +578,15 @@ php artisan migrate</pre>
   - 8080:80    # Webサーバー
   - 3307:3306  # MySQL</pre>
                             </div>
-                            <p class="text-sm text-gray-700">アクセスURL: <code class="bg-gray-200 px-2 py-1 rounded">http://localhost:8080</code></p>
+                            <p class="text-sm text-gray-700">アクセスURL: <code
+                                    class="bg-gray-200 px-2 py-1 rounded">http://localhost:8080</code></p>
                         </div>
 
                         <!-- トラブル2 -->
                         <div class="bg-red-50 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
                             <h3 class="text-xl font-bold text-red-800 mb-3">トラブル2: Docker未起動</h3>
-                            <p class="text-gray-700 mb-3"><strong>エラー:</strong> "Cannot connect to the Docker daemon"</p>
+                            <p class="text-gray-700 mb-3"><strong>エラー:</strong> "Cannot connect to the Docker daemon"
+                            </p>
                             <p class="text-gray-700"><strong>解決策:</strong> アプリケーションフォルダからDocker Desktopを起動します。</p>
                         </div>
 
@@ -556,7 +594,8 @@ php artisan migrate</pre>
                         <div class="bg-red-50 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
                             <h3 class="text-xl font-bold text-red-800 mb-3">トラブル3: .env設定誤り</h3>
                             <p class="text-gray-700 mb-3"><strong>エラー:</strong> "SQLSTATE[HY000]"</p>
-                            <p class="text-gray-700 mb-4"><strong>解決策:</strong> src/.envの設定値をdocker-compose.ymlと一致させて再起動します。</p>
+                            <p class="text-gray-700 mb-4"><strong>解決策:</strong>
+                                src/.envの設定値をdocker-compose.ymlと一致させて再起動します。</p>
                             <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                                 <pre>docker compose down -v
 docker compose up -d</pre>
@@ -585,62 +624,8 @@ php artisan migrate</pre>
             </div>
         </section>
 
-        <!-- Claude Code基本操作 -->
-        <section id="claude-basic" class="py-16 bg-gray-50">
-            <div class="container mx-auto px-6">
-                <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Claude Code基本操作</h2>
 
-                    <div class="bg-white p-8 rounded-lg shadow-lg mb-6">
-                        <h3 class="text-2xl font-bold text-blue-600 mb-4">主要コマンド</h3>
-                        <div class="bg-gray-100 p-6 rounded-lg space-y-2 text-sm">
-                            <div><code class="bg-gray-200 px-2 py-1 rounded">claude</code> - 起動</div>
-                            <div><code class="bg-gray-200 px-2 py-1 rounded">claude -r</code> - 前の会話再開（選択可能）</div>
-                            <div><code class="bg-gray-200 px-2 py-1 rounded">claude -c</code> - 最新会話を続ける</div>
-                            <div><code class="bg-gray-200 px-2 py-1 rounded">/init</code> - プロジェクト用CLAUDEファイル生成</div>
-                            <div><code class="bg-gray-200 px-2 py-1 rounded">/help</code> - ヘルプ表示</div>
-                            <div><code class="bg-gray-200 px-2 py-1 rounded">/model</code> - モデル確認・変更</div>
-                            <div><code class="bg-gray-200 px-2 py-1 rounded">/login</code> - ログイン</div>
-                            <div><code class="bg-gray-200 px-2 py-1 rounded">/logout</code> - ログアウト</div>
-                        </div>
-                    </div>
 
-                    <div class="bg-white p-8 rounded-lg shadow-lg mb-6">
-                        <h3 class="text-2xl font-bold text-blue-600 mb-4">日本語設定【最重要】</h3>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                            <pre>vi ~/.claude/CLAUDE.md
-# または
-code ~/.claude/CLAUDE.md</pre>
-                        </div>
-                        <p class="text-gray-700 mb-3">ファイルに以下を記載:</p>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                            <pre>Always respond in Japanese</pre>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-8 rounded-lg shadow-lg mb-6">
-                        <h3 class="text-2xl font-bold text-blue-600 mb-4">ファイル指定方法</h3>
-                        <div class="bg-gray-100 p-6 rounded-lg space-y-3">
-                            <div>
-                                <p class="text-gray-700 mb-2">単一ファイル:</p>
-                                <code class="bg-gray-200 px-2 py-1 rounded text-sm">@routes/web.php このファイルを解説して</code>
-                            </div>
-                            <div>
-                                <p class="text-gray-700 mb-2">複数ファイル:</p>
-                                <code class="bg-gray-200 px-2 py-1 rounded text-sm">@app/Models/User.php @app/Http/Controllers/UserController.php リレーション確認</code>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <h3 class="text-2xl font-bold text-blue-600 mb-4">パーミッションエラー対処</h3>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                            <pre>chmod -R 755 .</pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- よく使うDockerコマンド集 -->
         <section id="docker-commands" class="py-16 bg-white">
@@ -651,27 +636,33 @@ code ~/.claude/CLAUDE.md</pre>
                     <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-lg shadow-lg">
                         <div class="bg-white p-6 rounded-lg space-y-4">
                             <div>
-                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose up -d</code>
+                                <code
+                                    class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose up -d</code>
                                 <p class="text-sm text-gray-600">コンテナ起動</p>
                             </div>
                             <div class="border-t pt-4">
-                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose down</code>
+                                <code
+                                    class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose down</code>
                                 <p class="text-sm text-gray-600">コンテナ停止</p>
                             </div>
                             <div class="border-t pt-4">
-                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose down -v</code>
+                                <code
+                                    class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose down -v</code>
                                 <p class="text-sm text-gray-600">コンテナ停止＋ボリューム削除</p>
                             </div>
                             <div class="border-t pt-4">
-                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose exec app bash</code>
+                                <code
+                                    class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose exec app bash</code>
                                 <p class="text-sm text-gray-600">appコンテナに入る</p>
                             </div>
                             <div class="border-t pt-4">
-                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose ps</code>
+                                <code
+                                    class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose ps</code>
                                 <p class="text-sm text-gray-600">起動中コンテナ確認</p>
                             </div>
                             <div class="border-t pt-4">
-                                <code class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose logs</code>
+                                <code
+                                    class="bg-gray-200 px-3 py-2 rounded font-mono text-sm block mb-2">docker compose logs</code>
                                 <p class="text-sm text-gray-600">ログ確認</p>
                             </div>
                             <div class="border-t pt-4">
@@ -694,7 +685,7 @@ code ~/.claude/CLAUDE.md</pre>
 
     <script>
         // モバイルメニュートグル
-        document.getElementById('menuBtn')?.addEventListener('click', function() {
+        document.getElementById('menuBtn')?.addEventListener('click', function () {
             const mobileMenu = document.getElementById('mobileMenu');
             mobileMenu?.classList.toggle('hidden');
         });
@@ -704,4 +695,5 @@ code ~/.claude/CLAUDE.md</pre>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
 </body>
+
 </html>
