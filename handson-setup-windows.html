@@ -668,25 +668,11 @@ cd リポジトリ名</pre>
                             <pre>cp .env.example .env</pre>
                         </div>
 
-                        <h4 class="font-bold text-gray-800 mb-3">Docker立ち上げと権限設定</h4>
+                        <h4 class="font-bold text-gray-800 mb-3">Docker立ち上げ</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre># Dockerコンテナ起動
-docker compose up -d
-
-# rootユーザーでコンテナに入る
-docker compose exec -u root app bash
-
-# /dataの所有者をappuserに変更
-chown -R appuser:appuser /data
-
-# exitして通常ユーザーで入る
-exit
+                            <pre>docker compose up -d
 docker compose exec app bash
-
-# Laravelプロジェクト作成
 composer create-project laravel/laravel:"^12.0" .
-
-# 完了したらexit
 exit</pre>
                         </div>
 
