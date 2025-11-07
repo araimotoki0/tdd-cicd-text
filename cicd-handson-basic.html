@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基礎編：自動テスト実行 - CI/CDハンズオン</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">CI/CD ハンズオン - 基礎編</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="cicd-index.html" class="hover:text-blue-200">理論編</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="cicd-handson-basic.html" class="hover:text-blue-200">基礎：自動テスト</a>
+                    <a href="cicd-handson-quality.html" class="hover:text-blue-200">応用：品質チェック</a>
+                    <a href="cicd-handson-deploy.html" class="hover:text-blue-200">実践：自動デプロイ</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="cicd-index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="cicd-handson-basic.html" class="block hover:text-blue-200">基礎：自動テスト</a>
+            <a href="cicd-handson-quality.html" class="block hover:text-blue-200">応用：品質チェック</a>
+            <a href="cicd-handson-deploy.html" class="block hover:text-blue-200">実践：自動デプロイ</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">基礎編：自動テスト実行</h2>
+                <p class="text-2xl mb-4">GitHub Actionsでテストを自動化しよう</p>
+            </div>
+        </section>
+
+        <!-- イントロ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">何を作るか？</h2>
+
+                    <div class="bg-green-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-green-800 mb-4">🎯 目標</h3>
+                        <p class="text-gray-700 text-lg mb-6">
+                            コードをGitHubにプッシュしたら、<br>
+                            <span class="bg-yellow-200 px-2 py-1 rounded">自動的にPHPUnitが実行される</span>ようにします。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg border-l-4 border-green-600">
+                            <h4 class="font-bold text-gray-800 mb-3">実現すること</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• コードをプッシュすると自動でテストが実行される</li>
+                                <li>• GitHub上でテスト結果が見える</li>
+                                <li>• テストが失敗したらすぐに通知される</li>
+                                <li>• チーム全員のコードが常にテストされる</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                        <p class="font-bold text-yellow-800 mb-3">💡 前提条件</p>
+                        <ul class="text-gray-700 space-y-2">
+                            <li>• TDDハンズオンでTodoアプリを作成済み</li>
+                            <li>• GitHubアカウントを持っている</li>
+                            <li>• Gitの基本操作ができる</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ1: GitHubリポジトリ作成 -->
+        <section id="create-repo" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ1：GitHubリポジトリ作成</h2>
+                        <p class="text-xl text-gray-600">コードをGitHubにアップロードする</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📁 新しいリポジトリを作成</h3>
+
+                        <ol class="space-y-6">
+                            <li class="border-l-4 border-green-500 pl-6">
+                                <h4 class="font-bold text-gray-800 mb-2">1. GitHubで新規リポジトリ作成</h4>
+                                <p class="text-gray-700 mb-3">
+                                    GitHub (<a href="https://github.com" target="_blank" class="text-blue-600 hover:underline">https://github.com</a>) にアクセスし、右上の「+」→「New repository」をクリック
+                                </p>
+                                <div class="bg-gray-100 p-4 rounded">
+                                    <p class="text-sm text-gray-700"><strong>リポジトリ名:</strong> laravel-tdd-cicd（または任意の名前）</p>
+                                    <p class="text-sm text-gray-700"><strong>公開設定:</strong> Public（無料プランでActions使用可能）</p>
+                                    <p class="text-sm text-gray-700"><strong>README:</strong> チェックなし（既存プロジェクトなので）</p>
+                                </div>
+                            </li>
+
+                            <li class="border-l-4 border-blue-500 pl-6">
+                                <h4 class="font-bold text-gray-800 mb-2">2. ローカルリポジトリと連携</h4>
+                                <p class="text-gray-700 mb-3">
+                                    Laravelプロジェクトのディレクトリで以下のコマンドを実行:
+                                </p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+<pre class="text-white"><span class="text-gray-500"># まだGit管理していない場合</span>
+git init
+
+<span class="text-gray-500"># リモートリポジトリを追加（URLは自分のものに置き換える）</span>
+git remote add origin https://github.com/YOUR_USERNAME/laravel-tdd-cicd.git
+
+<span class="text-gray-500"># 現在のブランチ名をmainに変更</span>
+git branch -M main</pre>
+                                </div>
+                            </li>
+
+                            <li class="border-l-4 border-yellow-500 pl-6">
+                                <h4 class="font-bold text-gray-800 mb-2">3. 最初のコミット&プッシュ</h4>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white"><span class="text-gray-500"># 全てのファイルをステージング</span>
+git add .
+
+<span class="text-gray-500"># コミット</span>
+git commit -m "Initial commit with TDD Todo app"
+
+<span class="text-gray-500"># GitHubにプッシュ</span>
+git push -u origin main</pre>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <div class="mt-6 bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                            <p class="text-gray-700 text-sm">
+                                <strong>✅ 確認:</strong> GitHubのリポジトリページをブラウザで開き、コードがアップロードされていることを確認してください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ2: ワークフローファイル作成 -->
+        <section id="create-workflow" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ2：ワークフローファイル作成</h2>
+                        <p class="text-xl text-gray-600">GitHub Actionsの設定を書く</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📝 test.ymlを作成</h3>
+
+                        <p class="text-gray-700 mb-6 text-lg">
+                            プロジェクトルートに以下のディレクトリ構造を作成します:
+                        </p>
+
+                        <div class="bg-gray-100 p-4 rounded-lg mb-6 font-mono text-sm">
+<pre>プロジェクトルート/
+├── .github/
+│   └── workflows/
+│       └── test.yml  ← これを作る
+├── app/
+├── tests/
+└── ...</pre>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">
+                            <code class="bg-gray-100 px-2 py-1 rounded">.github/workflows/test.yml</code> を作成し、以下の内容を記述します:
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500"># .github/workflows/test.yml</span>
+<span class="text-yellow-300">name:</span> <span class="text-green-300">Run Tests</span>
+
+<span class="text-gray-500"># いつ実行するか</span>
+<span class="text-yellow-300">on:</span>
+  <span class="text-yellow-300">push:</span>
+    <span class="text-yellow-300">branches:</span> [ main, develop ]
+  <span class="text-yellow-300">pull_request:</span>
+    <span class="text-yellow-300">branches:</span> [ main, develop ]
+
+<span class="text-gray-500"># 実行する処理</span>
+<span class="text-yellow-300">jobs:</span>
+  <span class="text-yellow-300">test:</span>
+    <span class="text-yellow-300">runs-on:</span> ubuntu-latest
+
+    <span class="text-yellow-300">steps:</span>
+    <span class="text-gray-500"># 1. コードをチェックアウト</span>
+    - <span class="text-yellow-300">name:</span> <span class="text-green-300">Checkout code</span>
+      <span class="text-yellow-300">uses:</span> actions/checkout@v3
+
+    <span class="text-gray-500"># 2. PHPをセットアップ</span>
+    - <span class="text-yellow-300">name:</span> <span class="text-green-300">Setup PHP</span>
+      <span class="text-yellow-300">uses:</span> shivammathur/setup-php@v2
+      <span class="text-yellow-300">with:</span>
+        <span class="text-yellow-300">php-version:</span> <span class="text-green-300">'8.2'</span>
+        <span class="text-yellow-300">extensions:</span> mbstring, pdo, pdo_sqlite
+        <span class="text-yellow-300">coverage:</span> none
+
+    <span class="text-gray-500"># 3. Composerの依存関係をインストール</span>
+    - <span class="text-yellow-300">name:</span> <span class="text-green-300">Install dependencies</span>
+      <span class="text-yellow-300">run:</span> composer install --prefer-dist --no-progress --no-suggest
+
+    <span class="text-gray-500"># 4. .envファイルをコピー</span>
+    - <span class="text-yellow-300">name:</span> <span class="text-green-300">Copy .env</span>
+      <span class="text-yellow-300">run:</span> cp .env.example .env
+
+    <span class="text-gray-500"># 5. アプリケーションキーを生成</span>
+    - <span class="text-yellow-300">name:</span> <span class="text-green-300">Generate app key</span>
+      <span class="text-yellow-300">run:</span> php artisan key:generate
+
+    <span class="text-gray-500"># 6. ディレクトリ権限を設定</span>
+    - <span class="text-yellow-300">name:</span> <span class="text-green-300">Set directory permissions</span>
+      <span class="text-yellow-300">run:</span> chmod -R <span class="text-green-300">777</span> storage bootstrap/cache
+
+    <span class="text-gray-500"># 7. テストを実行</span>
+    - <span class="text-yellow-300">name:</span> <span class="text-green-300">Run tests</span>
+      <span class="text-yellow-300">run:</span> php artisan test</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-4">📖 設定の解説:</p>
+                            <div class="space-y-3 text-gray-700 text-sm">
+                                <div>
+                                    <p class="font-bold">on: push / pull_request</p>
+                                    <p>mainまたはdevelopブランチへのpush、またはプルリクエスト作成時に実行</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold">runs-on: ubuntu-latest</p>
+                                    <p>Ubuntu最新版の仮想環境で実行</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold">actions/checkout@v3</p>
+                                    <p>GitHubからコードをダウンロード</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold">shivammathur/setup-php@v2</p>
+                                    <p>PHPと必要な拡張機能をインストール</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ステップ3: プッシュして動作確認 -->
+        <section id="test-workflow" class="py-16 bg-green-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ3：プッシュして動作確認</h2>
+                        <p class="text-xl text-gray-600">実際にCIを動かしてみる</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🚀 ワークフローを実行</h3>
+
+                        <ol class="space-y-6">
+                            <li class="border-l-4 border-green-500 pl-6">
+                                <h4 class="font-bold text-gray-800 mb-2">1. 作成したファイルをコミット&プッシュ</h4>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">git add .github/workflows/test.yml
+git commit -m "Add GitHub Actions workflow for testing"
+git push</pre>
+                                </div>
+                            </li>
+
+                            <li class="border-l-4 border-blue-500 pl-6">
+                                <h4 class="font-bold text-gray-800 mb-2">2. GitHubでActionsタブを確認</h4>
+                                <p class="text-gray-700 mb-3">
+                                    GitHubのリポジトリページで「Actions」タブをクリックします。
+                                </p>
+                                <div class="bg-gray-100 p-4 rounded">
+                                    <p class="text-sm text-gray-700">「Run Tests」というワークフローが実行中になっているはずです。</p>
+                                    <p class="text-sm text-gray-700">🟡 黄色（実行中） → 🟢 緑（成功） または 🔴 赤（失敗）</p>
+                                </div>
+                            </li>
+
+                            <li class="border-l-4 border-yellow-500 pl-6">
+                                <h4 class="font-bold text-gray-800 mb-2">3. 実行ログを確認</h4>
+                                <p class="text-gray-700 mb-3">
+                                    ワークフロー名をクリックすると、詳細なログが見られます。
+                                </p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>• 各ステップの実行時間</li>
+                                    <li>• コマンドの出力結果</li>
+                                    <li>• テストの成功/失敗</li>
+                                    <li>• エラーメッセージ（失敗時）</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <div class="mt-8 bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                            <p class="font-bold text-green-800 mb-3">✅ 成功した場合</p>
+                            <p class="text-gray-700 mb-3">
+                                おめでとうございます！自動テストが動きました🎉<br>
+                                これで、コードをプッシュするたびに自動でテストが実行されます。
+                            </p>
+                        </div>
+
+                        <div class="mt-4 bg-red-50 p-6 rounded-lg border-l-4 border-red-600">
+                            <p class="font-bold text-red-800 mb-3">❌ 失敗した場合</p>
+                            <p class="text-gray-700 mb-3">
+                                ログを確認して、エラーメッセージを読みましょう。<br>
+                                よくある原因:
+                            </p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li>• PHPのバージョンが合っていない</li>
+                                <li>• 必要な拡張機能がインストールされていない</li>
+                                <li>• テストコード自体にバグがある</li>
+                                <li>• .envの設定が不足している</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 応用：バッジを追加 -->
+        <section id="add-badge" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">応用：ステータスバッジを追加</h2>
+                        <p class="text-xl text-gray-600">READMEにテスト結果を表示する</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🏅 バッジで見える化</h3>
+
+                        <p class="text-gray-700 mb-6">
+                            GitHubのステータスバッジをREADMEに追加すると、一目でテスト状態が分かります。
+                        </p>
+
+                        <div class="bg-gray-100 p-4 rounded-lg mb-6">
+                            <img src="https://github.com/YOUR_USERNAME/YOUR_REPO/workflows/Run%20Tests/badge.svg" alt="Test Status Badge" class="mb-2">
+                            <p class="text-sm text-gray-600">↑ こんな感じのバッジが表示されます</p>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">
+                            <code class="bg-gray-100 px-2 py-1 rounded">README.md</code> の先頭に以下を追加:
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500"># Laravel TDD CICD</span>
+
+![Run Tests](https://github.com/YOUR_USERNAME/YOUR_REPO/workflows/Run%20Tests/badge.svg)
+
+<span class="text-gray-500">## 概要</span>
+TDDで開発したTodoアプリです。
+CI/CDでテストを自動化しています。</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 ポイント:</strong> <code>YOUR_USERNAME</code>と<code>YOUR_REPO</code>を自分のものに置き換えてください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎓 基礎編のまとめ</h2>
+
+                    <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">学んだこと</h3>
+
+                        <div class="space-y-4">
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-green-600 mb-4">✓ 実現できたこと</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• GitHubリポジトリの作成</li>
+                                    <li>• GitHub Actionsのワークフロー作成</li>
+                                    <li>• プッシュ時の自動テスト実行</li>
+                                    <li>• テスト結果の確認</li>
+                                    <li>• ステータスバッジの追加</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ 今後の開発フロー</h4>
+                                <ol class="space-y-2 text-gray-700 list-decimal list-inside">
+                                    <li>ローカルでTDDで機能開発</li>
+                                    <li>GitHubにプッシュ</li>
+                                    <li><strong>自動でテストが実行される</strong>（NEW!）</li>
+                                    <li>テストが通ればマージ</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">次のステップ</h3>
+                        <p class="text-gray-600 mb-8 text-lg">
+                            自動テスト実行を学びました。<br>
+                            次は<strong>コード品質チェック</strong>を追加します。
+                        </p>
+
+                        <a href="cicd-handson-quality.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                            応用編へ進む →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- フッター -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center">
+                    <p class="text-gray-300 text-sm">
+                        &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            // 現在の年を自動挿入
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        </script>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="code-copy.js"></script>
+    <script src="global-menu.js"></script>
+    <script src="nav-highlight.js"></script>
+    <script src="scroll-to-top.js"></script>
+</body>
+</html>

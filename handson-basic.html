@@ -22,6 +22,8 @@
                     <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
                     <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
                     <a href="handson-database.html" class="hover:text-blue-200">実践：DB版Todo</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="cicd-index.html" class="hover:text-blue-200">CI/CD</a>
                 </div>
                 <button id="menuBtn" class="md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -893,12 +895,21 @@ exit</pre>
             </div>
         </section>
 
-        <footer class="bg-gray-800 text-white py-8">
-            <div class="container mx-auto px-6 text-center">
-                <p class="mb-4">TDD ハンズオン講座 - Test-Driven Development</p>
-                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+        <!-- フッター -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center">
+                    <p class="text-gray-300 text-sm">
+                        &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                    </p>
+                </div>
             </div>
         </footer>
+
+        <script>
+            // 現在の年を自動挿入
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        </script>
     </div>
 
     <script src="script.js"></script>

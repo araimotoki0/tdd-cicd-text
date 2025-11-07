@@ -22,6 +22,8 @@
                     <a href="handson-assertions.html" class="hover:text-blue-200">検証：Assertions</a>
                     <a href="handson-advanced.html" class="hover:text-blue-200">応用：Todo機能</a>
                     <a href="handson-database.html" class="hover:text-blue-200">実践：DB版Todo</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="cicd-index.html" class="hover:text-blue-200">CI/CD</a>
                 </div>
                 <button id="menuBtn" class="md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +134,32 @@
                 <div class="max-w-5xl mx-auto">
                     <div class="text-center mb-12">
                         <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ0：環境準備</h2>
-                        <p class="text-xl text-gray-600">テスト用データベースを設定する</p>
+                        <p class="text-xl text-gray-600">データベース接続とテスト環境を確認する</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🔌 データベースクライアントツールの接続確認</h3>
+                        <p class="text-gray-700 mb-4">
+                            Sequel Ace、A5M2、またはそれに準ずるDBクライアントツールで、<br>
+                            MySQLデータベースに接続できることを確認してください。
+                        </p>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <p class="font-bold text-blue-800 mb-3">📖 接続情報の例：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>ホスト:</strong> localhost (または 127.0.0.1)</li>
+                                <li><strong>ポート:</strong> 3306</li>
+                                <li><strong>ユーザー名:</strong> root (または設定したユーザー)</li>
+                                <li><strong>パスワード:</strong> .envファイルに記載されているもの</li>
+                                <li><strong>データベース:</strong> .envのDB_DATABASE</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 ポイント:</strong> DBクライアントツールを使うことで、テーブル構造やデータの確認が簡単になります。
+                            </p>
+                        </div>
                     </div>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
@@ -435,6 +462,7 @@
         <span class="text-gray-500">// Arrange & Act</span>
         <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">create</span>([
             <span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物に行く'</span>,
+            <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>,
         ]);
 
         <span class="text-gray-500">// Assert</span>
@@ -612,8 +640,8 @@
     <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_get_all_todos</span>()
     {
         <span class="text-gray-500">// Arrange</span>
-        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>]);
-        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'掃除'</span>]);
+        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>, <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>]);
+        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'掃除'</span>, <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>]);
 
         <span class="text-gray-500">// Act</span>
         <span class="text-blue-300">$todos</span> = <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">getAll</span>();
@@ -629,7 +657,7 @@
     <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_complete_a_todo</span>()
     {
         <span class="text-gray-500">// Arrange</span>
-        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>]);
+        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>, <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>]);
 
         <span class="text-gray-500">// Act</span>
         <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">complete</span>(<span class="text-blue-300">$todo</span>->id);
@@ -648,8 +676,8 @@
     <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_get_pending_todos</span>()
     {
         <span class="text-gray-500">// Arrange</span>
-        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>]);
-        <span class="text-blue-300">$completed</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'掃除'</span>]);
+        Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>, <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>]);
+        <span class="text-blue-300">$completed</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'掃除'</span>, <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>]);
         <span class="text-blue-300">$completed</span>-><span class="text-yellow-300">update</span>([<span class="text-green-300">'completed'</span> => <span class="text-purple-400">true</span>]);
 
         <span class="text-gray-500">// Act</span>
@@ -667,7 +695,7 @@
     <span class="text-purple-400">public function</span> <span class="text-yellow-300">it_can_delete_a_todo</span>()
     {
         <span class="text-gray-500">// Arrange</span>
-        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>]);
+        <span class="text-blue-300">$todo</span> = Todo::<span class="text-yellow-300">create</span>([<span class="text-green-300">'title'</span> => <span class="text-green-300">'買い物'</span>, <span class="text-green-300">'completed'</span> => <span class="text-purple-400">false</span>]);
 
         <span class="text-gray-500">// Act</span>
         <span class="text-blue-300">$this</span>-><span class="text-blue-300">repository</span>-><span class="text-yellow-300">delete</span>(<span class="text-blue-300">$todo</span>->id);
@@ -1078,19 +1106,11 @@ Route::<span class="text-yellow-300">delete</span>(<span class="text-green-300">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">🚀 動作確認</h3>
 
                         <p class="text-gray-700 mb-4">
-                            開発サーバーを起動します。
-                        </p>
-
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
-<pre class="text-white">php artisan serve</pre>
-                        </div>
-
-                        <p class="text-gray-700 mb-4">
-                            ブラウザで以下のURLにアクセスします。
+                            Nginxコンテナが起動しているので、ブラウザで以下のURLにアクセスします。
                         </p>
 
                         <div class="bg-blue-50 p-4 rounded-lg mb-6">
-                            <p class="font-bold text-blue-800">http://localhost:8000/todos</p>
+                            <p class="font-bold text-blue-800">http://localhost/todos</p>
                         </div>
 
                         <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
@@ -1245,12 +1265,21 @@ Route::<span class="text-yellow-300">delete</span>(<span class="text-green-300">
             </div>
         </section>
 
-        <footer class="bg-gray-800 text-white py-8">
-            <div class="container mx-auto px-6 text-center">
-                <p class="mb-4">TDD ハンズオン講座（完全版）- Test-Driven Development</p>
-                <p class="text-sm text-gray-400">継続的な学習と実践で、品質の高いコードを書き続けましょう</p>
+        <!-- フッター -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center">
+                    <p class="text-gray-300 text-sm">
+                        &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                    </p>
+                </div>
             </div>
         </footer>
+
+        <script>
+            // 現在の年を自動挿入
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        </script>
     </div>
 
     <script>

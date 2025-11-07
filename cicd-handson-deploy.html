@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実践編：自動デプロイ - CI/CD実践ハンズオン</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーションバー -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="text-2xl font-bold">CI/CD実践講座</div>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="cicd-index.html" class="hover:text-blue-200">理論編</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="cicd-handson-basic.html" class="hover:text-blue-200">基礎：自動テスト</a>
+                    <a href="cicd-handson-quality.html" class="hover:text-blue-200">応用：品質チェック</a>
+                    <a href="cicd-handson-deploy.html" class="hover:text-blue-200 font-semibold">実践：自動デプロイ</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">実践編：EC2への自動デプロイ</h2>
+                <p class="text-2xl mb-4">GitHub ActionsでAWS EC2へ自動デプロイを実現しましょう</p>
+            </div>
+        </section>
+
+        <!-- コンテンツ -->
+        <div class="container mx-auto px-4 py-12 max-w-4xl">
+
+            <!-- セクション1: デプロイの流れ -->
+            <section class="mb-12 bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">📋 デプロイの全体像</h2>
+
+                <div class="prose max-w-none">
+                    <p class="text-lg mb-4">
+                        この章では、GitHubにプッシュすると自動的にEC2サーバーにアプリケーションがデプロイされる仕組みを構築します。
+                    </p>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
+                        <h3 class="font-bold text-lg mb-2">🔄 デプロイの流れ</h3>
+                        <ol class="list-decimal ml-6 space-y-2">
+                            <li>開発者がコードをGitHubにプッシュ</li>
+                            <li>GitHub Actionsが自動的に起動</li>
+                            <li>テストと品質チェックを実行</li>
+                            <li>すべて成功したらEC2にSSH接続</li>
+                            <li>EC2上でコードを更新して再起動</li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">⚠️ 前提条件</h4>
+                        <p class="text-sm mb-2">この演習を進めるには、以下が必要です：</p>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li>稼働中のEC2インスタンス（Ubuntu推奨）</li>
+                            <li>EC2にSSHでアクセスできるキーペア</li>
+                            <li>EC2にPHP、Composer、Nginxがインストール済み</li>
+                            <li>EC2のセキュリティグループでポート80/443が開放済み</li>
+                        </ul>
+                        <p class="text-sm mt-2">※ EC2のセットアップ手順は省略します</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション2: SSH接続の準備 -->
+            <section class="mb-12 bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">🔐 Step 1: SSH接続の準備</h2>
+
+                <div class="prose max-w-none">
+                    <h3 class="text-xl font-bold mb-3">1. デプロイ用SSHキーの生成</h3>
+                    <p class="mb-4">GitHub Actions専用のSSHキーペアを作成します（ローカルで実行）。</p>
+
+                    <div class="code-block-wrapper relative mb-6">
+                        <div class="absolute top-2 right-2">
+                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                コピー
+                            </button>
+                        </div>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/github_actions_deploy
+
+# パスフレーズは空にする（Enterを2回押す）</code></pre>
+                    </div>
+
+                    <p class="text-sm text-gray-600 mb-4">2つのファイルが作成されます：</p>
+                    <ul class="list-disc ml-6 mb-6 text-sm">
+                        <li><code>github_actions_deploy</code> - 秘密鍵（GitHub Secretsに保存）</li>
+                        <li><code>github_actions_deploy.pub</code> - 公開鍵（EC2に配置）</li>
+                    </ul>
+
+                    <h3 class="text-xl font-bold mb-3 mt-6">2. 公開鍵をEC2に配置</h3>
+                    <p class="mb-4">EC2にSSH接続して、公開鍵を登録します。</p>
+
+                    <div class="code-block-wrapper relative mb-6">
+                        <div class="absolute top-2 right-2">
+                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                コピー
+                            </button>
+                        </div>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># ローカルから公開鍵の内容をコピー
+cat ~/.ssh/github_actions_deploy.pub
+
+# EC2にSSH接続
+ssh -i ~/.ssh/your-ec2-key.pem ubuntu@your-ec2-ip
+
+# EC2上で公開鍵を追加
+echo "公開鍵の内容をここに貼り付け" >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys</code></pre>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-3 mt-6">3. GitHub Secretsに秘密鍵を登録</h3>
+                    <p class="mb-4">GitHubリポジトリで「Settings」→「Secrets and variables」→「Actions」を開きます。</p>
+
+                    <div class="bg-blue-50 border p-4 rounded-lg mb-4">
+                        <p class="font-bold mb-2">登録するSecrets：</p>
+                        <ul class="space-y-3 text-sm">
+                            <li>
+                                <strong>EC2_SSH_KEY</strong><br>
+                                <code>cat ~/.ssh/github_actions_deploy</code> の内容をコピー（秘密鍵全体）
+                            </li>
+                            <li>
+                                <strong>EC2_HOST</strong><br>
+                                EC2のパブリックIPアドレス（例：<code>54.123.45.67</code>）
+                            </li>
+                            <li>
+                                <strong>EC2_USERNAME</strong><br>
+                                EC2のユーザー名（Ubuntuなら <code>ubuntu</code>、Amazon Linuxなら <code>ec2-user</code>）
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">✅ 接続確認</h4>
+                        <p class="text-sm">ローカルから新しいキーでSSH接続できることを確認：</p>
+                        <div class="code-block-wrapper relative mt-2">
+                            <div class="absolute top-2 right-2">
+                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    コピー
+                                </button>
+                            </div>
+                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code>ssh -i ~/.ssh/github_actions_deploy ubuntu@your-ec2-ip</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション3: デプロイスクリプトの作成 -->
+            <section class="mb-12 bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">📝 Step 2: デプロイスクリプトの作成</h2>
+
+                <div class="prose max-w-none">
+                    <p class="mb-4">EC2上で実行するデプロイスクリプトを作成します。</p>
+
+                    <h3 class="text-xl font-bold mb-3">1. リポジトリにスクリプトを追加</h3>
+                    <p class="mb-4">プロジェクトルートに <code>deploy.sh</code> を作成します。</p>
+
+                    <div class="code-block-wrapper relative mb-6">
+                        <div class="absolute top-2 right-2">
+                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                コピー
+                            </button>
+                        </div>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>#!/bin/bash
+set -e
+
+echo "🚀 Starting deployment..."
+
+# アプリケーションディレクトリに移動
+cd /var/www/your-app
+
+# メンテナンスモードを有効化
+php artisan down || true
+
+# 最新コードを取得
+echo "📥 Pulling latest code..."
+git fetch origin main
+git reset --hard origin/main
+
+# 依存関係をインストール
+echo "📦 Installing dependencies..."
+composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+
+# キャッシュとマイグレーション
+echo "🔧 Running migrations and clearing cache..."
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# ファイルパーミッション
+echo "🔒 Setting permissions..."
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+
+# メンテナンスモードを解除
+php artisan up
+
+echo "✅ Deployment completed successfully!"</code></pre>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-3 mt-6">2. スクリプトをEC2に配置</h3>
+                    <p class="mb-4">EC2上のアプリケーションディレクトリに配置し、実行権限を付与します。</p>
+
+                    <div class="code-block-wrapper relative mb-6">
+                        <div class="absolute top-2 right-2">
+                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                コピー
+                            </button>
+                        </div>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># EC2にSSH接続後
+cd /var/www/your-app
+chmod +x deploy.sh</code></pre>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">💡 デプロイスクリプトの解説</h4>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li><code>php artisan down</code> - メンテナンスモードで一時的にアクセスを遮断</li>
+                            <li><code>git reset --hard</code> - 最新コードを強制的に取得</li>
+                            <li><code>composer install --no-dev</code> - 本番環境用の依存関係のみインストール</li>
+                            <li><code>php artisan migrate --force</code> - データベースマイグレーション実行</li>
+                            <li><code>*:cache</code> - 各種キャッシュを再生成してパフォーマンス向上</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション4: GitHub Actionsワークフローの作成 -->
+            <section class="mb-12 bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">⚙️ Step 3: GitHub Actionsワークフローの作成</h2>
+
+                <div class="prose max-w-none">
+                    <p class="mb-4">
+                        <code>.github/workflows/deploy.yml</code> を作成します。
+                    </p>
+
+                    <div class="code-block-wrapper relative mb-6">
+                        <div class="absolute top-2 right-2">
+                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                コピー
+                            </button>
+                        </div>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>name: Deploy to EC2
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 手動実行を許可
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, xml, ctype, json, bcmath
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run PHPStan
+      run: ./vendor/bin/phpstan analyse
+
+    - name: Run PHP CS Fixer
+      run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
+    - name: Run tests
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+        php artisan test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /var/www/your-app
+          ./deploy.sh
+
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ ${{ job.status }} == 'success' ]; then
+          echo "✅ Deployment succeeded!"
+        else
+          echo "❌ Deployment failed!"
+        fi</code></pre>
+                    </div>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">🔍 ワークフローの解説</h4>
+                        <ul class="list-disc ml-6 text-sm space-y-2">
+                            <li><strong>testジョブ</strong>：テストと品質チェックを実行</li>
+                            <li><strong>deployジョブ</strong>：testが成功した場合のみ実行される</li>
+                            <li><strong>needs: test</strong>：testジョブが成功しないとdeployは実行されない</li>
+                            <li><strong>appleboy/ssh-action</strong>：SSH経由でEC2にコマンドを実行</li>
+                            <li><strong>workflow_dispatch</strong>：GitHub UIから手動実行可能</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">✨ セキュリティのベストプラクティス</h4>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li>秘密鍵は絶対にGitHubにコミットしない</li>
+                            <li>GitHub Secretsを使って機密情報を管理</li>
+                            <li>デプロイ専用のSSHキーを使用（EC2ログイン用と分ける）</li>
+                            <li>mainブランチのみデプロイ対象にする</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション5: 実践演習 -->
+            <section class="mb-12 bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">🎯 Step 4: デプロイを実行してみよう</h2>
+
+                <div class="prose max-w-none">
+                    <h3 class="text-xl font-bold mb-3">1. 初回デプロイの準備</h3>
+
+                    <h4 class="font-bold mb-2 mt-4">EC2にアプリケーションを初期配置</h4>
+                    <div class="code-block-wrapper relative mb-6">
+                        <div class="absolute top-2 right-2">
+                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                コピー
+                            </button>
+                        </div>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># EC2上で実行
+cd /var/www
+sudo git clone https://github.com/your-username/your-repo.git your-app
+cd your-app
+cp .env.example .env
+php artisan key:generate
+
+# データベース設定を編集
+nano .env
+
+# マイグレーション実行
+php artisan migrate
+
+# パーミッション設定
+sudo chown -R www-data:www-data storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache</code></pre>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-3 mt-6">2. ワークフローファイルをプッシュ</h3>
+                    <div class="code-block-wrapper relative mb-6">
+                        <div class="absolute top-2 right-2">
+                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                コピー
+                            </button>
+                        </div>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>git add .github/workflows/deploy.yml deploy.sh
+git commit -m "Add automated deployment workflow"
+git push origin main</code></pre>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-3 mt-6">3. デプロイ状況を確認</h3>
+                    <p class="mb-4">GitHubの「Actions」タブでワークフローの実行状況を確認できます。</p>
+
+                    <div class="bg-blue-50 border p-4 rounded-lg mb-6">
+                        <p class="font-bold mb-2">確認ポイント：</p>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li>✅ testジョブがすべて成功しているか</li>
+                            <li>✅ deployジョブが実行されたか</li>
+                            <li>✅ SSH接続が成功したか</li>
+                            <li>✅ デプロイスクリプトがエラーなく完了したか</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-3 mt-6">4. 本番環境で動作確認</h3>
+                    <p class="mb-4">ブラウザでEC2のIPアドレスにアクセスして、アプリケーションが正常に動作していることを確認します。</p>
+
+                    <div class="code-block-wrapper relative mb-6">
+                        <div class="absolute top-2 right-2">
+                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                コピー
+                            </button>
+                        </div>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>http://your-ec2-ip</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション6: トラブルシューティング -->
+            <section class="mb-12 bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">🔧 トラブルシューティング</h2>
+
+                <div class="space-y-6">
+                    <div class="border-l-4 border-red-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">❌ SSH接続エラー</h3>
+                        <p class="text-sm mb-2"><strong>症状：</strong> "Permission denied (publickey)" エラー</p>
+                        <p class="text-sm mb-2"><strong>対処法：</strong></p>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li>GitHub Secretsの <code>EC2_SSH_KEY</code> に秘密鍵全体（BEGIN〜END含む）がコピーされているか確認</li>
+                            <li>EC2の <code>~/.ssh/authorized_keys</code> に公開鍵が正しく追加されているか確認</li>
+                            <li><code>EC2_USERNAME</code> が正しいか確認（ubuntu、ec2-userなど）</li>
+                        </ul>
+                    </div>
+
+                    <div class="border-l-4 border-red-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">❌ デプロイスクリプトエラー</h3>
+                        <p class="text-sm mb-2"><strong>症状：</strong> "Permission denied" や "command not found"</p>
+                        <p class="text-sm mb-2"><strong>対処法：</strong></p>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li><code>deploy.sh</code> に実行権限があるか確認：<code>chmod +x deploy.sh</code></li>
+                            <li>EC2にPHP、Composer、Gitがインストールされているか確認</li>
+                            <li>スクリプト内のパス（<code>/var/www/your-app</code>）が正しいか確認</li>
+                        </ul>
+                    </div>
+
+                    <div class="border-l-4 border-red-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">❌ composer installエラー</h3>
+                        <p class="text-sm mb-2"><strong>症状：</strong> メモリ不足エラー</p>
+                        <p class="text-sm mb-2"><strong>対処法：</strong></p>
+                        <div class="code-block-wrapper relative mt-2">
+                            <div class="absolute top-2 right-2">
+                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    コピー
+                                </button>
+                            </div>
+                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># スワップファイルを作成
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="border-l-4 border-yellow-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">💡 デバッグ方法</h3>
+                        <p class="text-sm mb-2">EC2上でログを確認：</p>
+                        <div class="code-block-wrapper relative mt-2">
+                            <div class="absolute top-2 right-2">
+                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    コピー
+                                </button>
+                            </div>
+                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># Laravelログ
+tail -f /var/www/your-app/storage/logs/laravel.log
+
+# Nginxエラーログ
+sudo tail -f /var/log/nginx/error.log</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- セクション7: 発展的なトピック -->
+            <section class="mb-12 bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">🚀 発展的なトピック</h2>
+
+                <div class="space-y-6">
+                    <div class="border-l-4 border-blue-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">1. ブルーグリーンデプロイメント</h3>
+                        <p class="text-sm">2つの本番環境を用意し、切り替えることでゼロダウンタイムを実現します。</p>
+                    </div>
+
+                    <div class="border-l-4 border-blue-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">2. ロールバック機能</h3>
+                        <p class="text-sm">デプロイに失敗した場合、自動的に前のバージョンに戻す仕組みを追加できます。</p>
+                        <div class="code-block-wrapper relative mt-2">
+                            <div class="absolute top-2 right-2">
+                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    コピー
+                                </button>
+                            </div>
+                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># deploy.shに追加
+if ! ./deploy.sh; then
+  echo "Deployment failed, rolling back..."
+  git reset --hard HEAD@{1}
+  composer install
+  php artisan up
+fi</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="border-l-4 border-blue-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">3. Slack/Discord通知</h3>
+                        <p class="text-sm">デプロイの成功・失敗をチャットツールに通知できます。</p>
+                    </div>
+
+                    <div class="border-l-4 border-blue-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">4. ステージング環境</h3>
+                        <p class="text-sm">本番デプロイ前にステージング環境で動作確認する環境を追加できます。</p>
+                    </div>
+
+                    <div class="border-l-4 border-blue-600 pl-4">
+                        <h3 class="font-bold text-lg mb-2">5. Docker化</h3>
+                        <p class="text-sm">アプリケーションをDockerコンテナ化することで、環境の再現性が向上します。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- まとめ -->
+            <section class="mb-12">
+                <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 p-8 rounded-lg shadow-lg">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">🎓 実践編のまとめ</h2>
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">学んだこと</h3>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>✅ GitHub ActionsからEC2への安全なデプロイ</li>
+                                <li>✅ SSHキーとGitHub Secretsの活用</li>
+                                <li>✅ デプロイスクリプトの作成</li>
+                                <li>✅ 自動デプロイパイプラインの構築</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">💪 実務で活かすために</h3>
+                            <p class="text-gray-700">
+                                この講座で学んだCI/CDパイプラインは、実際のプロジェクトですぐに活用できます。
+                                小さなプロジェクトから始めて、徐々に複雑なワークフローに挑戦していきましょう。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- 次のステップ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🎉 講座完了</h3>
+                        <p class="text-gray-600 mb-8 text-lg">
+                            CI/CD実践講座を完走しました！<br>
+                            学んだ知識を実際のプロジェクトで活かしていきましょう。
+                        </p>
+
+                        <a href="cicd-index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                            理論編に戻る
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- フッター -->
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p class="text-gray-300 text-sm">
+                    &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 現在の年を自動挿入
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+
+    <!-- 上部へ戻るボタン -->
+    <button id="scrollToTop" class="hidden fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 z-50">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script src="script.js"></script>
+    <script src="code-copy.js"></script>
+    <script src="global-menu.js"></script>
+    <script src="nav-highlight.js"></script>
+    <script src="scroll-to-top.js"></script>
+</body>
+</html>
