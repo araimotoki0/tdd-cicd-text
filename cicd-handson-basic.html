@@ -20,6 +20,8 @@
                     <a href="cicd-handson-basic.html" class="hover:text-blue-200">基礎：自動テスト</a>
                     <a href="cicd-handson-quality.html" class="hover:text-blue-200">応用：品質チェック</a>
                     <a href="cicd-handson-deploy.html" class="hover:text-blue-200">実践：自動デプロイ</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="index.html" class="hover:text-blue-200">TDD</a>
                 </div>
                 <button id="menuBtn" class="md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,17 +166,27 @@ git push -u origin main</pre>
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">📝 test.ymlを作成</h3>
 
                         <p class="text-gray-700 mb-6 text-lg">
-                            プロジェクトルートに以下のディレクトリ構造を作成します:
+                            <strong>Gitリポジトリのルート</strong>（<code class="bg-gray-100 px-2 py-1 rounded">.git</code>ディレクトリがある場所）に以下のディレクトリ構造を作成します:
                         </p>
 
                         <div class="bg-gray-100 p-4 rounded-lg mb-6 font-mono text-sm">
-<pre>プロジェクトルート/
-├── .github/
+<pre>リポジトリルート/    ← .gitディレクトリがある場所
+├── .git/           ← Gitの管理ディレクトリ
+├── .github/        ← ここを作る
 │   └── workflows/
 │       └── test.yml  ← これを作る
-├── app/
-├── tests/
-└── ...</pre>
+├── src/            ← Laravelのソースコード（プロジェクトによる）
+│   ├── app/
+│   ├── tests/
+│   └── ...
+└── docker-compose.yml</pre>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <p class="text-sm text-gray-800">
+                                <strong>⚠️ 注意:</strong> <code class="bg-gray-100 px-1 rounded">.github</code>ディレクトリは、Laravelプロジェクト（<code class="bg-gray-100 px-1 rounded">app</code>や<code class="bg-gray-100 px-1 rounded">tests</code>がある場所）ではなく、
+                                <strong>Gitリポジトリのルート</strong>（<code class="bg-gray-100 px-1 rounded">.git</code>ディレクトリと同じ階層）に配置してください。
+                            </p>
                         </div>
 
                         <p class="text-gray-700 mb-4">
@@ -188,9 +200,9 @@ git push -u origin main</pre>
 <span class="text-gray-500"># いつ実行するか</span>
 <span class="text-yellow-300">on:</span>
   <span class="text-yellow-300">push:</span>
-    <span class="text-yellow-300">branches:</span> [ main, develop ]
+    <span class="text-yellow-300">branches:</span> [ main, master, develop ]
   <span class="text-yellow-300">pull_request:</span>
-    <span class="text-yellow-300">branches:</span> [ main, develop ]
+    <span class="text-yellow-300">branches:</span> [ main, master, develop ]
 
 <span class="text-gray-500"># 実行する処理</span>
 <span class="text-yellow-300">jobs:</span>
@@ -212,22 +224,27 @@ git push -u origin main</pre>
 
     <span class="text-gray-500"># 3. Composerの依存関係をインストール</span>
     - <span class="text-yellow-300">name:</span> <span class="text-green-300">Install dependencies</span>
-      <span class="text-yellow-300">run:</span> composer install --prefer-dist --no-progress --no-suggest
+      <span class="text-yellow-300">working-directory:</span> src
+      <span class="text-yellow-300">run:</span> composer install --prefer-dist --no-progress
 
     <span class="text-gray-500"># 4. .envファイルをコピー</span>
     - <span class="text-yellow-300">name:</span> <span class="text-green-300">Copy .env</span>
+      <span class="text-yellow-300">working-directory:</span> src
       <span class="text-yellow-300">run:</span> cp .env.example .env
 
     <span class="text-gray-500"># 5. アプリケーションキーを生成</span>
     - <span class="text-yellow-300">name:</span> <span class="text-green-300">Generate app key</span>
+      <span class="text-yellow-300">working-directory:</span> src
       <span class="text-yellow-300">run:</span> php artisan key:generate
 
     <span class="text-gray-500"># 6. ディレクトリ権限を設定</span>
     - <span class="text-yellow-300">name:</span> <span class="text-green-300">Set directory permissions</span>
+      <span class="text-yellow-300">working-directory:</span> src
       <span class="text-yellow-300">run:</span> chmod -R <span class="text-green-300">777</span> storage bootstrap/cache
 
     <span class="text-gray-500"># 7. テストを実行</span>
     - <span class="text-yellow-300">name:</span> <span class="text-green-300">Run tests</span>
+      <span class="text-yellow-300">working-directory:</span> src
       <span class="text-yellow-300">run:</span> php artisan test</pre>
                         </div>
 
@@ -236,7 +253,7 @@ git push -u origin main</pre>
                             <div class="space-y-3 text-gray-700 text-sm">
                                 <div>
                                     <p class="font-bold">on: push / pull_request</p>
-                                    <p>mainまたはdevelopブランチへのpush、またはプルリクエスト作成時に実行</p>
+                                    <p>main、master、developブランチへのpush、またはプルリクエスト作成時に実行</p>
                                 </div>
                                 <div>
                                     <p class="font-bold">runs-on: ubuntu-latest</p>
@@ -250,7 +267,20 @@ git push -u origin main</pre>
                                     <p class="font-bold">shivammathur/setup-php@v2</p>
                                     <p>PHPと必要な拡張機能をインストール</p>
                                 </div>
+                                <div>
+                                    <p class="font-bold">working-directory: src</p>
+                                    <p>Laravelプロジェクトが<code class="bg-gray-100 px-1 rounded">src</code>ディレクトリ内にある場合に指定（プロジェクトがルートにある場合は不要）</p>
+                                </div>
                             </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                            <p class="text-sm text-gray-800">
+                                <strong>💡 プロジェクト構造について:</strong><br>
+                                上記の例は、Laravelプロジェクトが<code class="bg-gray-100 px-1 rounded">src</code>ディレクトリ内にある構造を想定しています。
+                                もしLaravelプロジェクトがリポジトリのルートに直接ある場合（<code class="bg-gray-100 px-1 rounded">composer.json</code>がルートにある場合）は、
+                                <code class="bg-gray-100 px-1 rounded">working-directory: src</code>の行を削除してください。
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -368,6 +398,172 @@ CI/CDでテストを自動化しています。</pre>
                         <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
                             <p class="text-sm text-gray-700">
                                 <strong>💡 ポイント:</strong> <code>YOUR_USERNAME</code>と<code>YOUR_REPO</code>を自分のものに置き換えてください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 重要：ブランチ保護ルール -->
+        <section id="branch-protection" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">重要：テスト失敗時にマージを防ぐ</h2>
+                        <p class="text-xl text-gray-600">ブランチ保護ルールでコード品質を守る</p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-8 rounded-lg shadow-lg mb-8 border-l-4 border-yellow-500">
+                        <h3 class="text-2xl font-bold text-yellow-800 mb-4">⚠️ 現状の問題</h3>
+                        <p class="text-gray-700 text-lg mb-4">
+                            今のままでは、<span class="bg-yellow-200 px-2 py-1 rounded">テストが失敗してもpushできてしまいます。</span>
+                        </p>
+                        <p class="text-gray-700">
+                            GitHub Actionsはリモートで実行されるだけなので、ローカルからのpushを止めることはできません。<br>
+                            これを防ぐために、<strong>プルリクエスト + ブランチ保護ルール</strong>を使います。
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🛡️ ブランチ保護ルールとは</h3>
+
+                        <div class="bg-green-50 p-6 rounded-lg mb-6 border-l-4 border-green-500">
+                            <p class="font-bold text-green-800 mb-2">✅ プルリクエスト + ブランチ保護ルールが圧倒的に一般的です。</p>
+                            <p class="text-gray-700 text-sm">
+                                チーム開発の標準手法として、世界中の開発チームで使われています。
+                            </p>
+                        </div>
+
+                        <p class="text-gray-700 mb-6">
+                            <strong>ブランチ保護ルール</strong>は、mainブランチに直接pushするのではなく、<br>
+                            必ず<span class="bg-blue-100 px-2 py-1 rounded">プルリクエスト（PR）</span>を経由してマージする仕組みです。
+                        </p>
+
+                        <div class="bg-gray-100 p-6 rounded-lg mb-6">
+                            <h4 class="font-bold text-gray-800 mb-3">スクラム開発での位置づけ</h4>
+                            <p class="text-gray-700 mb-3">
+                                プルリクエストは、スクラムの<strong>「完成の定義（Definition of Done）」</strong>を技術的に保証する仕組みです。
+                            </p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li>✓ コードレビューが承認されている</li>
+                                <li>✓ すべてのテストがパスしている（CI）</li>
+                                <li>✓ コード品質基準を満たしている</li>
+                                <li>✓ チーム全員が変更内容を把握できる（透明性）</li>
+                            </ul>
+                        </div>
+
+                        <h4 class="text-xl font-bold text-gray-800 mb-4 mt-8">📋 設定手順</h4>
+
+                        <ol class="space-y-6">
+                            <li class="border-l-4 border-blue-500 pl-6">
+                                <h5 class="font-bold text-gray-800 mb-2">1. GitHubでブランチ保護ルールを設定</h5>
+                                <div class="bg-gray-50 p-4 rounded">
+                                    <ol class="space-y-2 text-gray-700 text-sm list-decimal list-inside">
+                                        <li>GitHubのリポジトリページで「Settings」タブをクリック</li>
+                                        <li>左メニューから「Branches」を選択</li>
+                                        <li>「Add branch protection rule」をクリック</li>
+                                        <li>「Branch name pattern」に<code class="bg-gray-100 px-2 py-1 rounded">main</code>と入力</li>
+                                        <li>以下にチェックを入れる：
+                                            <ul class="ml-6 mt-2 space-y-1">
+                                                <li>☑ <strong>Require a pull request before merging</strong></li>
+                                                <li>☑ <strong>Require status checks to pass before merging</strong></li>
+                                                <li class="ml-4">→ 検索ボックスで「test」と検索し、「Run Tests」のジョブを選択</li>
+                                            </ul>
+                                        </li>
+                                        <li>「Create」ボタンをクリック</li>
+                                    </ol>
+                                </div>
+                            </li>
+
+                            <li class="border-l-4 border-green-500 pl-6">
+                                <h5 class="font-bold text-gray-800 mb-2">2. 今後の開発フロー</h5>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white"><span class="text-gray-500"># 1. 新しいブランチを作成</span>
+git checkout -b feature/new-feature
+
+<span class="text-gray-500"># 2. TDDで機能開発</span>
+<span class="text-gray-500"># ... コードを書く ...</span>
+
+<span class="text-gray-500"># 3. コミット&プッシュ</span>
+git add .
+git commit -m "Add new feature"
+git push origin feature/new-feature
+
+<span class="text-gray-500"># 4. GitHubでプルリクエストを作成</span>
+<span class="text-gray-500"># ブラウザでGitHubを開き「Compare & pull request」ボタンをクリック</span></pre>
+                                </div>
+                            </li>
+
+                            <li class="border-l-4 border-yellow-500 pl-6">
+                                <h5 class="font-bold text-gray-800 mb-2">3. プルリクエストでの確認事項</h5>
+                                <p class="text-gray-700 mb-3">
+                                    PRを作成すると、自動的に以下が実行されます：
+                                </p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>🟡 GitHub Actionsでテストが実行される</li>
+                                    <li>🟢 テストが成功 → 「Merge pull request」ボタンが有効になる</li>
+                                    <li>🔴 テストが失敗 → マージできない（修正が必要）</li>
+                                </ul>
+
+                                <div class="bg-green-50 p-4 rounded mt-4 border-l-4 border-green-500">
+                                    <p class="text-sm text-gray-800">
+                                        <strong>✅ これで、テストが通らないコードはmainブランチに入らなくなります！</strong>
+                                    </p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">💡 他の方法との比較</h3>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3 text-left font-bold text-gray-800">方法</th>
+                                        <th class="p-3 text-left font-bold text-gray-800">使用頻度</th>
+                                        <th class="p-3 text-left font-bold text-gray-800">メリット</th>
+                                        <th class="p-3 text-left font-bold text-gray-800">デメリット</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3 font-bold text-green-700">PR + ブランチ保護</td>
+                                        <td class="p-3"><span class="bg-green-100 px-2 py-1 rounded text-green-800">⭐⭐⭐ 非常に一般的</span></td>
+                                        <td class="p-3 text-gray-700">
+                                            • チーム全体で強制可能<br>
+                                            • コードレビュー文化が育つ<br>
+                                            • GitHubの標準機能<br>
+                                            • 変更履歴が明確
+                                        </td>
+                                        <td class="p-3 text-gray-700">
+                                            • PRの手間が増える<br>
+                                            • 小規模な変更も同じ手順
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold text-gray-700">Git Hooks (pre-push)</td>
+                                        <td class="p-3"><span class="bg-gray-100 px-2 py-1 rounded text-gray-600">⭐ 補助的に使用</span></td>
+                                        <td class="p-3 text-gray-700">
+                                            • ローカルで即座にチェック<br>
+                                            • 個人開発に便利
+                                        </td>
+                                        <td class="p-3 text-gray-700">
+                                            • 簡単にスキップ可能<br>
+                                            • チーム全体への適用が困難<br>
+                                            • 各自がセットアップ必要
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-6 bg-blue-50 p-4 rounded border-l-4 border-blue-500">
+                            <p class="text-sm text-gray-800">
+                                <strong>推奨：</strong> スクラム開発では、<strong>PR + ブランチ保護ルール</strong>を必ず設定しましょう。<br>
+                                これにより、スプリント内でのコード品質が保たれ、技術的負債の蓄積を防ぐことができます。
                             </p>
                         </div>
                     </div>

@@ -20,6 +20,8 @@
                     <a href="cicd-handson-basic.html" class="hover:text-blue-200">基礎：自動テスト</a>
                     <a href="cicd-handson-quality.html" class="hover:text-blue-200">応用：品質チェック</a>
                     <a href="cicd-handson-deploy.html" class="hover:text-blue-200">実践：自動デプロイ</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="index.html" class="hover:text-blue-200">TDD</a>
                 </div>
                 <button id="menuBtn" class="md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,9 +46,9 @@
         <!-- ヒーローセクション -->
         <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
             <div class="container mx-auto px-6 text-center">
-                <h2 class="text-5xl font-bold mb-4">CI/CD: Continuous Integration / Continuous Delivery</h2>
-                <p class="text-xl mb-4">継続的インテグレーション・継続的デリバリーで開発を加速させよう</p>
-                <p class="text-sm mb-8 opacity-90">テストを自動化し、品質を保ちながら高速にリリースする</p>
+                <h2 class="text-5xl font-bold mb-4">CI/CD: スクラム開発を加速させる自動化</h2>
+                <p class="text-xl mb-4">継続的インテグレーション・継続的デリバリーでスプリントの価値を最大化</p>
+                <p class="text-sm mb-8 opacity-90">スプリント内で品質を保ちながら、プロダクトオーナーに迅速にフィードバック</p>
                 <div class="flex justify-center space-x-4 flex-wrap">
                     <span class="bg-white text-green-600 px-4 py-2 rounded-full font-semibold mb-2">Code</span>
                     <span class="text-2xl">→</span>
@@ -66,11 +68,12 @@
 
                 <div class="max-w-4xl mx-auto mb-12">
                     <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-lg shadow-lg mb-8">
-                        <h3 class="text-2xl font-bold text-green-800 mb-6">📘 正式な定義</h3>
+                        <h3 class="text-2xl font-bold text-green-800 mb-6">📘 スクラム開発におけるCI/CD</h3>
                         <p class="text-gray-700 leading-relaxed text-lg mb-6">
-                            <strong>CI/CD</strong>は、ソフトウェア開発における自動化のプラクティスです。<br>
-                            <span class="bg-yellow-200 px-2 py-1 rounded">コードの変更を自動的にテスト・ビルド・デプロイする</span>ことで、
-                            品質を保ちながら高速にリリースできます。
+                            <strong>CI/CD</strong>は、スクラムの価値観である<span class="bg-yellow-200 px-2 py-1 rounded">「透明性」「検査」「適応」</span>を
+                            技術的に実現する自動化のプラクティスです。<br>
+                            スプリント内で<strong>コードの変更を自動的にテスト・ビルド・デプロイする</strong>ことで、
+                            プロダクトオーナーやステークホルダーに迅速にフィードバックを提供できます。
                         </p>
 
                         <div class="grid md:grid-cols-2 gap-6 mb-6">
@@ -78,10 +81,10 @@
                                 <h4 class="font-bold text-blue-800 mb-3">🔄 CI: Continuous Integration</h4>
                                 <p class="text-gray-700 text-sm mb-3"><strong>継続的インテグレーション</strong></p>
                                 <ul class="space-y-2 text-gray-700 text-sm">
-                                    <li>• コードを頻繁にマージする</li>
-                                    <li>• 自動テストで品質を確認</li>
-                                    <li>• 問題を早期に発見</li>
-                                    <li>• チーム全体の生産性向上</li>
+                                    <li>• デイリーで開発チームのコードを統合</li>
+                                    <li>• 自動テストでインクリメントの品質を確認</li>
+                                    <li>• スプリント中の統合リスクを削減</li>
+                                    <li>• デイリースクラムで進捗を透明化</li>
                                 </ul>
                             </div>
 
@@ -89,47 +92,47 @@
                                 <h4 class="font-bold text-purple-800 mb-3">🚀 CD: Continuous Delivery/Deployment</h4>
                                 <p class="text-gray-700 text-sm mb-3"><strong>継続的デリバリー/デプロイ</strong></p>
                                 <ul class="space-y-2 text-gray-700 text-sm">
-                                    <li>• いつでもリリース可能な状態を保つ</li>
-                                    <li>• デプロイプロセスを自動化</li>
-                                    <li>• 本番環境への安全なリリース</li>
-                                    <li>• フィードバックサイクルの高速化</li>
+                                    <li>• スプリントレビューで動くソフトウェアをデモ</li>
+                                    <li>• プロダクトバックログ項目を迅速にリリース</li>
+                                    <li>• ステークホルダーへの早期フィードバック</li>
+                                    <li>• Done（完成）の定義を技術的に保証</li>
                                 </ul>
                             </div>
                         </div>
 
                         <div class="bg-green-100 p-6 rounded-lg">
                             <p class="text-gray-700 italic">
-                                💡 <strong>重要:</strong> CI/CDは<strong>自動化</strong>がキーワードです。
-                                人が手作業でやっていたテスト・ビルド・デプロイを自動化することで、
-                                ミスを減らし、開発スピードを向上させます。
+                                💡 <strong>スクラムとの親和性:</strong> CI/CDは<strong>自動化</strong>により、スクラムチームが
+                                「動くソフトウェア」を毎スプリント提供することを技術的に支援します。
+                                プロダクトオーナーは常に最新のインクリメントを確認でき、優先順位の判断が迅速になります。
                             </p>
                         </div>
                     </div>
 
                     <!-- なぜCI/CDが必要なのか -->
                     <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🤔 なぜCI/CDが必要なのか？</h3>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🤔 スクラム開発でCI/CDが必要な理由</h3>
 
                         <div class="space-y-6">
                             <div class="border-l-4 border-red-500 pl-6">
-                                <h4 class="text-xl font-bold text-red-700 mb-3">❌ CI/CDがない場合の問題</h4>
+                                <h4 class="text-xl font-bold text-red-700 mb-3">❌ CI/CDがないスクラムチームの課題</h4>
                                 <ul class="space-y-2 text-gray-700">
-                                    <li>• テストを手動で実行するのが面倒 → <strong>テストが省略される</strong></li>
-                                    <li>• デプロイ手順が複雑 → <strong>リリースが遅れる</strong></li>
-                                    <li>• 環境差異で本番で動かない → <strong>デプロイが怖い</strong></li>
-                                    <li>• 複数人の変更が衝突 → <strong>統合に時間がかかる</strong></li>
-                                    <li>• バグが本番で発覚 → <strong>ユーザーに迷惑をかける</strong></li>
+                                    <li>• スプリント終了時の統合で問題が発覚 → <strong>スプリントゴール達成が危うい</strong></li>
+                                    <li>• 手動デプロイに時間がかかる → <strong>スプリントレビューに間に合わない</strong></li>
+                                    <li>• テストを省略 → <strong>Done（完成）の定義を満たせない</strong></li>
+                                    <li>• 環境構築に時間を取られる → <strong>本来の開発に集中できない</strong></li>
+                                    <li>• プロダクトオーナーが実物を確認できない → <strong>フィードバックが遅れる</strong></li>
                                 </ul>
                             </div>
 
                             <div class="border-l-4 border-green-500 pl-6">
-                                <h4 class="text-xl font-bold text-green-700 mb-3">✅ CI/CDがある場合のメリット</h4>
+                                <h4 class="text-xl font-bold text-green-700 mb-3">✅ CI/CDがあるスクラムチームの強み</h4>
                                 <ul class="space-y-2 text-gray-700">
-                                    <li>• コードをプッシュすると<strong>自動でテスト実行</strong></li>
-                                    <li>• テストが通れば<strong>自動でデプロイ</strong></li>
-                                    <li>• 問題を<strong>すぐに発見</strong>できる</li>
-                                    <li>• <strong>安心してリリース</strong>できる</li>
-                                    <li>• チームの<strong>開発速度が向上</strong></li>
+                                    <li>• デイリースクラムで<strong>常に統合済みの状態を確認</strong></li>
+                                    <li>• スプリントレビューで<strong>自信を持ってデモ</strong>できる</li>
+                                    <li>• プロダクトオーナーが<strong>毎日進捗を確認</strong>できる</li>
+                                    <li>• 技術的負債が<strong>蓄積しにくい</strong></li>
+                                    <li>• Velocity（開発速度）が<strong>安定・向上</strong>する</li>
                                 </ul>
                             </div>
                         </div>
@@ -137,15 +140,16 @@
 
                     <!-- CI/CDパイプライン -->
                     <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
-                        <h3 class="text-2xl font-bold text-blue-800 mb-6">🔧 CI/CDパイプラインの流れ</h3>
+                        <h3 class="text-2xl font-bold text-blue-800 mb-6">🔧 スプリント内でのCI/CDパイプライン</h3>
 
                         <div class="space-y-4">
                             <div class="bg-white p-6 rounded-lg shadow">
                                 <div class="flex items-start">
                                     <div class="bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4 flex-shrink-0">1</div>
                                     <div>
-                                        <h4 class="text-lg font-bold text-gray-800 mb-2">📝 Code（コード作成）</h4>
-                                        <p class="text-gray-700">開発者がコードを書き、GitHubにプッシュします。</p>
+                                        <h4 class="text-lg font-bold text-gray-800 mb-2">📝 Code（実装）</h4>
+                                        <p class="text-gray-700">スプリントバックログ項目を実装し、GitHubにプッシュします。</p>
+                                        <p class="text-gray-600 text-sm mt-1">→ デイリースクラムで進捗を共有</p>
                                     </div>
                                 </div>
                             </div>
@@ -156,6 +160,7 @@
                                     <div>
                                         <h4 class="text-lg font-bold text-gray-800 mb-2">🔨 Build（ビルド）</h4>
                                         <p class="text-gray-700">依存関係のインストール、アセットのコンパイルなどを自動実行します。</p>
+                                        <p class="text-gray-600 text-sm mt-1">→ 環境差異によるトラブルを防止</p>
                                     </div>
                                 </div>
                             </div>
@@ -165,7 +170,8 @@
                                     <div class="bg-yellow-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4 flex-shrink-0">3</div>
                                     <div>
                                         <h4 class="text-lg font-bold text-gray-800 mb-2">🧪 Test（テスト）</h4>
-                                        <p class="text-gray-700">PHPUnit、PHPStanなどを自動実行して品質をチェックします。</p>
+                                        <p class="text-gray-700">PHPUnit、PHPStanなどを自動実行してDone（完成）の定義を保証します。</p>
+                                        <p class="text-gray-600 text-sm mt-1">→ 品質基準を満たしていることを確認</p>
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +181,8 @@
                                     <div class="bg-purple-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4 flex-shrink-0">4</div>
                                     <div>
                                         <h4 class="text-lg font-bold text-gray-800 mb-2">🚀 Deploy（デプロイ）</h4>
-                                        <p class="text-gray-700">テストが成功したら、ステージングや本番環境へ自動デプロイします。</p>
+                                        <p class="text-gray-700">ステージング環境へ自動デプロイし、スプリントレビューで実演します。</p>
+                                        <p class="text-gray-600 text-sm mt-1">→ プロダクトオーナー・ステークホルダーへのフィードバック</p>
                                     </div>
                                 </div>
                             </div>
@@ -183,8 +190,8 @@
 
                         <div class="mt-6 bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
                             <p class="text-gray-700 text-sm">
-                                <strong>💡 ポイント:</strong> これら全てが<strong>自動的に</strong>実行されます。
-                                開発者は「コードを書いてプッシュする」だけで、残りは自動化されています。
+                                <strong>💡 スクラムでのポイント:</strong> これら全てが<strong>自動的に</strong>実行されるため、
+                                開発チームは価値提供に集中でき、プロダクトオーナーは透明性のあるインクリメントを常に確認できます。
                             </p>
                         </div>
                     </div>
@@ -297,57 +304,105 @@
             </div>
         </section>
 
-        <!-- TDDとCI/CDの関係 -->
-        <section id="tdd-and-cicd" class="py-16 bg-white">
+        <!-- スクラムイベントとCI/CD -->
+        <section id="scrum-and-cicd" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">TDDとCI/CDの関係</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">スクラムイベントとCI/CD</h2>
 
                     <div class="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-lg shadow-lg mb-8">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🔗 相乗効果を生み出す組み合わせ</h3>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🔗 各スクラムイベントでCI/CDが果たす役割</h3>
 
-                        <div class="bg-white p-6 rounded-lg mb-6 border-l-4 border-blue-600">
-                            <h4 class="font-bold text-blue-800 mb-3">TDDで作ったテストが、CI/CDで活きる</h4>
-                            <p class="text-gray-700 mb-4">
-                                TDDで書いたテストコードは、CI/CDで自動実行されることで真価を発揮します。
-                            </p>
-                            <div class="space-y-2 text-gray-700 text-sm">
-                                <p>✅ コードをプッシュするたびに<strong>自動でテスト実行</strong></p>
-                                <p>✅ バグを<strong>即座に検知</strong></p>
-                                <p>✅ チーム全員の変更が<strong>常にテストされる</strong></p>
-                                <p>✅ <strong>安心してリファクタリング</strong>できる</p>
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-lg border-l-4 border-blue-600">
+                                <h4 class="font-bold text-blue-800 mb-3">📅 デイリースクラム（Daily Scrum）</h4>
+                                <p class="text-gray-700 mb-3">
+                                    CI/CDにより、毎日の統合状態を透明化できます。
+                                </p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✅ 昨日プッシュしたコードが<strong>自動テストでグリーン</strong></li>
+                                    <li>✅ 統合の問題を<strong>15分の会議前に把握</strong></li>
+                                    <li>✅ 「今日やること」が<strong>技術的に実現可能か確認</strong>済み</li>
+                                    <li>✅ チーム全体の進捗が<strong>GitHubのダッシュボードで可視化</strong></li>
+                                </ul>
                             </div>
-                        </div>
 
-                        <div class="bg-white p-6 rounded-lg border-l-4 border-green-600">
-                            <h4 class="font-bold text-green-800 mb-3">CI/CDがあると、TDDがもっと楽しくなる</h4>
-                            <p class="text-gray-700 mb-4">
-                                自動化により、テストを書くモチベーションが上がります。
-                            </p>
-                            <div class="space-y-2 text-gray-700 text-sm">
-                                <p>✅ テスト実行が<strong>自動化</strong>されて楽</p>
-                                <p>✅ GitHub上で<strong>テスト結果が見える化</strong></p>
-                                <p>✅ プルリクエストで<strong>品質が保証される</strong></p>
-                                <p>✅ チーム全体で<strong>品質意識が高まる</strong></p>
+                            <div class="bg-white p-6 rounded-lg border-l-4 border-green-600">
+                                <h4 class="font-bold text-green-800 mb-3">🎯 スプリントレビュー（Sprint Review）</h4>
+                                <p class="text-gray-700 mb-3">
+                                    CI/CDで自動デプロイされた環境でデモを実施できます。
+                                </p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✅ <strong>動くソフトウェア</strong>をステージング環境でデモ</li>
+                                    <li>✅ プロダクトオーナーから<strong>即座にフィードバック</strong>を受ける</li>
+                                    <li>✅ Done（完成）の定義が<strong>技術的に保証</strong>されている</li>
+                                    <li>✅ ステークホルダーが<strong>実際に触れる</strong>環境を提供</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg border-l-4 border-purple-600">
+                                <h4 class="font-bold text-purple-800 mb-3">🔄 スプリントレトロスペクティブ（Sprint Retrospective）</h4>
+                                <p class="text-gray-700 mb-3">
+                                    CI/CDパイプラインの改善もレトロで議論します。
+                                </p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✅ テストの<strong>実行時間を短縮</strong>できないか検討</li>
+                                    <li>✅ デプロイの<strong>頻度を上げる</strong>方法を議論</li>
+                                    <li>✅ <strong>技術的負債</strong>の蓄積を振り返る</li>
+                                    <li>✅ CI/CD改善が<strong>次スプリントのバックログ</strong>に</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg border-l-4 border-yellow-600">
+                                <h4 class="font-bold text-yellow-800 mb-3">📋 スプリントプランニング（Sprint Planning）</h4>
+                                <p class="text-gray-700 mb-3">
+                                    CI/CDがあることで、見積もりの精度が向上します。
+                                </p>
+                                <ul class="space-y-2 text-gray-700 text-sm">
+                                    <li>✅ 環境構築やデプロイの<strong>時間を考慮不要</strong></li>
+                                    <li>✅ Done（完成）の定義が<strong>明確で共有</strong>されている</li>
+                                    <li>✅ <strong>技術的リスク</strong>が低い状態でプランニング</li>
+                                    <li>✅ Velocity（速度）が<strong>安定</strong>している</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
 
                     <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-8">
-                        <p class="font-bold text-yellow-800 mb-3">💡 実務での標準的な開発フロー</p>
+                        <p class="font-bold text-yellow-800 mb-3">💡 スクラム開発での標準的なフロー</p>
                         <ol class="space-y-2 text-gray-700 list-decimal list-inside">
-                            <li><strong>TDD</strong>でテストを書きながら機能を実装</li>
+                            <li><strong>スプリントバックログ項目</strong>をTDDで実装</li>
                             <li>GitHubにプッシュ</li>
-                            <li><strong>CI/CD</strong>が自動でテスト実行</li>
-                            <li>テストが通ればプルリクエストをマージ</li>
-                            <li><strong>自動デプロイ</strong>でステージング/本番環境へ</li>
+                            <li><strong>CI/CD</strong>が自動でテスト・品質チェック</li>
+                            <li>プルリクエストをレビュー・マージ</li>
+                            <li><strong>自動デプロイ</strong>でステージング環境へ</li>
+                            <li><strong>デイリースクラム</strong>で進捗を共有</li>
+                            <li><strong>スプリントレビュー</strong>でデモ・フィードバック</li>
                         </ol>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📜 Done（完成）の定義にCI/CDを組み込む</h3>
+                        <p class="text-gray-700 mb-4">
+                            CI/CDを活用することで、Done（完成）の定義を技術的に保証できます。
+                        </p>
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-green-800 mb-3">Done（完成）の定義例</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>☑ コードレビューが承認されている</li>
+                                <li>☑ <strong>すべての自動テストがパス</strong>している（CI）</li>
+                                <li>☑ <strong>コード品質チェック</strong>をクリア（CI）</li>
+                                <li>☑ <strong>ステージング環境へ自動デプロイ</strong>済み（CD）</li>
+                                <li>☑ プロダクトオーナーが承認している</li>
+                                <li>☑ ドキュメントが更新されている</li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="text-center">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">次はハンズオンで実践しましょう！</h3>
                         <p class="text-gray-600 mb-8 text-lg">
-                            実際にGitHub Actionsを使って、CI/CDパイプラインを構築していきます。
+                            実際にGitHub Actionsを使って、スクラム開発を支えるCI/CDパイプラインを構築していきます。
                         </p>
 
                         <a href="cicd-handson-basic.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
