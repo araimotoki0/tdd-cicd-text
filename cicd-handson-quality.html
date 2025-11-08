@@ -78,61 +78,87 @@
 
                 <div class="prose max-w-none">
                     <h3 class="text-xl font-bold mb-3">1. PHPStanのインストール</h3>
-                    <p class="mb-4">Composerを使ってPHPStanをインストールします。</p>
+                    <p class="mb-4">Composerを使ってPHPStanとLaravel専用の拡張機能をインストールします。</p>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-4">
+                        <p class="text-sm text-gray-800">
+                            <strong>💡 Docker環境の場合:</strong> まずコンテナに入ってから実行してください。
+                        </p>
+                    </div>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>composer require --dev phpstan/phpstan
-composer require --dev phpstan/phpstan-phpunit</code></pre>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Docker環境の場合、まずコンテナに入る
+docker compose exec app bash
+
+# PHPStanとLaravel拡張をインストール
+composer require --dev phpstan/phpstan
+composer require --dev larastan/larastan</code></pre>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">✅ Larastanとは</h4>
+                        <p class="text-sm">LarastanはLaravel専用のPHPStan拡張です。Eloquentモデルのメソッドやプロパティを正しく認識し、誤検知を減らします。</p>
                     </div>
 
                     <h3 class="text-xl font-bold mb-3 mt-6">2. 設定ファイルの作成</h3>
-                    <p class="mb-4">プロジェクトルートに <code>phpstan.neon</code> を作成します。</p>
+                    <p class="mb-4">Laravelプロジェクトのルート（<code>composer.json</code>がある場所）に <code>phpstan.neon</code> を作成します。</p>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-4">
+                        <p class="text-sm text-gray-800">
+                            <strong>⚠️ 注意:</strong> プロジェクト構造によって配置場所が異なります。<br>
+                            • Laravelプロジェクトがリポジトリルートにある場合 → ルートに作成<br>
+                            • Laravelプロジェクトが<code>src</code>ディレクトリ内にある場合 → <code>src/phpstan.neon</code>として作成
+                        </p>
+                    </div>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>includes:
-    - ./vendor/phpstan/phpstan-phpunit/extension.neon
+    - ./vendor/larastan/larastan/extension.neon
 
 parameters:
-    level: 6
+    level: 4
     paths:
         - app
         - tests
     excludePaths:
-        - app/Console/Kernel.php
-    checkMissingIterableValueType: false</code></pre>
+        - app/Console/Kernel.php (?)</code></pre>
                     </div>
 
-                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-6">
-                        <h4 class="font-bold mb-2">💡 レベルについて</h4>
-                        <p class="text-sm">PHPStanのレベルは0〜9まであり、数字が大きいほど厳格です。</p>
-                        <ul class="list-disc ml-6 text-sm mt-2">
-                            <li><strong>レベル0-3</strong>：基本的なチェック</li>
-                            <li><strong>レベル4-6</strong>：実用的なバランス（推奨）</li>
-                            <li><strong>レベル7-9</strong>：非常に厳格</li>
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">💡 設定の解説</h4>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li><strong>includes:</strong> Larastanの拡張機能を読み込み（Laravel専用のルール）</li>
+                            <li><strong>level: 4:</strong> 実用的なバランスのチェックレベル（レベル0-9まであり、数字が大きいほど厳格）</li>
+                            <li><strong>excludePaths:</strong> <code>(?)</code>を付けることで、ファイルが存在しない場合もエラーにならない（Laravel 11以降では<code>Kernel.php</code>が廃止されているため）</li>
                         </ul>
                     </div>
 
-                    <h3 class="text-xl font-bold mb-3 mt-6">3. ローカルで実行</h3>
+                    <h3 class="text-xl font-bold mb-3 mt-6">3. Laravel IDE Helperの生成</h3>
+                    <p class="mb-4">LarastanがEloquentモデルを正しく認識するために、IDE Helperファイルを生成します。</p>
+
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>./vendor/bin/phpstan analyse</code></pre>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Docker環境の場合はコンテナ内で実行
+php artisan ide-helper:generate
+php artisan ide-helper:models --nowrite</code></pre>
                     </div>
 
-                    <p class="text-sm text-gray-600">エラーがなければ「No errors」と表示されます。</p>
+                    <p class="text-sm text-gray-600 mb-6">これにより、<code>_ide_helper.php</code>と<code>_ide_helper_models.php</code>が生成されます。</p>
+
+                    <h3 class="text-xl font-bold mb-3 mt-6">4. ローカルで実行</h3>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-4">
+                        <p class="text-sm text-gray-800">
+                            <strong>💡 実行場所:</strong> <code>phpstan.neon</code>があるディレクトリ（Laravelプロジェクトのルート）で実行してください。
+                        </p>
+                    </div>
+
+                    <div class="code-block-wrapper relative mb-6">
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Laravelプロジェクトのルートディレクトリで実行
+# (srcディレクトリ構成の場合は cd src してから実行)
+./vendor/bin/phpstan analyse --memory-limit=512M</code></pre>
+                    </div>
+
+                    <p class="text-sm text-gray-600">エラーがなければ「No errors」と表示されます。型エラーなどが検出された場合は、修正してから再実行します。</p>
                 </div>
             </section>
 
@@ -143,24 +169,30 @@ parameters:
                 <div class="prose max-w-none">
                     <h3 class="text-xl font-bold mb-3">1. PHP CS Fixerのインストール</h3>
 
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-4">
+                        <p class="text-sm text-gray-800">
+                            <strong>💡 Docker環境の場合:</strong> コンテナ内で実行してください。
+                        </p>
+                    </div>
+
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>composer require --dev friendsofphp/php-cs-fixer</code></pre>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Docker環境の場合
+docker compose exec app bash
+
+# PHP CS Fixerをインストール
+composer require --dev friendsofphp/php-cs-fixer</code></pre>
                     </div>
 
                     <h3 class="text-xl font-bold mb-3 mt-6">2. 設定ファイルの作成</h3>
-                    <p class="mb-4">プロジェクトルートに <code>.php-cs-fixer.php</code> を作成します。</p>
+                    <p class="mb-4">Laravelプロジェクトのルート（<code>composer.json</code>がある場所）に <code>.php-cs-fixer.php</code> を作成します。</p>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-4">
+                        <p class="text-sm text-gray-800">
+                            <strong>⚠️ 注意:</strong> <code>src</code>ディレクトリ構成の場合は、<code>src/.php-cs-fixer.php</code>として作成してください。
+                        </p>
+                    </div>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>&lt;?php
 
 $finder = PhpCsFixer\Finder::create()
@@ -195,24 +227,36 @@ return (new PhpCsFixer\Config())
 
                     <h3 class="text-xl font-bold mb-3 mt-6">3. ローカルで実行</h3>
 
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-4">
+                        <p class="text-sm text-gray-800">
+                            <strong>💡 実行場所:</strong> <code>.php-cs-fixer.php</code>があるディレクトリ（Laravelプロジェクトのルート）で実行してください。
+                        </p>
+                    </div>
+
                     <h4 class="font-bold mb-2">チェックのみ（修正しない）</h4>
                     <div class="code-block-wrapper relative mb-4">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>./vendor/bin/php-cs-fixer fix --dry-run --diff</code></pre>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Laravelプロジェクトのルートで実行
+# (srcディレクトリ構成の場合は cd src してから実行)
+./vendor/bin/php-cs-fixer fix --dry-run --diff</code></pre>
                     </div>
 
                     <h4 class="font-bold mb-2 mt-4">自動修正</h4>
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>./vendor/bin/php-cs-fixer fix</code></pre>
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># コードスタイルを自動修正
+./vendor/bin/php-cs-fixer fix
+
+# 修正後、再度チェックして確認
+./vendor/bin/php-cs-fixer fix --dry-run --diff</code></pre>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">✅ 推奨フロー</h4>
+                        <ol class="list-decimal ml-6 text-sm space-y-1">
+                            <li>コードを書く</li>
+                            <li><code>./vendor/bin/php-cs-fixer fix</code> でスタイルを自動修正</li>
+                            <li><code>./vendor/bin/phpstan analyse --memory-limit=512M</code> で型チェック</li>
+                            <li>問題なければコミット&プッシュ → CI/CDが通る</li>
+                        </ol>
                     </div>
 
                     <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
@@ -232,30 +276,30 @@ return (new PhpCsFixer\Config())
                     </p>
 
                     <h3 class="text-xl font-bold mb-3">ワークフローファイルの更新</h3>
-                    <p class="mb-4"><code>.github/workflows/laravel.yml</code> を以下のように更新します。</p>
+                    <p class="mb-4">基礎編で作成した<code>.github/workflows/test.yml</code>を以下のように更新します。</p>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>name: Laravel CI
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># .github/workflows/test.yml
+name: Run Tests
 
+# いつ実行するか
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, master, develop ]
 
+# 実行する処理
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. コードをチェックアウト
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # 2. PHPをセットアップ
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
@@ -263,25 +307,39 @@ jobs:
         extensions: mbstring, xml, ctype, json, bcmath
         coverage: none
 
+    # 3. .envファイルをコピー
     - name: Copy .env
+      working-directory: src
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
+    # 4. Composerの依存関係をインストール
     - name: Install dependencies
+      working-directory: src
       run: composer install --prefer-dist --no-progress --no-suggest
 
+    # 5. アプリケーションキーを生成
     - name: Generate key
+      working-directory: src
       run: php artisan key:generate
 
+    # 6. ディレクトリ権限を設定
     - name: Directory Permissions
+      working-directory: src
       run: chmod -R 777 storage bootstrap/cache
 
+    # 7. PHPStanで静的解析（追加）
     - name: Run PHPStan
-      run: ./vendor/bin/phpstan analyse --error-format=github
+      working-directory: src
+      run: ./vendor/bin/phpstan analyse --memory-limit=512M --error-format=github
 
+    # 8. PHP CS Fixerでコードスタイルチェック（追加）
     - name: Run PHP CS Fixer
+      working-directory: src
       run: ./vendor/bin/php-cs-fixer fix --dry-run --diff --format=txt
 
+    # 9. テストを実行
     - name: Run tests
+      working-directory: src
       run: php artisan test</code></pre>
                     </div>
 
@@ -297,100 +355,70 @@ jobs:
                 </div>
             </section>
 
-            <!-- セクション5: 実践演習 -->
+            <!-- セクション5: GitHubにプッシュして動作確認 -->
             <section class="mb-12 bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-3xl font-bold mb-6 text-blue-600">🎯 Step 4: 実践演習</h2>
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">🎯 Step 4: GitHubにプッシュして動作確認</h2>
 
                 <div class="prose max-w-none">
-                    <h3 class="text-xl font-bold mb-3">演習：品質チェックを動かしてみよう</h3>
+                    <p class="text-lg mb-6">
+                        これまでに設定したPHPStanとPHP CS Fixerが、GitHub Actions上で正しく動作することを確認します。
+                    </p>
 
-                    <h4 class="font-bold mb-2 mt-4">1. 故意にエラーを作る</h4>
-                    <p class="mb-4"><code>app/Models/User.php</code> に以下のような問題を追加してみましょう。</p>
+                    <h3 class="text-xl font-bold mb-4">1. ローカルで最終チェック</h3>
+                    <p class="mb-4">GitHubにプッシュする前に、ローカルで両方のチェックが通ることを確認します。</p>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>&lt;?php
-
-namespace App\Models;
-
-use Illuminate\Foundation\Auth\User as Authenticatable;
-
-class User extends Authenticatable
-{
-    // 型宣言がない（PHPStanが検出）
-    public function getFullName()
-    {
-        return $this-&gt;first_name . ' ' . $this-&gt;last_name;
-    }
-
-    // インデントがおかしい（PHP CS Fixerが検出）
-    public function isAdmin()
-    {
-      return $this-&gt;role === 'admin';
-    }
-}</code></pre>
-                    </div>
-
-                    <h4 class="font-bold mb-2 mt-4">2. ローカルでチェック</h4>
-                    <div class="code-block-wrapper relative mb-4">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># PHPStanで型チェック
-./vendor/bin/phpstan analyse
+./vendor/bin/phpstan analyse --memory-limit=512M
 
 # PHP CS Fixerでスタイルチェック
 ./vendor/bin/php-cs-fixer fix --dry-run --diff</code></pre>
                     </div>
 
-                    <h4 class="font-bold mb-2 mt-4">3. 修正してコミット</h4>
-                    <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>&lt;?php
-
-namespace App\Models;
-
-use Illuminate\Foundation\Auth\User as Authenticatable;
-
-class User extends Authenticatable
-{
-    // 型宣言を追加
-    public function getFullName(): string
-    {
-        return $this-&gt;first_name . ' ' . $this-&gt;last_name;
-    }
-
-    // インデントを修正
-    public function isAdmin(): bool
-    {
-        return $this-&gt;role === 'admin';
-    }
-}</code></pre>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">⚠️ エラーが出た場合</h4>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li>PHP CS Fixerのエラー → <code>./vendor/bin/php-cs-fixer fix</code> で自動修正</li>
+                            <li>PHPStanのエラー → コードを修正してから再チェック</li>
+                        </ul>
                     </div>
 
-                    <h4 class="font-bold mb-2 mt-4">4. GitHub Actionsで確認</h4>
+                    <h3 class="text-xl font-bold mb-4 mt-8">2. GitHubにプッシュ</h3>
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>git add .
-git commit -m "Add code quality checks"
+git commit -m "Add PHPStan and PHP CS Fixer to CI/CD"
 git push origin main</code></pre>
                     </div>
 
-                    <p class="mt-4">GitHubの「Actions」タブで、PHPStanとPHP CS Fixerが実行されることを確認しましょう。</p>
+                    <h3 class="text-xl font-bold mb-4 mt-8">3. GitHub Actionsで確認</h3>
+                    <ol class="list-decimal ml-6 space-y-3 mb-6">
+                        <li>GitHubのリポジトリページで「Actions」タブをクリック</li>
+                        <li>「Run Tests」ワークフローが実行されていることを確認</li>
+                        <li>以下のステップが順番に実行されることを確認：
+                            <ul class="list-disc ml-6 mt-2 space-y-1 text-sm">
+                                <li>Checkout code</li>
+                                <li>Setup PHP</li>
+                                <li>Install dependencies</li>
+                                <li><strong>Run PHPStan</strong> ← 追加された</li>
+                                <li><strong>Run PHP CS Fixer</strong> ← 追加された</li>
+                                <li>Run tests</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">✅ 成功条件</h4>
+                        <p class="text-sm">すべてのステップが緑色のチェックマークで完了すれば成功です。特にPHPStanとPHP CS Fixerがエラー0で完了していることを確認しましょう。</p>
+                    </div>
+
+                    <div class="bg-red-50 border-l-4 border-red-600 p-4">
+                        <h4 class="font-bold mb-2">❌ 失敗した場合</h4>
+                        <p class="text-sm mb-2">ログを確認して、どのステップで失敗したかを特定します。</p>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li>PHPStanで失敗 → 型エラーを修正してから再プッシュ</li>
+                            <li>PHP CS Fixerで失敗 → <code>./vendor/bin/php-cs-fixer fix</code> を実行してから再プッシュ</li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
@@ -408,11 +436,6 @@ git push origin main</code></pre>
                         <h3 class="font-bold text-lg mb-2">2. ベースラインの活用</h3>
                         <p class="text-sm">既存のエラーは一旦ベースラインに登録し、新しいコードだけチェックする方法もあります。</p>
                         <div class="code-block-wrapper relative mt-2">
-                            <div class="absolute top-2 right-2">
-                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                    コピー
-                                </button>
-                            </div>
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code>./vendor/bin/phpstan analyse --generate-baseline</code></pre>
                         </div>
                     </div>
@@ -426,11 +449,6 @@ git push origin main</code></pre>
                         <h3 class="font-bold text-lg mb-2">4. pre-commitフック</h3>
                         <p class="text-sm">コミット前にローカルで自動チェックする設定も有効です。</p>
                         <div class="code-block-wrapper relative mt-2">
-                            <div class="absolute top-2 right-2">
-                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                    コピー
-                                </button>
-                            </div>
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code>composer require --dev brainmaestro/composer-git-hooks
 
 # composer.jsonに追加
