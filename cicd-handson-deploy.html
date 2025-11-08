@@ -63,93 +63,89 @@
                         <h4 class="font-bold mb-2">⚠️ 前提条件</h4>
                         <p class="text-sm mb-2">この演習を進めるには、以下が必要です：</p>
                         <ul class="list-disc ml-6 text-sm space-y-1">
-                            <li>稼働中のEC2インスタンス（Ubuntu推奨）</li>
-                            <li>EC2にSSHでアクセスできるキーペア</li>
-                            <li>EC2にPHP、Composer、Nginxがインストール済み</li>
+                            <li>稼働中のEC2インスタンス（Amazon Linux 2023推奨）</li>
+                            <li>EC2にDocker、Docker Compose、Gitがインストール済み</li>
                             <li>EC2のセキュリティグループでポート80/443が開放済み</li>
+                            <li>IAMユーザーのアクセスキーID・シークレットキー</li>
                         </ul>
                         <p class="text-sm mt-2">※ EC2のセットアップ手順は省略します</p>
                     </div>
                 </div>
             </section>
 
-            <!-- セクション2: SSH接続の準備 -->
+            <!-- セクション2: IAMとEC2の準備 -->
             <section class="mb-12 bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-3xl font-bold mb-6 text-blue-600">🔐 Step 1: SSH接続の準備</h2>
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">🔐 Step 1: IAMとEC2の準備</h2>
 
                 <div class="prose max-w-none">
-                    <h3 class="text-xl font-bold mb-3">1. デプロイ用SSHキーの生成</h3>
-                    <p class="mb-4">GitHub Actions専用のSSHキーペアを作成します（ローカルで実行）。</p>
+                    <h3 class="text-xl font-bold mb-3">1. IAMユーザーの権限設定</h3>
+                    <p class="mb-4">GitHub ActionsからEC2にコマンドを送るため、IAMユーザーに以下の権限を付与します。</p>
 
-                    <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">必要な権限ポリシー</h4>
+                        <p class="text-sm mb-3">カスタムポリシーを作成し、IAMユーザーにアタッチします：</p>
+                        <div class="code-block-wrapper relative">
+                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code>{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ssm:SendCommand",
+                "ssm:GetCommandInvocation"
+            ],
+            "Resource": "*"
+        }
+    ]
+}</code></pre>
                         </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/github_actions_deploy
-
-# パスフレーズは空にする（Enterを2回押す）</code></pre>
+                        <p class="text-sm mt-3">このポリシーにより、GitHub ActionsがSystems Manager経由でEC2にコマンドを送信できます。</p>
                     </div>
 
-                    <p class="text-sm text-gray-600 mb-4">2つのファイルが作成されます：</p>
-                    <ul class="list-disc ml-6 mb-6 text-sm">
-                        <li><code>github_actions_deploy</code> - 秘密鍵（GitHub Secretsに保存）</li>
-                        <li><code>github_actions_deploy.pub</code> - 公開鍵（EC2に配置）</li>
-                    </ul>
+                    <h3 class="text-xl font-bold mb-3 mt-6">2. EC2インスタンスにIAMロールを付与</h3>
+                    <p class="mb-4">EC2がSystems Managerからのコマンドを受け取るため、IAMロールを作成してEC2にアタッチします。</p>
 
-                    <h3 class="text-xl font-bold mb-3 mt-6">2. 公開鍵をEC2に配置</h3>
-                    <p class="mb-4">EC2にSSH接続して、公開鍵を登録します。</p>
-
-                    <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># ローカルから公開鍵の内容をコピー
-cat ~/.ssh/github_actions_deploy.pub
-
-# EC2にSSH接続
-ssh -i ~/.ssh/your-ec2-key.pem ubuntu@your-ec2-ip
-
-# EC2上で公開鍵を追加
-echo "公開鍵の内容をここに貼り付け" >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys</code></pre>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">EC2用IAMロールの作成手順</h4>
+                        <ol class="list-decimal ml-6 text-sm space-y-2">
+                            <li>AWSコンソールで「IAM」→「ロール」→「ロールを作成」</li>
+                            <li>「AWSのサービス」→「EC2」を選択</li>
+                            <li>ポリシーで「<strong>AmazonSSMManagedInstanceCore</strong>」を検索して選択</li>
+                            <li>ロール名（例：<code>EC2-SSM-Role</code>）を入力して作成</li>
+                            <li>EC2コンソールでインスタンスを選択 → 「アクション」→「セキュリティ」→「IAMロールを変更」</li>
+                            <li>作成したロールを選択して保存</li>
+                        </ol>
                     </div>
 
-                    <h3 class="text-xl font-bold mb-3 mt-6">3. GitHub Secretsに秘密鍵を登録</h3>
-                    <p class="mb-4">GitHubリポジトリで「Settings」→「Secrets and variables」→「Actions」を開きます。</p>
+                    <div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">✅ Systems Manager Agent（SSM Agent）について</h4>
+                        <p class="text-sm">Amazon Linux 2023のEC2インスタンスには、SSM Agentがプリインストールされています。</p>
+                        <p class="text-sm mt-2">IAMロールをアタッチ後、数分待つとAWSコンソールの「Systems Manager」→「Fleet Manager」にインスタンスが表示されます。</p>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-3 mt-6">3. GitHub Secretsにアクセスキーを登録</h3>
+                    <p class="mb-4">IAMユーザーのアクセスキーを発行し、GitHubリポジトリの「Settings」→「Secrets and variables」→「Actions」に登録します。</p>
 
                     <div class="bg-blue-50 border p-4 rounded-lg mb-4">
                         <p class="font-bold mb-2">登録するSecrets：</p>
                         <ul class="space-y-3 text-sm">
                             <li>
-                                <strong>EC2_SSH_KEY</strong><br>
-                                <code>cat ~/.ssh/github_actions_deploy</code> の内容をコピー（秘密鍵全体）
+                                <strong>AWS_ACCESS_KEY_ID</strong><br>
+                                IAMユーザーのアクセスキーID
                             </li>
                             <li>
-                                <strong>EC2_HOST</strong><br>
-                                EC2のパブリックIPアドレス（例：<code>54.123.45.67</code>）
+                                <strong>AWS_SECRET_ACCESS_KEY</strong><br>
+                                IAMユーザーのシークレットアクセスキー
                             </li>
                             <li>
-                                <strong>EC2_USERNAME</strong><br>
-                                EC2のユーザー名（Ubuntuなら <code>ubuntu</code>、Amazon Linuxなら <code>ec2-user</code>）
+                                <strong>AWS_REGION</strong><br>
+                                EC2のリージョン（例：<code>ap-northeast-1</code>）
+                            </li>
+                            <li>
+                                <strong>EC2_INSTANCE_ID</strong><br>
+                                EC2のインスタンスID（例：<code>i-1234567890abcdef0</code>）
                             </li>
                         </ul>
-                    </div>
-
-                    <div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
-                        <h4 class="font-bold mb-2">✅ 接続確認</h4>
-                        <p class="text-sm">ローカルから新しいキーでSSH接続できることを確認：</p>
-                        <div class="code-block-wrapper relative mt-2">
-                            <div class="absolute top-2 right-2">
-                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                    コピー
-                                </button>
-                            </div>
-                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code>ssh -i ~/.ssh/github_actions_deploy ubuntu@your-ec2-ip</code></pre>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -159,77 +155,82 @@ chmod 600 ~/.ssh/authorized_keys</code></pre>
                 <h2 class="text-3xl font-bold mb-6 text-blue-600">📝 Step 2: デプロイスクリプトの作成</h2>
 
                 <div class="prose max-w-none">
-                    <p class="mb-4">EC2上で実行するデプロイスクリプトを作成します。</p>
+                    <p class="mb-4">EC2上で実行するデプロイスクリプトを作成します。Docker Compose環境に対応したスクリプトです。</p>
 
                     <h3 class="text-xl font-bold mb-3">1. リポジトリにスクリプトを追加</h3>
                     <p class="mb-4">プロジェクトルートに <code>deploy.sh</code> を作成します。</p>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>#!/bin/bash
 set -e
 
 echo "🚀 Starting deployment..."
 
-# アプリケーションディレクトリに移動
-cd /var/www/your-app
-
-# メンテナンスモードを有効化
-php artisan down || true
+# プロジェクトディレクトリに移動
+cd /home/ec2-user/your-project
 
 # 最新コードを取得
 echo "📥 Pulling latest code..."
-git fetch origin main
-git reset --hard origin/main
+git fetch origin master
+git reset --hard origin/master
 
-# 依存関係をインストール
+# メンテナンスモードを有効化（Dockerコンテナ内で実行）
+docker compose exec -T app php artisan down || true
+
+# Composerの依存関係をインストール（Dockerコンテナ内で実行）
 echo "📦 Installing dependencies..."
-composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+docker compose exec -T app composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
-# キャッシュとマイグレーション
+# キャッシュとマイグレーション（Dockerコンテナ内で実行）
 echo "🔧 Running migrations and clearing cache..."
-php artisan migrate --force
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+docker compose exec -T app php artisan migrate --force
+docker compose exec -T app php artisan config:cache
+docker compose exec -T app php artisan route:cache
+docker compose exec -T app php artisan view:cache
 
-# ファイルパーミッション
+# ファイルパーミッション（Dockerコンテナ内で実行）
 echo "🔒 Setting permissions..."
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+docker compose exec -T app chmod -R 777 storage bootstrap/cache
 
 # メンテナンスモードを解除
-php artisan up
+docker compose exec -T app php artisan up
+
+# コンテナを再起動（変更を反映）
+echo "🔄 Restarting containers..."
+docker compose restart app
 
 echo "✅ Deployment completed successfully!"</code></pre>
                     </div>
 
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
+                        <h4 class="font-bold mb-2">💡 Docker Compose環境でのデプロイ</h4>
+                        <ul class="list-disc ml-6 text-sm space-y-1">
+                            <li><code>docker compose exec -T app</code> - Dockerコンテナ内でコマンドを実行（<code>-T</code>は非対話モード）</li>
+                            <li><code>git reset --hard</code> - EC2上で最新コードを取得</li>
+                            <li><code>php artisan down/up</code> - メンテナンスモードの切り替え</li>
+                            <li><code>composer install --no-dev</code> - 本番環境用の依存関係のみインストール</li>
+                            <li><code>docker compose restart app</code> - コンテナを再起動して変更を反映</li>
+                        </ul>
+                    </div>
+
                     <h3 class="text-xl font-bold mb-3 mt-6">2. スクリプトをEC2に配置</h3>
-                    <p class="mb-4">EC2上のアプリケーションディレクトリに配置し、実行権限を付与します。</p>
+                    <p class="mb-4">EC2上のプロジェクトディレクトリに配置し、実行権限を付与します。</p>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># EC2にSSH接続後
-cd /var/www/your-app
-chmod +x deploy.sh</code></pre>
+cd /home/ec2-user/your-project
+chmod +x deploy.sh
+
+# 手動実行して動作確認
+./deploy.sh</code></pre>
                     </div>
 
                     <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-6">
-                        <h4 class="font-bold mb-2">💡 デプロイスクリプトの解説</h4>
+                        <h4 class="font-bold mb-2">⚠️ 注意事項</h4>
                         <ul class="list-disc ml-6 text-sm space-y-1">
-                            <li><code>php artisan down</code> - メンテナンスモードで一時的にアクセスを遮断</li>
-                            <li><code>git reset --hard</code> - 最新コードを強制的に取得</li>
-                            <li><code>composer install --no-dev</code> - 本番環境用の依存関係のみインストール</li>
-                            <li><code>php artisan migrate --force</code> - データベースマイグレーション実行</li>
-                            <li><code>*:cache</code> - 各種キャッシュを再生成してパフォーマンス向上</li>
+                            <li>スクリプト内のパス（<code>/home/ec2-user/your-project</code>）を実際のプロジェクトパスに変更してください</li>
+                            <li>EC2上でDockerとDocker Composeがインストールされていることを確認してください</li>
+                            <li>EC2上でGitリポジトリがクローン済みであることを確認してください</li>
                         </ul>
                     </div>
                 </div>
@@ -245,21 +246,20 @@ chmod +x deploy.sh</code></pre>
                     </p>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>name: Deploy to EC2
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:  # 手動実行を許可
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    # srcディレクトリをworking-directoryに設定
+    defaults:
+      run:
+        working-directory: src
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -273,12 +273,15 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
+    # PHPStan静的解析を実行(メモリ制限を512Mに設定)
     - name: Run PHPStan
-      run: ./vendor/bin/phpstan analyse
+      run: ./vendor/bin/phpstan analyse --memory-limit=512M
 
+    # PHP CS Fixerでコードスタイルチェック(--dry-runで修正は行わない)
     - name: Run PHP CS Fixer
       run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
+    # ユニットテストを実行
     - name: Run tests
       run: |
         cp .env.example .env
@@ -286,21 +289,78 @@ jobs:
         php artisan test
 
   deploy:
-    needs: test
+    needs: test  # testジョブが成功した場合のみ実行
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'  # masterブランチへのpushのみデプロイ
 
     steps:
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
+    # AWS認証情報を設定
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          cd /var/www/your-app
-          ./deploy.sh
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
+    # Systems Managerを使用してEC2でデプロイスクリプトを実行
+    - name: Deploy to EC2 via SSM
+      id: deploy
+      run: |
+        # SSMでコマンド実行
+        COMMAND_ID=$(aws ssm send-command \
+          --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+          --document-name "AWS-RunShellScript" \
+          --comment "Deploy from GitHub Actions" \
+          --parameters 'commands=[
+            "cd /home/ec2-user/your-project",
+            "sudo -u ec2-user bash /home/ec2-user/your-project/deploy.sh"
+          ]' \
+          --output text \
+          --query "Command.CommandId")
+
+        echo "Command ID: $COMMAND_ID"
+        echo "command_id=$COMMAND_ID" >> $GITHUB_OUTPUT
+
+        # コマンド完了を待機(最大5分)
+        echo "⏳ Waiting for deployment to complete..."
+        aws ssm wait command-executed \
+          --command-id "$COMMAND_ID" \
+          --instance-id ${{ secrets.EC2_INSTANCE_ID }} \
+          --cli-read-timeout 300
+
+        # コマンド結果を取得
+        STATUS=$(aws ssm get-command-invocation \
+          --command-id "$COMMAND_ID" \
+          --instance-id ${{ secrets.EC2_INSTANCE_ID }} \
+          --query "Status" \
+          --output text)
+
+        OUTPUT=$(aws ssm get-command-invocation \
+          --command-id "$COMMAND_ID" \
+          --instance-id ${{ secrets.EC2_INSTANCE_ID }} \
+          --query "StandardOutputContent" \
+          --output text)
+
+        ERROR_OUTPUT=$(aws ssm get-command-invocation \
+          --command-id "$COMMAND_ID" \
+          --instance-id ${{ secrets.EC2_INSTANCE_ID }} \
+          --query "StandardErrorContent" \
+          --output text)
+
+        echo "📋 Deployment output:"
+        echo "$OUTPUT"
+
+        # デプロイ結果を確認
+        if [ "$STATUS" != "Success" ]; then
+          echo "❌ Deployment failed with status: $STATUS"
+          echo "🔴 Error output:"
+          echo "$ERROR_OUTPUT"
+          exit 1
+        fi
+
+        echo "✅ Deployment completed successfully!"
+
+    # デプロイステータスを通知
     - name: Notify deployment status
       if: always()
       run: |
@@ -314,10 +374,14 @@ jobs:
                     <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
                         <h4 class="font-bold mb-2">🔍 ワークフローの解説</h4>
                         <ul class="list-disc ml-6 text-sm space-y-2">
-                            <li><strong>testジョブ</strong>：テストと品質チェックを実行</li>
+                            <li><strong>testジョブ</strong>：PHPStan、PHP CS Fixer、ユニットテストを実行</li>
+                            <li><strong>defaults.run.working-directory</strong>：srcディレクトリをベースに設定</li>
                             <li><strong>deployジョブ</strong>：testが成功した場合のみ実行される</li>
                             <li><strong>needs: test</strong>：testジョブが成功しないとdeployは実行されない</li>
-                            <li><strong>appleboy/ssh-action</strong>：SSH経由でEC2にコマンドを実行</li>
+                            <li><strong>aws-actions/configure-aws-credentials</strong>：IAM認証情報を設定</li>
+                            <li><strong>aws ssm send-command</strong>：Systems Manager経由でEC2にコマンドを実行</li>
+                            <li><strong>aws ssm wait command-executed</strong>：コマンド完了を待機</li>
+                            <li><strong>aws ssm get-command-invocation</strong>：実行結果とステータスを取得</li>
                             <li><strong>workflow_dispatch</strong>：GitHub UIから手動実行可能</li>
                         </ul>
                     </div>
@@ -343,11 +407,6 @@ jobs:
 
                     <h4 class="font-bold mb-2 mt-4">EC2にアプリケーションを初期配置</h4>
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># EC2上で実行
 cd /var/www
 sudo git clone https://github.com/your-username/your-repo.git your-app
@@ -368,14 +427,9 @@ sudo chmod -R 775 storage bootstrap/cache</code></pre>
 
                     <h3 class="text-xl font-bold mb-3 mt-6">2. ワークフローファイルをプッシュ</h3>
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>git add .github/workflows/deploy.yml deploy.sh
 git commit -m "Add automated deployment workflow"
-git push origin main</code></pre>
+git push origin master</code></pre>
                     </div>
 
                     <h3 class="text-xl font-bold mb-3 mt-6">3. デプロイ状況を確認</h3>
@@ -395,11 +449,6 @@ git push origin main</code></pre>
                     <p class="mb-4">ブラウザでEC2のIPアドレスにアクセスして、アプリケーションが正常に動作していることを確認します。</p>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <div class="absolute top-2 right-2">
-                            <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                コピー
-                            </button>
-                        </div>
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>http://your-ec2-ip</code></pre>
                     </div>
                 </div>
@@ -411,13 +460,14 @@ git push origin main</code></pre>
 
                 <div class="space-y-6">
                     <div class="border-l-4 border-red-600 pl-4">
-                        <h3 class="font-bold text-lg mb-2">❌ SSH接続エラー</h3>
-                        <p class="text-sm mb-2"><strong>症状：</strong> "Permission denied (publickey)" エラー</p>
+                        <h3 class="font-bold text-lg mb-2">❌ SSM接続エラー</h3>
+                        <p class="text-sm mb-2"><strong>症状：</strong> "An error occurred (InvalidInstanceId)" エラー</p>
                         <p class="text-sm mb-2"><strong>対処法：</strong></p>
                         <ul class="list-disc ml-6 text-sm space-y-1">
-                            <li>GitHub Secretsの <code>EC2_SSH_KEY</code> に秘密鍵全体（BEGIN〜END含む）がコピーされているか確認</li>
-                            <li>EC2の <code>~/.ssh/authorized_keys</code> に公開鍵が正しく追加されているか確認</li>
-                            <li><code>EC2_USERNAME</code> が正しいか確認（ubuntu、ec2-userなど）</li>
+                            <li>GitHub Secretsの <code>EC2_INSTANCE_ID</code> が正しいか確認（i-から始まるID）</li>
+                            <li>EC2にIAMロール（AmazonSSMManagedInstanceCore）がアタッチされているか確認</li>
+                            <li>Systems Manager Fleet Managerにインスタンスが表示されているか確認</li>
+                            <li>IAMユーザーに <code>ssm:SendCommand</code> 権限があるか確認</li>
                         </ul>
                     </div>
 
@@ -437,11 +487,6 @@ git push origin main</code></pre>
                         <p class="text-sm mb-2"><strong>症状：</strong> メモリ不足エラー</p>
                         <p class="text-sm mb-2"><strong>対処法：</strong></p>
                         <div class="code-block-wrapper relative mt-2">
-                            <div class="absolute top-2 right-2">
-                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                    コピー
-                                </button>
-                            </div>
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># スワップファイルを作成
 sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
@@ -454,11 +499,6 @@ sudo swapon /swapfile</code></pre>
                         <h3 class="font-bold text-lg mb-2">💡 デバッグ方法</h3>
                         <p class="text-sm mb-2">EC2上でログを確認：</p>
                         <div class="code-block-wrapper relative mt-2">
-                            <div class="absolute top-2 right-2">
-                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                    コピー
-                                </button>
-                            </div>
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># Laravelログ
 tail -f /var/www/your-app/storage/logs/laravel.log
 
@@ -483,11 +523,6 @@ sudo tail -f /var/log/nginx/error.log</code></pre>
                         <h3 class="font-bold text-lg mb-2">2. ロールバック機能</h3>
                         <p class="text-sm">デプロイに失敗した場合、自動的に前のバージョンに戻す仕組みを追加できます。</p>
                         <div class="code-block-wrapper relative mt-2">
-                            <div class="absolute top-2 right-2">
-                                <button class="copy-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                    コピー
-                                </button>
-                            </div>
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># deploy.shに追加
 if ! ./deploy.sh; then
   echo "Deployment failed, rolling back..."
