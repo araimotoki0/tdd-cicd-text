@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coding入門：Gemini CLI - ハンズオン講座</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">AI Coding入門</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="ai-coding.html" class="hover:text-blue-200">AI Coding</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="index.html" class="hover:text-blue-200">TDD理論編</a>
+                    <a href="handson-basic.html" class="hover:text-blue-200">TDD基礎</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="ai-coding.html" class="block hover:text-blue-200">AI Coding</a>
+            <a href="index.html" class="block hover:text-blue-200">TDD理論編</a>
+            <a href="handson-basic.html" class="block hover:text-blue-200">TDD基礎</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">AI Coding入門：Gemini CLI</h2>
+                <p class="text-2xl mb-4">ターミナルからAIでコーディングを効率化</p>
+            </div>
+        </section>
+
+        <!-- イントロ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Gemini CLIとは？</h2>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">🤖 概要</h3>
+                        <p class="text-gray-700 text-lg mb-4">
+                            <strong>Gemini CLI</strong>は、Googleが提供する<br>
+                            <span class="bg-yellow-200 px-2 py-1 rounded">ターミナルから直接AIを使えるオープンソースツール</span>です。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg border-l-4 border-blue-600">
+                            <h4 class="font-bold text-gray-800 mb-3">✨ 主な特徴</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• <strong>無料で使える</strong>：60リクエスト/分、1,000リクエスト/日</li>
+                                <li>• <strong>大容量</strong>：100万トークンのコンテキストウィンドウ</li>
+                                <li>• <strong>ファイル操作</strong>：コードの読み取り・編集をAIに任せられる</li>
+                                <li>• <strong>シェル連携</strong>：コマンド実行もAIがサポート</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-8">
+                        <p class="font-bold text-green-800 mb-3">✅ 前提条件</p>
+                        <p class="text-gray-700">
+                            環境構築ページでGemini CLIのインストールが完了していること。<br>
+                            まだの方は <a href="handson-setup-mac.html" class="text-blue-600 hover:underline">Mac環境構築</a> または
+                            <a href="handson-setup-windows.html" class="text-blue-600 hover:underline">Windows環境構築</a> を先に完了してください。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ハンズオン手順 -->
+        <section id="handson" class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ハンズオン：Gemini CLIを使ってみよう</h2>
+                        <p class="text-xl text-gray-600">基本的な操作を体験します</p>
+                    </div>
+
+                    <!-- 実装手順 -->
+                    <div class="space-y-8">
+                        <!-- 手順1: 初回起動と認証 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                                <h3 class="text-3xl font-bold text-gray-800">初回起動と認証</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">ターミナルでGemini CLIを起動します。</p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 実行するコマンド:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">gemini</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-red-50 p-6 rounded-lg mb-6 border-l-4 border-red-500">
+                                <p class="font-bold text-red-800 mb-3">⚠️ 重要：個人アカウントでログインしてください</p>
+                                <p class="text-gray-700 mb-2">
+                                    無料で使えるのは<strong>個人のGoogleアカウント</strong>のみです。
+                                </p>
+                                <p class="text-gray-700 text-sm">
+                                    会社や学校の<strong>Google Workspaceアカウント</strong>では無料版が使えません。<br>
+                                    Workspaceで使うには有料プラン（Standard $19〜/月）が必要になります。<br>
+                                    <a href="https://developers.google.com/gemini-code-assist/resources/faqs" target="_blank" class="text-blue-600 hover:underline">公式FAQ →</a>
+                                </p>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-4">🎨 初回起動時の流れ:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">1. テーマ選択</p>
+                                        <p class="text-sm">
+                                            CLIの見た目のテーマを選びます。<br>
+                                            カーソルキー（↑↓）で選択し、Enterで決定。
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">2. 認証方法の選択</p>
+                                        <p class="text-sm">
+                                            「<strong>Login with Google</strong>」を選択してEnter。<br>
+                                            ブラウザが開き、<strong>個人のGoogleアカウント</strong>でログインします。
+                                        </p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">3. 認証完了</p>
+                                        <p class="text-sm">
+                                            「許可」をクリックすると、ターミナルに戻ります。<br>
+                                            これで準備完了です！
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600 mb-6">
+                                <p class="font-bold text-green-800 mb-3">✅ 成功のサイン:</p>
+                                <p class="text-gray-700">
+                                    プロンプト（入力待ち状態）が表示されれば成功です。<br>
+                                    <code class="bg-gray-100 px-2 py-1 rounded">❯</code> のような記号が表示されます。
+                                </p>
+                            </div>
+
+                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                                <p class="font-bold text-yellow-800 mb-3">💡 認証の切り替え・ログアウト</p>
+                                <p class="text-gray-700 mb-3">
+                                    別のGoogleアカウントに切り替えたい場合や、ログアウトしたい場合は<br>
+                                    <code class="bg-gray-200 px-2 py-1 rounded">/auth</code> コマンドを使います。
+                                </p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white"><span class="text-gray-500">❯</span> /auth</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-3">
+                                    認証方法の選択画面が再表示され、別のアカウントでログインし直せます。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順2: 日本語設定 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                                <h3 class="text-3xl font-bold text-gray-800">日本語設定（GEMINI.md）</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                デフォルトでは英語で応答されることがあります。<br>
+                                <strong>GEMINI.md</strong>ファイルを編集して、常に日本語で応答させましょう。
+                            </p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800 mb-3">📖 GEMINI.mdとは？</p>
+                                <p class="text-gray-700">
+                                    Gemini CLIが<strong>自動で読み込む設定ファイル</strong>です。<br>
+                                    AIへの指示を書いておくと、毎回のプロンプトに自動で適用されます。
+                                </p>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-4">📁 配置場所と優先順位:</p>
+                                <div class="space-y-3 text-gray-700">
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-1">1. グローバル設定（全プロジェクト共通）</p>
+                                        <code class="text-sm bg-blue-100 px-2 py-1 rounded">~/.gemini/GEMINI.md</code>
+                                        <p class="text-sm text-gray-600 mt-1">← 日本語設定はここに書くのがおすすめ！</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-1">2. プロジェクト設定</p>
+                                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">プロジェクトルート/GEMINI.md</code>
+                                        <p class="text-sm text-gray-600 mt-1">プロジェクト固有の指示を追加</p>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-4">
+                                    ※ 複数のGEMINI.mdがある場合、全て統合されてAIに送信されます。<br>
+                                    <a href="https://google-gemini.github.io/gemini-cli/docs/cli/gemini-md.html" target="_blank" class="text-blue-600 hover:underline">公式ドキュメント →</a>
+                                </p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 グローバル設定に追記:</p>
+                                <p class="text-gray-700 mb-3"><code class="bg-gray-200 px-2 py-1 rounded">~/.gemini/GEMINI.md</code> を開き、以下を追記：</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">Always respond in Japanese.</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600 mb-6">
+                                <p class="font-bold text-green-800 mb-3">✅ 効果:</p>
+                                <p class="text-gray-700">
+                                    グローバル設定に書いておけば、<strong>どのプロジェクトでも</strong><br>
+                                    AIが常に日本語で応答するようになります。
+                                </p>
+                            </div>
+
+                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                                <p class="font-bold text-yellow-800 mb-3">💡 プロジェクト固有の設定例</p>
+                                <p class="text-gray-700 mb-2 text-sm">プロジェクトルートのGEMINI.mdには、そのプロジェクト特有の情報を書きます：</p>
+                                <ul class="text-gray-700 space-y-2 text-sm">
+                                    <li>• プロジェクトの概要・目的</li>
+                                    <li>• 使用している技術スタック</li>
+                                    <li>• コーディング規約・命名規則</li>
+                                    <li>• ディレクトリ構成の説明</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 手順3: 基本的な使い方 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
+                                <h3 class="text-3xl font-bold text-gray-800">基本的な使い方</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                対話モードで質問してみましょう。自然な日本語で入力できます。
+                            </p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 試してみよう:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white"><span class="text-gray-500">❯</span> JSとHTMLとCSSでTodoアプリのUIを作って</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg mb-6 border-l-4 border-green-600">
+                                <p class="font-bold text-green-800 mb-3">✅ 期待される応答:</p>
+                                <p class="text-gray-700 mb-3">
+                                    AIがHTML、CSS、JavaScriptのコードを生成してくれます。<br>
+                                    ファイルの作成や編集もAIに任せることができます。
+                                </p>
+                                <p class="text-gray-700">
+                                    続けて「タスクの削除機能を追加して」など、<br>
+                                    会話を続けることで機能を追加していけます。
+                                </p>
+                            </div>
+
+                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-6">
+                                <p class="font-bold text-yellow-800 mb-3">💡 その他の質問例:</p>
+                                <ul class="text-gray-700 space-y-2 text-sm">
+                                    <li>• 「このディレクトリの構造を教えて」</li>
+                                    <li>• 「Laravelでユーザー認証機能を作って」</li>
+                                    <li>• 「このエラーの原因を教えて」</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-gray-500">
+                                <p class="font-bold text-gray-800 mb-3">🚪 終了方法:</p>
+                                <p class="text-gray-700">
+                                    <code class="bg-gray-200 px-2 py-1 rounded">/quit</code> または <code class="bg-gray-200 px-2 py-1 rounded">Ctrl + C</code> で終了できます。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順4: ファイル参照 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">4</span>
+                                <h3 class="text-3xl font-bold text-gray-800">ファイル参照（@記法）</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">
+                                <code class="bg-gray-100 px-2 py-1 rounded">@</code> を使うと、ファイルの内容をAIに渡せます。<br>
+                                これがGemini CLIの最も便利な機能です。
+                            </p>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">📝 使い方:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white"><span class="text-gray-500">❯</span> @main.py このコードを説明して</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-4">📖 @記法の使用例:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">コードの説明</p>
+                                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">@app.py このコードは何をしている？</code>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">バグの発見</p>
+                                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">@calculator.py バグがないかチェックして</code>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-2">リファクタリング提案</p>
+                                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">@utils.js もっと良い書き方を教えて</code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-2 border-green-600">
+                                <div class="flex items-start">
+                                    <span class="text-3xl mr-4">🎉</span>
+                                    <div>
+                                        <p class="text-xl font-bold text-green-800 mb-3">基本操作マスター！</p>
+                                        <p class="text-gray-700 mb-3">
+                                            これでGemini CLIの基本的な使い方を習得しました。
+                                        </p>
+                                        <div class="bg-white p-4 rounded">
+                                            <p class="font-bold text-gray-800 mb-2">📚 学んだこと:</p>
+                                            <ul class="text-sm text-gray-700 space-y-2">
+                                                <li>✓ Gemini CLIの起動と認証</li>
+                                                <li>✓ /authでの認証切り替え</li>
+                                                <li>✓ GEMINI.mdでの日本語設定</li>
+                                                <li>✓ 対話モードでの質問方法</li>
+                                                <li>✓ @記法でのファイル参照</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-gray-400 mt-6">
+                                <p class="font-bold text-gray-800 mb-3">💡 他のAI Codingツールについて</p>
+                                <p class="text-gray-700 mb-4">
+                                    <strong>Claude Code</strong>（Anthropic）や<strong>Codex</strong>（OpenAI）など、
+                                    より高性能なAI Codingツールも存在します。<br>
+                                    しかし、これらは<strong>有料</strong>（月額$20〜$200）のため、本講座では無料で使えるGemini CLIを採用しました。
+                                </p>
+                                <div class="bg-white p-4 rounded mb-4">
+                                    <p class="text-sm text-gray-700">
+                                        <strong>良いニュース：</strong>これらのツールは使い方が非常に似ています。<br>
+                                        ターミナルで起動、@記法でファイル参照、自然言語でコード生成...など基本は同じです。<br>
+                                        <span class="text-blue-600 font-bold">今回のGemini講座で学んだスキルは、他のツールでもそのまま活かせます。</span>
+                                    </p>
+                                </div>
+                                <div class="bg-blue-100 p-4 rounded">
+                                    <p class="text-sm text-blue-800">
+                                        <strong>📌 <span id="currentDate"></span>現在</strong>、CLIベースのAI Codingツールは
+                                        開発の生産性と品質を飛躍的に向上させる<strong>最先端の手法</strong>です。<br>
+                                        この講座で身につけたスキルは、今後のキャリアで大きな武器になります。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">まとめ</h2>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">AI Codingで学んだこと</h3>
+
+                        <div class="space-y-4">
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ Gemini CLIの基本</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• ターミナルから起動（<code class="bg-gray-100 px-1 rounded">gemini</code>）</li>
+                                    <li>• Googleアカウントで認証</li>
+                                    <li>• <code class="bg-gray-100 px-1 rounded">/auth</code>で認証切り替え・ログアウト</li>
+                                    <li>• 無料で十分な利用枠</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg shadow">
+                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ 便利な機能</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• GEMINI.mdで日本語設定・カスタム指示</li>
+                                    <li>• @記法でファイルをAIに渡せる</li>
+                                    <li>• コードの説明・レビュー・リファクタリングを依頼</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- チームハンズオン -->
+        <section class="py-16 bg-blue-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">チームでハンズオンをしてみよう</h2>
+                    <p class="text-xl text-gray-600 mb-12 text-center">
+                        Gemini CLIを使って、実際にツールやアプリを作ってみましょう。<br>
+                        以下からお好きなものを選んで挑戦してください！
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- 1. Todoアプリ -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
+                                <span class="text-2xl">📝</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Todoアプリ</h3>
+                            <p class="text-gray-600 text-sm mb-3">タスクの追加・削除・完了ができるシンプルなアプリ</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「JSとHTMLとCSSでTodoアプリを作って」</code>
+                            </div>
+                        </div>
+
+                        <!-- 2. 電卓 -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
+                                <span class="text-2xl">🔢</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">電卓アプリ</h3>
+                            <p class="text-gray-600 text-sm mb-3">四則演算ができるシンプルな電卓</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「HTMLとCSSとJSで電卓を作って」</code>
+                            </div>
+                        </div>
+
+                        <!-- 3. タイマー -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
+                                <span class="text-2xl">⏱️</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">ポモドーロタイマー</h3>
+                            <p class="text-gray-600 text-sm mb-3">25分作業→5分休憩のカウントダウンタイマー</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「ポモドーロタイマーをHTMLで作って」</code>
+                            </div>
+                        </div>
+
+                        <!-- 4. メモ帳 -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
+                                <span class="text-2xl">📓</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">メモ帳アプリ</h3>
+                            <p class="text-gray-600 text-sm mb-3">ローカルストレージでデータを保存するメモ帳</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「ローカルストレージで保存するメモ帳を作って」</code>
+                            </div>
+                        </div>
+
+                        <!-- 5. タイピングゲーム -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
+                                <span class="text-2xl">⌨️</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">タイピングゲーム</h3>
+                            <p class="text-gray-600 text-sm mb-3">制限時間内にどれだけ入力できるかのゲーム</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「タイピング速度を測るゲームを作って」</code>
+                            </div>
+                        </div>
+
+                        <!-- 6. マークダウンプレビュー -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
+                                <span class="text-2xl">📄</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Markdownプレビューアー</h3>
+                            <p class="text-gray-600 text-sm mb-3">左にMarkdown、右にプレビューを表示</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「Markdownのリアルタイムプレビュー画面を作って」</code>
+                            </div>
+                        </div>
+
+                        <!-- 7. じゃんけんゲーム -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
+                                <span class="text-2xl">✊</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">じゃんけんゲーム</h3>
+                            <p class="text-gray-600 text-sm mb-3">CPUと対戦するじゃんけん、勝敗をカウント</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「じゃんけんゲームを作って。勝敗数も表示」</code>
+                            </div>
+                        </div>
+
+                        <!-- 8. 数当てゲーム -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
+                                <span class="text-2xl">🔢</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">数当てゲーム</h3>
+                            <p class="text-gray-600 text-sm mb-3">1〜100の数字を当てる。ヒント付き</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「数当てゲームを作って。大きい小さいのヒント付き」</code>
+                            </div>
+                        </div>
+
+                        <!-- 9. クイズゲーム -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
+                                <span class="text-2xl">❓</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">クイズゲーム</h3>
+                            <p class="text-gray-600 text-sm mb-3">4択クイズ、スコア表示と結果画面付き</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「4択クイズゲームを作って。5問出題」</code>
+                            </div>
+                        </div>
+
+                        <!-- 10. 神経衰弱 -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
+                                <span class="text-2xl">🃏</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">神経衰弱ゲーム</h3>
+                            <p class="text-gray-600 text-sm mb-3">カードをめくってペアを揃えるメモリーゲーム</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「神経衰弱ゲームを作って。8ペアで」</code>
+                            </div>
+                        </div>
+
+                        <!-- 11. スネークゲーム -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-bold mr-3">上級</span>
+                                <span class="text-2xl">🐍</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">スネークゲーム</h3>
+                            <p class="text-gray-600 text-sm mb-3">キーボードで蛇を操作してエサを食べる</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「Canvasでスネークゲームを作って」</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">💡 ハンズオンのコツ</h3>
+                        <div class="space-y-4 text-gray-700">
+                            <div class="flex items-start">
+                                <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-sm font-bold mr-3">1</span>
+                                <p><strong>まずは動くものを作る</strong> - 最初から完璧を目指さず、シンプルな機能から始める</p>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-sm font-bold mr-3">2</span>
+                                <p><strong>少しずつ機能を追加</strong> - 「〜を追加して」と会話を続けて機能拡張</p>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-sm font-bold mr-3">3</span>
+                                <p><strong>エラーが出たら相談</strong> - エラーメッセージをそのまま伝えれば解決策を提案してくれる</p>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-sm font-bold mr-3">4</span>
+                                <p><strong>コードの説明を求める</strong> - 「このコードを説明して」で理解を深める</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 次のステップ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6">次のステップ</h2>
+                    <p class="text-gray-600 mb-8 text-lg">
+                        AI Codingの基本を習得しました。<br>
+                        次は<strong>TDD（テスト駆動開発）</strong>を学んで、品質の高いコードを書く方法を身につけましょう。
+                    </p>
+
+                    <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                        TDD講座へ進む →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- フッター -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center">
+                    <p class="text-gray-300 text-sm">
+                        &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            // 現在の年を自動挿入
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // 現在の年月を自動挿入
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            document.getElementById('currentDate').textContent = `${year}年${month}月`;
+        </script>
+    </div>
+
+    <script src="code-copy.js"></script>
+    <script src="global-menu.js"></script>
+    <script src="nav-highlight.js"></script>
+    <script src="scroll-to-top.js"></script>
+</body>
+</html>
