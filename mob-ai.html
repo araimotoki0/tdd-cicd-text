@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mob AI：Cyber-Dojoでチーム開発 - ハンズオン講座</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👥</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 背景アニメーションコンテナ */
+        .animated-bg {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(99, 102, 241, 0.02) 100%);
+            z-index: 0;
+        }
+
+        /* フローティングアイコン */
+        .floating-icon {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            font-size: 2.5rem;
+            filter: blur(0.5px);
+        }
+
+        /* 浮遊アニメーション - 複数パターン */
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0) rotate(0deg) scale(1); opacity: 0; }
+            10% { opacity: 0.25; }
+            90% { opacity: 0.25; }
+            100% { transform: translateY(-800px) translateX(50px) rotate(360deg) scale(0.8); opacity: 0; }
+        }
+
+        @keyframes floatDiagonal {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.2; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-600px) translateX(200px) rotate(-180deg); opacity: 0; }
+        }
+
+        @keyframes floatWave {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+            10% { opacity: 0.3; }
+            25% { transform: translateY(-200px) translateX(30px) scale(1.1); }
+            50% { transform: translateY(-400px) translateX(-30px) scale(1); }
+            75% { transform: translateY(-600px) translateX(30px) scale(0.9); }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-800px) translateX(0) scale(0.8); opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.15; }
+            50% { transform: scale(1.3); opacity: 0.3; }
+        }
+
+        @keyframes drift {
+            0% { transform: translateX(0) translateY(0); opacity: 0.2; }
+            25% { transform: translateX(100px) translateY(-50px); }
+            50% { transform: translateX(0) translateY(-100px); opacity: 0.3; }
+            75% { transform: translateX(-100px) translateY(-50px); }
+            100% { transform: translateX(0) translateY(0); opacity: 0.2; }
+        }
+
+        /* 背景パーティクル */
+        .bg-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* コンテンツを前面に */
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* セクションの背景アイコン（静的＋アニメーション） */
+        .section-bg-icon {
+            position: absolute;
+            opacity: 0.08;
+            font-size: 4rem;
+            z-index: 1;
+            animation: drift 20s ease-in-out infinite;
+        }
+
+        /* グラデーション背景のオーバーレイ */
+        .gradient-overlay {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(99, 102, 241, 0.03) 100%);
+        }
+
+        /* キラキラエフェクト */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: sparkle 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* 花火エフェクト */
+        .firework {
+            position: absolute;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .firework-particle {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0;
+        }
+
+        @keyframes fireworkLaunch {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+        }
+
+        @keyframes fireworkExplode {
+            0% { transform: translate(0, 0) scale(0); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
+        }
+
+        /* テスラカー走行 */
+        .tesla-car {
+            position: absolute;
+            font-size: 2.5rem;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+        }
+
+        @keyframes driveRight {
+            0% { transform: translateX(-100px) scaleX(1); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateX(calc(100vw + 100px)) scaleX(1); opacity: 0; }
+        }
+
+        @keyframes driveLeft {
+            0% { transform: translateX(100vw) scaleX(-1); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateX(-100px) scaleX(-1); opacity: 0; }
+        }
+
+        /* 流れ星 */
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(99,102,241,0.8) 50%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transform: rotate(-45deg);
+        }
+
+        @keyframes shootingStar {
+            0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateX(500px) translateY(500px) rotate(-45deg); opacity: 0; }
+        }
+
+        /* バブルエフェクト */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(99,102,241,0.3) 50%, rgba(99,102,241,0.1) 100%);
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+        }
+
+        @keyframes bubbleFloat {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-400px) scale(0.5); opacity: 0; }
+        }
+
+        /* 回転する歯車 */
+        .gear {
+            position: absolute;
+            font-size: 3rem;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.1;
+            animation: gearSpin 10s linear infinite;
+        }
+
+        @keyframes gearSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* パルス波紋 */
+        .ripple {
+            position: absolute;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes rippleEffect {
+            0% { width: 0; height: 0; opacity: 0.6; }
+            100% { width: 200px; height: 200px; opacity: 0; margin-left: -100px; margin-top: -100px; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">🤖 Mob AI</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="ai-coding.html" class="hover:text-blue-200">AI Coding</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="mob-ai.html" class="hover:text-blue-200">Mob AI</a>
+                    <span class="text-blue-200">|</span>
+                    <a href="index.html" class="hover:text-blue-200">TDD講座</a>
+                </div>
+                <button id="menuBtn" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="ai-coding.html" class="block hover:text-blue-200">AI Coding</a>
+            <a href="mob-ai.html" class="block hover:text-blue-200">Mob AI</a>
+            <a href="index.html" class="block hover:text-blue-200">TDD講座</a>
+        </div>
+    </div>
+
+    <div class="pt-20">
+        <!-- ヒーローセクション -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">🤖 Mob AI</h2>
+                <p class="text-2xl mb-4">Cyber-Dojoでチームモブプログラミング</p>
+                <p class="text-lg opacity-80">みんなで一緒にTDD練習をしよう！</p>
+            </div>
+        </section>
+
+        <!-- イントロ -->
+        <section class="py-16 bg-white animated-bg" id="introSection">
+            <!-- 背景パーティクル -->
+            <div class="bg-particles" id="introParticles"></div>
+            <!-- 背景の大きなアイコン -->
+            <div class="section-bg-icon" style="top: 10%; left: 5%;">🤖</div>
+            <div class="section-bg-icon" style="top: 60%; right: 5%; animation-delay: -5s;">👥</div>
+            <div class="section-bg-icon" style="bottom: 10%; left: 15%; animation-delay: -10s;">💻</div>
+
+            <div class="container mx-auto px-6 content-layer">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎯 Cyber-Dojoとは？</h2>
+
+                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4">👥 概要</h3>
+                        <p class="text-gray-700 text-lg mb-4">
+                            <strong>Cyber-Dojo</strong>は、<br>
+                            <span class="bg-yellow-200 px-2 py-1 rounded">チームでTDD練習ができるオンラインプラットフォーム</span>です。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg border-l-4 border-blue-600">
+                            <h4 class="font-bold text-gray-800 mb-3">主な特徴</h4>
+                            <ul class="space-y-2 text-gray-700">
+                                <li>• <strong>環境構築不要</strong>：ブラウザだけで動く</li>
+                                <li>• <strong>チーム共有</strong>：同じコードをリアルタイムで共有</li>
+                                <li>• <strong>信号機表示</strong>：テスト結果が赤/黄/緑で一目瞭然</li>
+                                <li>• <strong>予測機能</strong>：テスト結果を予測してから実行できる</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-8">
+                        <p class="font-bold text-green-800 mb-3">🎯 今日やること</p>
+                        <p class="text-gray-700">
+                            Cyber-Dojoを使って、チームで<strong>FizzBuzz</strong>をTDDで実装します。<br>
+                            モブプログラミング形式で、全員で1つのコードを作り上げましょう！
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ハンズオン手順 -->
+        <section id="handson" class="py-16 bg-blue-50 animated-bg">
+            <!-- 背景パーティクル -->
+            <div class="bg-particles" id="handsonParticles"></div>
+            <!-- 背景の大きなアイコン -->
+            <div class="section-bg-icon" style="top: 5%; right: 10%;">🚀</div>
+            <div class="section-bg-icon" style="top: 30%; left: 3%; animation-delay: -7s;">⚡</div>
+            <div class="section-bg-icon" style="top: 55%; right: 3%; animation-delay: -3s;">🔧</div>
+            <div class="section-bg-icon" style="top: 80%; left: 8%; animation-delay: -12s;">💡</div>
+
+            <div class="container mx-auto px-6 content-layer">
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">📖 Cyber-Dojoの使い方</h2>
+                        <p class="text-xl text-gray-600">チームで1人がセッションを作成し、全員で参加します</p>
+                    </div>
+
+                    <!-- 実装手順 -->
+                    <div class="space-y-8">
+                        <!-- 手順1: セッション作成 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-shadow">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                                <h3 class="text-3xl font-bold text-gray-800">セッションを作成する</h3>
+                            </div>
+
+                            <div class="bg-red-50 p-4 rounded-lg mb-6 border-l-4 border-red-500">
+                                <p class="font-bold text-red-800">⚠️ チームで1人だけが実行してください</p>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-4">📝 手順:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">1</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">サイトにアクセス</p>
+                                            <a href="https://cyber-dojo.org" target="_blank" class="text-blue-600 hover:underline text-lg">https://cyber-dojo.org</a>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">2</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">新規作成</p>
+                                            <p>「<strong>create a new practice</strong>」をクリック</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">3</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">課題を選ぶ</p>
+                                            <p>「<strong>Fizz Buzz</strong>」を選択 → 「next」をクリック</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">4</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">言語を選ぶ</p>
+                                            <p>「<strong>PHP, PHPUnit</strong>」を選択 → 「next」をクリック</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">5</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">プラクティスタイプを選ぶ</p>
+                                            <p>「<strong>ensemble</strong>」をクリック</p>
+                                            <p class="text-sm text-gray-500 mt-1">（チーム全員で同じファイルを編集するモード）</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                                <p class="font-bold text-green-800 mb-3">✅ セッションIDが表示される</p>
+                                <p class="text-gray-700 mb-3">
+                                    6文字のID（例：<code class="bg-gray-200 px-2 py-1 rounded font-mono text-lg">TC1xPq</code>）が表示されます。
+                                </p>
+                                <p class="text-lg font-bold text-green-800">
+                                    📢 このIDをチームメンバー全員に共有してください！
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順2: セッション参加 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-shadow">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                                <h3 class="text-3xl font-bold text-gray-800">セッションに参加する</h3>
+                            </div>
+
+                            <div class="bg-blue-50 p-4 rounded-lg mb-6 border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800">👥 他のメンバー全員が実行</p>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-4">📝 手順:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">1</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">サイトにアクセス</p>
+                                            <a href="https://cyber-dojo.org" target="_blank" class="text-blue-600 hover:underline text-lg">https://cyber-dojo.org</a>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">2</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">既存セッションに参加</p>
+                                            <p>「<strong>enter an existing practice</strong>」をクリック</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">3</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">IDを入力</p>
+                                            <p>共有された<strong>6文字のID</strong>を入力</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">4</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 mb-1">参加完了</p>
+                                            <p>「ok」をクリック → コーディング画面が表示されれば成功！</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 手順3: 画面の使い方 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-shadow">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
+                                <h3 class="text-3xl font-bold text-gray-800">コーディング画面の使い方</h3>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-4">📁 ファイル構成（PHP + PHPUnit）:</p>
+                                <div class="bg-white p-4 rounded font-mono text-sm">
+                                    <div class="space-y-2">
+                                        <p><span class="text-blue-600 font-bold">Hiker.php</span> ... 本体コード（ここにFizzBuzz等を実装）</p>
+                                        <p><span class="text-green-600 font-bold">HikerTest.php</span> ... テストコード</p>
+                                        <p><span class="text-gray-500">cyber-dojo.sh</span> ... テスト実行用（編集不要）</p>
+                                        <p><span class="text-gray-500">readme.txt</span> ... 課題の説明</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">▶️ テストの実行方法:</p>
+                                <p class="text-gray-700 text-lg">
+                                    画面左上の「<strong>test</strong>」ボタンをクリック
+                                </p>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg border-2 border-gray-200 mb-6">
+                                <p class="font-bold text-gray-800 mb-4">🚦 結果の見方（信号機）:</p>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="text-center p-4 bg-red-100 rounded-lg hover:scale-105 transition-transform cursor-default">
+                                        <div class="w-16 h-16 bg-red-500 rounded-full mx-auto mb-2 shadow-lg"></div>
+                                        <p class="font-bold text-red-800 text-lg">赤</p>
+                                        <p class="text-sm text-gray-600">テスト失敗</p>
+                                    </div>
+                                    <div class="text-center p-4 bg-yellow-100 rounded-lg hover:scale-105 transition-transform cursor-default">
+                                        <div class="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-2 shadow-lg"></div>
+                                        <p class="font-bold text-yellow-800 text-lg">黄</p>
+                                        <p class="text-sm text-gray-600">シンタックスエラー</p>
+                                    </div>
+                                    <div class="text-center p-4 bg-green-100 rounded-lg hover:scale-105 transition-transform cursor-default">
+                                        <div class="w-16 h-16 bg-green-500 rounded-full mx-auto mb-2 shadow-lg"></div>
+                                        <p class="font-bold text-green-800 text-lg">緑</p>
+                                        <p class="text-sm text-gray-600">テスト成功</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                                <p class="font-bold text-yellow-800 mb-3">💡 ファイルの切り替え:</p>
+                                <p class="text-gray-700">
+                                    画面左側のファイル名をクリックすると切り替わります
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順4: 予測機能 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-shadow">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">4</span>
+                                <h3 class="text-3xl font-bold text-gray-800">予測機能（predict）を使おう</h3>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">🔮 予測機能とは？</p>
+                                <p class="text-gray-700 text-lg">
+                                    テスト結果を<strong>予測してから実行</strong>する機能です。<br>
+                                    自分がコードの状態を把握できているか確認できます。
+                                </p>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-4">📝 使い方:</p>
+                                <div class="space-y-4 text-gray-700">
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">1</span>
+                                        <p>「<strong>predict</strong>」にチェックを入れる</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">2</span>
+                                        <p>red / amber / green のボタンが表示される</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">3</span>
+                                        <p>テスト結果がどうなるか<strong>予測してボタンをクリック</strong></p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">4</span>
+                                        <p>テストが実行され、予測が当たったか表示される</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-lg border-2 border-gray-200 mb-6">
+                                <p class="font-bold text-gray-800 mb-4">🎯 予測の意味:</p>
+                                <div class="space-y-3">
+                                    <div class="flex items-center p-3 bg-red-50 rounded hover:bg-red-100 transition-colors">
+                                        <div class="w-10 h-10 bg-red-500 rounded-full mr-3 shadow"></div>
+                                        <p><strong>redを選ぶ</strong> = テストが失敗すると思う</p>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-yellow-50 rounded hover:bg-yellow-100 transition-colors">
+                                        <div class="w-10 h-10 bg-yellow-500 rounded-full mr-3 shadow"></div>
+                                        <p><strong>amberを選ぶ</strong> = シンタックスエラーになると思う</p>
+                                    </div>
+                                    <div class="flex items-center p-3 bg-green-50 rounded hover:bg-green-100 transition-colors">
+                                        <div class="w-10 h-10 bg-green-500 rounded-full mr-3 shadow"></div>
+                                        <p><strong>greenを選ぶ</strong> = テストが成功すると思う</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                                <p class="font-bold text-green-800 mb-3">📊 結果の見方:</p>
+                                <ul class="text-gray-700 space-y-2">
+                                    <li>• <strong>予測が当たった</strong> → コードの状態を把握できている 👍</li>
+                                    <li>• <strong>予測が外れた</strong> → 何か見落としている可能性あり 🤔</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 手順5: チームでの進め方 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-shadow">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">5</span>
+                                <h3 class="text-3xl font-bold text-gray-800">チームでの進め方</h3>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-blue-800 mb-3">🤝 モブプログラミングとは？</p>
+                                <p class="text-gray-700">
+                                    チーム全員で1つのコードを作る開発スタイルです。<br>
+                                    <strong>ドライバー</strong>（コードを書く人）と<strong>ナビゲーター</strong>（指示を出す人）に分かれます。
+                                </p>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-4">🚀 準備:</p>
+                                <div class="space-y-3 text-gray-700">
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">1</span>
+                                        <p>チームで1人がセッションを作成（ensemble）</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">2</span>
+                                        <p>IDをチーム全員に共有</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
+                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">3</span>
+                                        <p>全員が自分のPCでそのIDに入っておく</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6 border-l-4 border-indigo-500">
+                                <p class="font-bold text-indigo-800 mb-4">💻 モブプログラミング中:</p>
+                                <div class="space-y-3 text-gray-700">
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-indigo-50 transition-colors">
+                                        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-bold mr-3">1</span>
+                                        <p><strong>ドライバー</strong>（コードを書く人）がZoomで画面共有</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-indigo-50 transition-colors">
+                                        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-bold mr-3">2</span>
+                                        <p>ドライバーがコードを書く</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-indigo-50 transition-colors">
+                                        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-bold mr-3">3</span>
+                                        <p>他のメンバーは口頭で指示・アドバイス</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-indigo-50 transition-colors">
+                                        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-bold mr-3">4</span>
+                                        <p>時間が来たら交代</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                                <p class="font-bold text-yellow-800 mb-4">🔄 交代時:</p>
+                                <div class="space-y-3 text-gray-700">
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-yellow-50 transition-colors">
+                                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">1</span>
+                                        <p>次のドライバーが<strong>ブラウザをリフレッシュ</strong>（最新コードを取得）</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-yellow-50 transition-colors">
+                                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">2</span>
+                                        <p>Zoomの画面共有を次の人に切り替え</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded flex items-start hover:bg-yellow-50 transition-colors">
+                                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">3</span>
+                                        <p>続きからコーディング開始</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 手順6: FizzBuzzチュートリアル -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-orange-500 hover:shadow-xl transition-shadow">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-orange-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">6</span>
+                                <h3 class="text-3xl font-bold text-gray-800">FizzBuzz TDDチュートリアル</h3>
+                            </div>
+
+                            <!-- スクラム開発のアドバイス -->
+                            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-6 rounded-lg mb-6 border-2 border-purple-200">
+                                <p class="font-bold text-purple-800 mb-4 text-xl">🏃 スクラム開発のポイント</p>
+                                <div class="space-y-3 text-gray-700">
+                                    <div class="flex items-start">
+                                        <span class="text-2xl mr-3">📋</span>
+                                        <div>
+                                            <p class="font-bold">スプリント計画</p>
+                                            <p class="text-sm">最初にチームでゴールを確認。「STEP 6までを一緒にやって、残りは自力でやる」</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="text-2xl mr-3">🔄</span>
+                                        <div>
+                                            <p class="font-bold">イテレーション</p>
+                                            <p class="text-sm">TDDの「赤→緑→リファクタリング」はスクラムの短いサイクルと同じ考え方！</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="text-2xl mr-3">👥</span>
+                                        <div>
+                                            <p class="font-bold">全員参加</p>
+                                            <p class="text-sm">ナビゲーターは積極的に声を出そう。「次は何をテストする？」「このコードで大丈夫？」</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="text-2xl mr-3">🎯</span>
+                                        <div>
+                                            <p class="font-bold">予測を活用</p>
+                                            <p class="text-sm">testボタンを押す前に「赤か緑か」を予測！外れたら振り返りのチャンス</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FizzBuzzの仕様 -->
+                            <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800 mb-3 text-lg">📝 FizzBuzzの仕様 <span class="text-sm font-normal text-gray-500">（readme.txt 日本語訳）</span></p>
+
+                                <!-- 原文 -->
+                                <div class="bg-gray-100 p-4 rounded-lg mb-4 border border-gray-300">
+                                    <p class="text-xs text-gray-500 mb-2">📄 readme.txt（原文）:</p>
+                                    <p class="text-sm text-gray-700 font-mono">
+                                        Write a program that prints the numbers from 1 to 100. But for multiples of three print "Fizz" instead of the number and for the multiples of five print "Buzz". For numbers which are multiples of both three and five print "FizzBuzz".
+                                    </p>
+                                </div>
+
+                                <!-- 日本語訳 -->
+                                <div class="bg-white p-4 rounded-lg border-2 border-blue-200">
+                                    <p class="text-xs text-blue-500 mb-2">🇯🇵 日本語訳:</p>
+                                    <p class="text-gray-700 mb-3">
+                                        1から100までの数字を出力するプログラムを書いてください。<br>
+                                        ただし：
+                                    </p>
+                                    <ul class="space-y-2 text-gray-700 ml-4">
+                                        <li>• <strong>3の倍数</strong>のときは、数字の代わりに「<span class="text-green-600 font-bold">Fizz</span>」を出力</li>
+                                        <li>• <strong>5の倍数</strong>のときは、数字の代わりに「<span class="text-blue-600 font-bold">Buzz</span>」を出力</li>
+                                        <li>• <strong>3と5の両方の倍数</strong>のときは「<span class="text-purple-600 font-bold">FizzBuzz</span>」を出力</li>
+                                    </ul>
+                                </div>
+
+                                <!-- 出力例 -->
+                                <div class="mt-4 bg-gray-900 p-4 rounded-lg">
+                                    <p class="text-xs text-gray-400 mb-2">Sample output:</p>
+                                    <div class="font-mono text-sm text-green-400 grid grid-cols-5 gap-1">
+                                        <span>1</span><span>2</span><span class="text-yellow-400">Fizz</span><span>4</span><span class="text-cyan-400">Buzz</span>
+                                        <span class="text-yellow-400">Fizz</span><span>7</span><span>8</span><span class="text-yellow-400">Fizz</span><span class="text-cyan-400">Buzz</span>
+                                        <span>11</span><span class="text-yellow-400">Fizz</span><span>13</span><span>14</span><span class="text-pink-400">FizzBuzz</span>
+                                        <span>16</span><span>17</span><span class="text-yellow-400">Fizz</span><span>19</span><span class="text-cyan-400">Buzz</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">... etc up to 100</p>
+                                </div>
+                            </div>
+
+                            <!-- 講師と一緒に進める部分 -->
+                            <div class="bg-green-50 p-6 rounded-lg mb-6 border-2 border-green-300">
+                                <p class="font-bold text-green-800 mb-4 text-xl">👨‍🏫 講師の模範解答（STEP 1〜6）</p>
+                                <p class="text-gray-700 mb-4">まずは講師と一緒にここまで進めましょう！</p>
+
+                                <!-- STEP 1 -->
+                                <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
+                                    <p class="font-bold text-gray-800 mb-2">STEP 1: FizzBuzz用に準備する</p>
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div>
+                                            <p class="text-sm text-gray-600 mb-1">Hiker.php</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+
+function fizzbuzz($n)
+{
+    // まだ何も実装しない
+}
+?&gt;</code></pre>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-gray-600 mb-1">HikerTest.php</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+require_once 'Hiker.php';
+use PHPUnit\Framework\TestCase;
+
+class HikerTest extends TestCase
+{
+    public function test_1を渡すと1を返す()
+    {
+        $this-&gt;assertEquals("1", fizzbuzz(1));
+    }
+}
+?&gt;</code></pre>
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（テスト失敗）</p>
+                                </div>
+
+                                <!-- STEP 2 -->
+                                <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-green-400">
+                                    <p class="font-bold text-gray-800 mb-2">STEP 2: テストを通す最小限のコード</p>
+                                    <div>
+                                        <p class="text-sm text-gray-600 mb-1">Hiker.php</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+
+function fizzbuzz($n)
+{
+    return "1";  // とりあえず"1"を返す
+}
+?&gt;</code></pre>
+                                    </div>
+                                    <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-green-500 rounded-full mr-1"></span> testボタン → <strong>緑</strong>（テスト成功）</p>
+                                </div>
+
+                                <!-- STEP 3 -->
+                                <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
+                                    <p class="font-bold text-gray-800 mb-2">STEP 3: 次のテストを追加</p>
+                                    <div>
+                                        <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function test_2を渡すと2を返す()
+{
+    $this-&gt;assertEquals("2", fizzbuzz(2));
+}</code></pre>
+                                    </div>
+                                    <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（"1"が返るので失敗）</p>
+                                </div>
+
+                                <!-- STEP 4 -->
+                                <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-green-400">
+                                    <p class="font-bold text-gray-800 mb-2">STEP 4: テストを通すように修正</p>
+                                    <div>
+                                        <p class="text-sm text-gray-600 mb-1">Hiker.php</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+
+function fizzbuzz($n)
+{
+    return (string)$n;  // 数字を文字列で返す
+}
+?&gt;</code></pre>
+                                    </div>
+                                    <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-green-500 rounded-full mr-1"></span> testボタン → <strong>緑</strong>（両方のテスト成功）</p>
+                                </div>
+
+                                <!-- STEP 5 -->
+                                <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
+                                    <p class="font-bold text-gray-800 mb-2">STEP 5: 3の倍数のテストを追加</p>
+                                    <div>
+                                        <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function test_3を渡すとFizzを返す()
+{
+    $this-&gt;assertEquals("Fizz", fizzbuzz(3));
+}</code></pre>
+                                    </div>
+                                    <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（"3"が返るので失敗）</p>
+                                </div>
+
+                                <!-- STEP 6 -->
+                                <div class="bg-white p-4 rounded-lg border-l-4 border-green-400">
+                                    <p class="font-bold text-gray-800 mb-2">STEP 6: 3の倍数でFizzを返す</p>
+                                    <div>
+                                        <p class="text-sm text-gray-600 mb-1">Hiker.php</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+
+function fizzbuzz($n)
+{
+    if ($n % 3 === 0) {
+        return "Fizz";
+    }
+    return (string)$n;
+}
+?&gt;</code></pre>
+                                    </div>
+                                    <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-green-500 rounded-full mr-1"></span> testボタン → <strong>緑</strong>（全テスト成功）</p>
+                                    <p class="mt-2 text-sm text-gray-600">💡 <code>$n % 3</code> は「nを3で割った余り」。余りが0なら3の倍数！</p>
+                                </div>
+                            </div>
+
+                            <!-- チームで挑戦する部分 -->
+                            <div class="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-lg border-2 border-orange-300">
+                                <p class="font-bold text-orange-800 mb-4 text-xl">🔥 ここからはチームで挑戦！</p>
+                                <p class="text-gray-700 mb-4">STEP 6までのパターンを参考に、残りを自分たちで実装しよう！</p>
+
+                                <div class="bg-white p-4 rounded-lg mb-4">
+                                    <p class="font-bold text-gray-800 mb-3">📋 やることリスト:</p>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center p-2 bg-gray-50 rounded">
+                                            <span class="w-6 h-6 border-2 border-gray-400 rounded mr-3"></span>
+                                            <p><strong>STEP 7-8:</strong> 5の倍数で「Buzz」を返すテストと実装</p>
+                                        </div>
+                                        <div class="flex items-center p-2 bg-gray-50 rounded">
+                                            <span class="w-6 h-6 border-2 border-gray-400 rounded mr-3"></span>
+                                            <p><strong>STEP 9-10:</strong> 15の倍数で「FizzBuzz」を返すテストと実装</p>
+                                        </div>
+                                        <div class="flex items-center p-2 bg-gray-50 rounded">
+                                            <span class="w-6 h-6 border-2 border-gray-400 rounded mr-3"></span>
+                                            <p><strong>STEP 11:</strong> 1から100まで出力</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                                    <p class="font-bold text-yellow-800 mb-2">💡 ヒント</p>
+                                    <ul class="text-sm text-gray-700 space-y-1">
+                                        <li>• 5の倍数は <code class="bg-gray-200 px-1 rounded">$n % 5 === 0</code> でチェック</li>
+                                        <li>• 15の倍数の判定は<strong>順番が重要</strong>！（最初にチェックしないと...？）</li>
+                                        <li>• 困ったらチームで相談。ナビゲーターがアドバイス！</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- 模範解答（折りたたみ） -->
+                            <details class="mt-6 bg-red-50 rounded-lg border-2 border-red-300 overflow-hidden">
+                                <summary class="bg-red-100 p-4 cursor-pointer hover:bg-red-200 transition-colors">
+                                    <span class="font-bold text-red-800 text-lg">🙈 講師の模範解答（STEP 7〜11）- まずは見ないでチャレンジ！</span>
+                                </summary>
+                                <div class="p-6">
+                                    <div class="bg-red-100 p-4 rounded-lg mb-6 border-l-4 border-red-500">
+                                        <p class="font-bold text-red-800 mb-2">⚠️ 注意</p>
+                                        <p class="text-gray-700">
+                                            まずはチームで考えてみましょう！<br>
+                                            どうしても分からないときだけ参考にしてください。
+                                        </p>
+                                    </div>
+
+                                    <!-- STEP 7 -->
+                                    <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
+                                        <p class="font-bold text-gray-800 mb-2">STEP 7: 5の倍数のテストを追加</p>
+                                        <div>
+                                            <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function test_5を渡すとBuzzを返す()
+{
+    $this-&gt;assertEquals("Buzz", fizzbuzz(5));
+}</code></pre>
+                                        </div>
+                                        <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（"5"が返るので失敗）</p>
+                                    </div>
+
+                                    <!-- STEP 8 -->
+                                    <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-green-400">
+                                        <p class="font-bold text-gray-800 mb-2">STEP 8: 5の倍数でBuzzを返す</p>
+                                        <div>
+                                            <p class="text-sm text-gray-600 mb-1">Hiker.php</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+
+function fizzbuzz($n)
+{
+    if ($n % 3 === 0) {
+        return "Fizz";
+    }
+    if ($n % 5 === 0) {
+        return "Buzz";
+    }
+    return (string)$n;
+}
+?&gt;</code></pre>
+                                        </div>
+                                        <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-green-500 rounded-full mr-1"></span> testボタン → <strong>緑</strong>（全テスト成功）</p>
+                                    </div>
+
+                                    <!-- STEP 9 -->
+                                    <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
+                                        <p class="font-bold text-gray-800 mb-2">STEP 9: 15の倍数のテストを追加</p>
+                                        <div>
+                                            <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function test_15を渡すとFizzBuzzを返す()
+{
+    $this-&gt;assertEquals("FizzBuzz", fizzbuzz(15));
+}</code></pre>
+                                        </div>
+                                        <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（"Fizz"が返る！15は3の倍数でもあるから）</p>
+                                    </div>
+
+                                    <!-- STEP 10 -->
+                                    <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-green-400">
+                                        <p class="font-bold text-gray-800 mb-2">STEP 10: 15の倍数でFizzBuzzを返す</p>
+                                        <div>
+                                            <p class="text-sm text-gray-600 mb-1">Hiker.php</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+
+function fizzbuzz($n)
+{
+    if ($n % 15 === 0) {  // ← 最初にチェック！
+        return "FizzBuzz";
+    }
+    if ($n % 3 === 0) {
+        return "Fizz";
+    }
+    if ($n % 5 === 0) {
+        return "Buzz";
+    }
+    return (string)$n;
+}
+?&gt;</code></pre>
+                                        </div>
+                                        <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-green-500 rounded-full mr-1"></span> testボタン → <strong>緑</strong>（全テスト成功）</p>
+                                        <div class="mt-2 bg-yellow-50 p-3 rounded text-sm">
+                                            <p class="font-bold text-yellow-800">💡 ポイント</p>
+                                            <p class="text-gray-700">15の倍数を<strong>最初に</strong>チェックする！<br>15は3でも5でも割り切れるので、後にすると"Fizz"になってしまう。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- STEP 11 -->
+                                    <div class="bg-white p-4 rounded-lg border-l-4 border-blue-400">
+                                        <p class="font-bold text-gray-800 mb-2">STEP 11: 1から100まで出力</p>
+                                        <div>
+                                            <p class="text-sm text-gray-600 mb-1">Hiker.php（完成版）</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+
+function fizzbuzz($n)
+{
+    if ($n % 15 === 0) {
+        return "FizzBuzz";
+    }
+    if ($n % 3 === 0) {
+        return "Fizz";
+    }
+    if ($n % 5 === 0) {
+        return "Buzz";
+    }
+    return (string)$n;
+}
+
+// 1から100まで出力
+for ($i = 1; $i &lt;= 100; $i++) {
+    echo fizzbuzz($i) . "\n";
+}
+?&gt;</code></pre>
+                                        </div>
+                                        <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-green-500 rounded-full mr-1"></span> testボタン → <strong>緑</strong>（outputタブで結果を確認！）</p>
+                                    </div>
+
+                                    <!-- 完成したテストコード -->
+                                    <div class="bg-gray-50 p-4 rounded-lg mt-6 border-l-4 border-gray-400">
+                                        <p class="font-bold text-gray-800 mb-2">📄 HikerTest.php（完成版）</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+require_once 'Hiker.php';
+use PHPUnit\Framework\TestCase;
+
+class HikerTest extends TestCase
+{
+    public function test_1を渡すと1を返す()
+    {
+        $this-&gt;assertEquals("1", fizzbuzz(1));
+    }
+
+    public function test_2を渡すと2を返す()
+    {
+        $this-&gt;assertEquals("2", fizzbuzz(2));
+    }
+
+    public function test_3を渡すとFizzを返す()
+    {
+        $this-&gt;assertEquals("Fizz", fizzbuzz(3));
+    }
+
+    public function test_5を渡すとBuzzを返す()
+    {
+        $this-&gt;assertEquals("Buzz", fizzbuzz(5));
+    }
+
+    public function test_15を渡すとFizzBuzzを返す()
+    {
+        $this-&gt;assertEquals("FizzBuzz", fizzbuzz(15));
+    }
+}
+?&gt;</code></pre>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- 発展：テスト可能な設計 -->
+                            <details class="mt-6 bg-indigo-50 rounded-lg border-2 border-indigo-300 overflow-hidden">
+                                <summary class="bg-indigo-100 p-4 cursor-pointer hover:bg-indigo-200 transition-colors">
+                                    <span class="font-bold text-indigo-800 text-lg">🎓 発展：1から100まで出力する部分もテストしよう</span>
+                                </summary>
+                                <div class="p-6">
+                                    <div class="bg-yellow-50 p-4 rounded-lg mb-6 border-l-4 border-yellow-500">
+                                        <p class="font-bold text-yellow-800 mb-2">🤔 ちょっと待って！</p>
+                                        <p class="text-gray-700">
+                                            仕様は「<strong>1から100まで出力する</strong>」でしたよね？<br>
+                                            今のテストでは fizzbuzz(1), fizzbuzz(3), fizzbuzz(5), fizzbuzz(15) しかテストしていません。<br>
+                                            <strong>1から100まで正しく出力されるか</strong>はテストできていない！
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-red-50 p-4 rounded-lg mb-6 border-l-4 border-red-400">
+                                        <p class="font-bold text-red-800 mb-2">❌ 現状のコードの問題</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>// これは直接echoしているのでテストしにくい
+for ($i = 1; $i <= 100; $i++) {
+    echo fizzbuzz($i) . "\n";
+}</code></pre>
+                                        <p class="text-sm text-gray-700 mt-2">
+                                            → <code>echo</code> は標準出力に出すだけ。PHPUnitで戻り値をテストできない！
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-green-50 p-4 rounded-lg mb-6 border-l-4 border-green-500">
+                                        <p class="font-bold text-green-800 mb-2">✅ テスト可能な設計に変更</p>
+                                        <p class="text-sm text-gray-600 mb-2">Hiker.php - 出力を配列で返す関数を追加</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+
+function fizzbuzz($n)
+{
+    if ($n % 15 === 0) {
+        return "FizzBuzz";
+    }
+    if ($n % 3 === 0) {
+        return "Fizz";
+    }
+    if ($n % 5 === 0) {
+        return "Buzz";
+    }
+    return (string)$n;
+}
+
+// 1からNまでの結果を配列で返す（テスト可能！）
+function fizzbuzzAll($end)
+{
+    $result = [];
+    for ($i = 1; $i <= $end; $i++) {
+        $result[] = fizzbuzz($i);
+    }
+    return $result;
+}
+
+// 出力
+foreach (fizzbuzzAll(100) as $line) {
+    echo $line . "\n";
+}
+?&gt;</code></pre>
+                                    </div>
+
+                                    <div class="bg-blue-50 p-4 rounded-lg mb-6 border-l-4 border-blue-500">
+                                        <p class="font-bold text-blue-800 mb-2">🧪 HikerTest.php（完全版）</p>
+                                        <p class="text-sm text-gray-600 mb-2">※ファイル全体をこれに置き換えてください</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+require_once 'Hiker.php';
+use PHPUnit\Framework\TestCase;
+
+class HikerTest extends TestCase
+{
+    public function testReturns1When1()
+    {
+        $this-&gt;assertEquals("1", fizzbuzz(1));
+    }
+
+    public function testReturns2When2()
+    {
+        $this-&gt;assertEquals("2", fizzbuzz(2));
+    }
+
+    public function testReturnsFizzWhen3()
+    {
+        $this-&gt;assertEquals("Fizz", fizzbuzz(3));
+    }
+
+    public function testReturnsBuzzWhen5()
+    {
+        $this-&gt;assertEquals("Buzz", fizzbuzz(5));
+    }
+
+    public function testReturnsFizzBuzzWhen15()
+    {
+        $this-&gt;assertEquals("FizzBuzz", fizzbuzz(15));
+    }
+
+    // --- 発展：1から100までのテスト ---
+
+    public function testFizzbuzzAllReturnsCorrectSequence()
+    {
+        $expected = [
+            "1", "2", "Fizz", "4", "Buzz",
+            "Fizz", "7", "8", "Fizz", "Buzz",
+            "11", "Fizz", "13", "14", "FizzBuzz"
+        ];
+        $this-&gt;assertEquals($expected, fizzbuzzAll(15));
+    }
+
+    public function testFizzbuzzAllReturns100Elements()
+    {
+        $result = fizzbuzzAll(100);
+        $this-&gt;assertCount(100, $result);
+    }
+
+    public function testThe100thElementIsBuzz()
+    {
+        $result = fizzbuzzAll(100);
+        $this-&gt;assertEquals("Buzz", $result[99]);
+    }
+}
+?&gt;</code></pre>
+                                    </div>
+
+                                    <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                                        <p class="font-bold text-purple-800 mb-2">💡 学びのポイント</p>
+                                        <ul class="text-sm text-gray-700 space-y-2">
+                                            <li>• <strong>テスト可能な設計</strong>：echoで直接出力せず、戻り値を返す関数にする</li>
+                                            <li>• <strong>単一責任</strong>：「計算する関数」と「出力する処理」を分ける</li>
+                                            <li>• <strong>仕様を満たすテスト</strong>：「1から100まで」という仕様もテストで保証する</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- TDDのポイント -->
+                            <div class="bg-gray-50 p-6 rounded-lg mt-6 border-l-4 border-gray-500">
+                                <p class="font-bold text-gray-800 mb-3">🔑 TDDのサイクル</p>
+                                <div class="flex items-center justify-center space-x-4 text-center">
+                                    <div class="bg-red-100 p-3 rounded-lg">
+                                        <div class="w-12 h-12 bg-red-500 rounded-full mx-auto mb-2"></div>
+                                        <p class="font-bold text-red-800">赤</p>
+                                        <p class="text-xs text-gray-600">テストを書く</p>
+                                    </div>
+                                    <span class="text-2xl">→</span>
+                                    <div class="bg-green-100 p-3 rounded-lg">
+                                        <div class="w-12 h-12 bg-green-500 rounded-full mx-auto mb-2"></div>
+                                        <p class="font-bold text-green-800">緑</p>
+                                        <p class="text-xs text-gray-600">最小限で通す</p>
+                                    </div>
+                                    <span class="text-2xl">→</span>
+                                    <div class="bg-blue-100 p-3 rounded-lg">
+                                        <div class="w-12 h-12 bg-blue-500 rounded-full mx-auto mb-2"></div>
+                                        <p class="font-bold text-blue-800">リファクタ</p>
+                                        <p class="text-xs text-gray-600">コードを整理</p>
+                                    </div>
+                                    <span class="text-2xl">→</span>
+                                    <span class="text-xl">🔄</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 次のステップ -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6">次のステップ</h2>
+                    <p class="text-gray-600 mb-8 text-lg">
+                        TDDの基礎を学んで、テストファーストで開発する方法を身につけましょう。
+                    </p>
+
+                    <a href="index.html" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-10 rounded-full inline-block transition text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        🚀 TDD講座へ進む →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- フッター -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center">
+                    <p class="text-gray-300 text-sm">
+                        &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 現在の年を自動挿入
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // アイコンと色の設定
+        const icons = ['🤖', '👥', '💻', '🚀', '⚡', '🔧', '💡', '🎯', '✨', '🔥', '💫', '⭐'];
+        const animations = ['floatUp', 'floatDiagonal', 'floatWave'];
+
+        // テスラカーのアイコン
+        const teslaIcons = ['🚗', '🏎️', '🚙', '🚕', '🛻'];
+        // 花火の色
+        const fireworkColors = ['🎆', '✨', '💫', '⭐', '🌟', '💥'];
+
+        // フローティングアイコンを生成
+        function createFloatingIcon(container) {
+            const icon = document.createElement('div');
+            icon.className = 'floating-icon';
+            icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+            icon.style.left = Math.random() * 100 + '%';
+            icon.style.bottom = '-50px';
+            const size = 1.5 + Math.random() * 2;
+            icon.style.fontSize = size + 'rem';
+            const animation = animations[Math.floor(Math.random() * animations.length)];
+            const duration = 8 + Math.random() * 12;
+            icon.style.animation = `${animation} ${duration}s ease-out forwards`;
+            container.appendChild(icon);
+            icon.addEventListener('animationend', () => icon.remove());
+        }
+
+        // キラキラを生成
+        function createSparkle(container) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = Math.random() * 2 + 's';
+            sparkle.style.animationDuration = (2 + Math.random() * 2) + 's';
+            container.appendChild(sparkle);
+            setTimeout(() => {
+                sparkle.remove();
+                createSparkle(container);
+            }, 4000 + Math.random() * 2000);
+        }
+
+        // 花火を生成
+        function createFirework(container) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            const x = 10 + Math.random() * 80;
+            const y = 20 + Math.random() * 60;
+            firework.style.left = x + '%';
+            firework.style.top = y + '%';
+
+            // 花火の爆発パーティクルを生成
+            const particleCount = 8 + Math.floor(Math.random() * 8);
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                particle.textContent = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+                const angle = (360 / particleCount) * i;
+                const distance = 50 + Math.random() * 80;
+                const tx = Math.cos(angle * Math.PI / 180) * distance;
+                const ty = Math.sin(angle * Math.PI / 180) * distance;
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.animation = `fireworkExplode ${0.8 + Math.random() * 0.5}s ease-out forwards`;
+                particle.style.animationDelay = Math.random() * 0.2 + 's';
+                firework.appendChild(particle);
+            }
+
+            container.appendChild(firework);
+            setTimeout(() => firework.remove(), 2000);
+        }
+
+        // テスラカーを走らせる
+        function createTeslaCar(container) {
+            const car = document.createElement('div');
+            car.className = 'tesla-car';
+            car.textContent = teslaIcons[Math.floor(Math.random() * teslaIcons.length)];
+            const y = 20 + Math.random() * 60;
+            car.style.top = y + '%';
+            const goRight = Math.random() > 0.5;
+            car.style.animation = `${goRight ? 'driveRight' : 'driveLeft'} ${6 + Math.random() * 4}s linear forwards`;
+            container.appendChild(car);
+            car.addEventListener('animationend', () => car.remove());
+        }
+
+        // 流れ星を生成
+        function createShootingStar(container) {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            star.style.left = Math.random() * 50 + '%';
+            star.style.top = Math.random() * 30 + '%';
+            star.style.animation = `shootingStar ${1 + Math.random() * 0.5}s linear forwards`;
+            container.appendChild(star);
+            star.addEventListener('animationend', () => star.remove());
+        }
+
+        // バブルを生成
+        function createBubble(container) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = 20 + Math.random() * 40;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.bottom = '-50px';
+            bubble.style.animation = `bubbleFloat ${5 + Math.random() * 5}s ease-out forwards`;
+            container.appendChild(bubble);
+            bubble.addEventListener('animationend', () => bubble.remove());
+        }
+
+        // 波紋を生成
+        function createRipple(container) {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = Math.random() * 100 + '%';
+            ripple.style.top = Math.random() * 100 + '%';
+            ripple.style.animation = `rippleEffect 2s ease-out forwards`;
+            container.appendChild(ripple);
+            ripple.addEventListener('animationend', () => ripple.remove());
+        }
+
+        // 回転歯車を配置
+        function createGear(container) {
+            const gear = document.createElement('div');
+            gear.className = 'gear';
+            gear.textContent = '⚙️';
+            gear.style.left = Math.random() * 100 + '%';
+            gear.style.top = Math.random() * 100 + '%';
+            gear.style.animationDuration = (8 + Math.random() * 10) + 's';
+            gear.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+            container.appendChild(gear);
+        }
+
+        // 各セクションにパーティクルを追加
+        function initParticles() {
+            const containers = [
+                document.getElementById('introParticles'),
+                document.getElementById('handsonParticles')
+            ];
+
+            containers.forEach(container => {
+                if (!container) return;
+
+                // 初期キラキラを生成
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => createSparkle(container), i * 150);
+                }
+
+                // 歯車を配置
+                for (let i = 0; i < 3; i++) {
+                    createGear(container);
+                }
+
+                // 定期的にフローティングアイコンを生成
+                setInterval(() => {
+                    if (document.visibilityState === 'visible') {
+                        createFloatingIcon(container);
+                    }
+                }, 1200);
+
+                // 定期的に花火を生成
+                setInterval(() => {
+                    if (document.visibilityState === 'visible') {
+                        createFirework(container);
+                    }
+                }, 3000);
+
+                // 定期的にテスラカーを走らせる
+                setInterval(() => {
+                    if (document.visibilityState === 'visible') {
+                        createTeslaCar(container);
+                    }
+                }, 5000);
+
+                // 定期的に流れ星を生成
+                setInterval(() => {
+                    if (document.visibilityState === 'visible') {
+                        createShootingStar(container);
+                    }
+                }, 4000);
+
+                // 定期的にバブルを生成
+                setInterval(() => {
+                    if (document.visibilityState === 'visible') {
+                        createBubble(container);
+                    }
+                }, 2000);
+
+                // 定期的に波紋を生成
+                setInterval(() => {
+                    if (document.visibilityState === 'visible') {
+                        createRipple(container);
+                    }
+                }, 2500);
+
+                // 初期エフェクトを生成
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => createFloatingIcon(container), i * 500);
+                    setTimeout(() => createBubble(container), i * 600);
+                }
+                setTimeout(() => createFirework(container), 1000);
+                setTimeout(() => createTeslaCar(container), 2000);
+            });
+        }
+
+        // DOM読み込み完了後に実行
+        document.addEventListener('DOMContentLoaded', initParticles);
+    </script>
+
+    <script src="code-copy.js"></script>
+    <script src="global-menu.js"></script>
+    <script src="nav-highlight.js"></script>
+    <script src="scroll-to-top.js"></script>
+</body>
+</html>
