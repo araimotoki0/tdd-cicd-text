@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a href="handson-setup-mac.html" class="global-menu-item">Mac環境構築</a>
                     <a href="ai-coding.html" class="global-menu-item">AI Coding</a>
                     <a href="mob-ai.html" class="global-menu-item">Mob AI</a>
+                    <a href="replit-tdd.html" class="global-menu-item">Mob AI Replit</a>
                     <a href="index.html" class="global-menu-item">TDD講座</a>
                     <a href="cicd-index.html" class="global-menu-item">CI/CD講座</a>
                 </div>
