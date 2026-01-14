@@ -112,11 +112,12 @@
                             </div>
                         </div>
 
-                        <div class="mt-6 bg-white p-4 rounded border-l-4 border-blue-600">
+                        <div class="mt-6 bg-white p-4 rounded border-l-4 border-red-500">
                             <p class="text-sm text-gray-700">
-                                <strong>💡 ヒント:</strong> エラーが出た場合は、コンテナ内で<code>composer install</code>を実行してみてください。
+                                <strong>⚠️ 重要:</strong> これ以降に出てくる <code>php artisan</code> コマンドは、必ず <code>docker compose exec app bash</code> などで app コンテナに入ってから実行してください。PHP がコンテナ内で設定されているためです。
                             </p>
                         </div>
+
                     </div>
 
                     <!-- チェックリスト -->
