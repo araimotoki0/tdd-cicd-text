@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSDクラス チラ見せ説明会 - スクラム開発を主導するための講座</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- ナビゲーション -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold">CSDクラス チラ見せ説明会</h1>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="index.html" class="hover:text-indigo-200">TDD講座</a>
+                    <span class="text-indigo-200">|</span>
+                    <a href="cicd-index.html" class="hover:text-indigo-200">CI/CD講座</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-20">
+        <!-- 1. ヒーローセクション（改善） -->
+        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl font-bold mb-6">CSDクラス チラ見せ説明会</h2>
+                <p class="text-2xl mb-4">資格を取るだけで終わらない</p>
+                <p class="text-lg opacity-80 mb-2">スクラム開発を主導するための実践講座</p>
+                <p class="text-xl font-semibold mb-8">現場で通用する開発スキルを2日間で習得</p>
+
+                <!-- スキルバッジ -->
+                <div class="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
+                    <span class="bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-medium">TDD</span>
+                    <span class="bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-medium">CI/CD</span>
+                    <span class="bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-medium">Docker</span>
+                    <span class="bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-medium">AI Coding</span>
+                    <span class="bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-medium">チーム開発</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. この講座について -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎯 この講座について</h2>
+
+                    <div class="bg-indigo-50 p-8 rounded-lg shadow-lg mb-8">
+                        <p class="text-xl text-gray-700 leading-relaxed">
+                            <strong>CSD資格を取るだけで終わらず</strong>、今後皆様が<span class="bg-yellow-200 px-2 py-1 rounded">スクラム開発を主導していく</span>ための講座を作りました。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. AIコーディング（既存維持） -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🤖 AIコーディング</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">💻</span>
+                            <h3 class="text-2xl font-bold text-gray-800">Gemini CLI を使った開発</h3>
+                        </div>
+
+                        <p class="text-gray-700 text-lg mb-6">
+                            CLIで<strong>Gemini CLI</strong>を用いた開発の仕方を解説します。
+                        </p>
+
+                        <div class="bg-gray-900 p-4 rounded-lg mb-6">
+                            <code class="text-green-400 text-sm">$ gemini</code>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">🔄 他のCLIツールにもすぐ対応</p>
+                            <p class="text-gray-700 mb-3">使い方が似ているので、他のツールもすぐに使えるようになります：</p>
+                            <div class="flex flex-wrap gap-3">
+                                <span class="bg-white px-4 py-2 rounded-lg border font-mono text-sm">Claude Code</span>
+                                <span class="bg-white px-4 py-2 rounded-lg border font-mono text-sm">Codex</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-bold text-yellow-800 mb-3">💡 現場の声</p>
+                            <p class="text-gray-700 italic">
+                                「AIを使わないコーディングはもう考えられません。<br>
+                                私も自分でコードを書くことはほとんどなく、<strong>できたものをレビューする</strong>のがほとんどです。」
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 開発環境（既存維持） -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🐳 実践的な開発環境</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">🐳</span>
+                            <h3 class="text-2xl font-bold text-gray-800">Docker Compose でローカル開発</h3>
+                        </div>
+
+                        <p class="text-gray-700 text-lg mb-6">
+                            開発環境は<strong>Docker Compose</strong>を用いて、実際にローカル環境で開発をしていきます。
+                        </p>
+
+                        <div class="bg-gray-900 p-6 rounded-lg mb-6">
+                            <p class="text-gray-400 text-sm mb-3">3層構造アーキテクチャ</p>
+                            <div class="flex items-center justify-center space-x-4 text-center">
+                                <div class="bg-green-600 text-white px-6 py-4 rounded-lg">
+                                    <p class="font-bold text-lg">Nginx</p>
+                                    <p class="text-sm opacity-80">Webサーバー</p>
+                                </div>
+                                <span class="text-white text-2xl">→</span>
+                                <div class="bg-red-600 text-white px-6 py-4 rounded-lg">
+                                    <p class="font-bold text-lg">Laravel</p>
+                                    <p class="text-sm opacity-80">アプリケーション</p>
+                                </div>
+                                <span class="text-white text-2xl">→</span>
+                                <div class="bg-blue-600 text-white px-6 py-4 rounded-lg">
+                                    <p class="font-bold text-lg">MySQL</p>
+                                    <p class="text-sm opacity-80">データベース</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                            <p class="font-bold text-yellow-800 mb-2">💡 なぜローカル環境？</p>
+                            <p class="text-gray-700">
+                                Webエディター（Replitなど）だけでは、実際のWebアプリ開発を学習できません。<br>
+                                <strong>現場で使われる環境</strong>で学ぶことで、即戦力となるスキルが身につきます。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. TDD -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🧪 実践的なTDD</h2>
+
+                    <div class="bg-green-50 p-8 rounded-lg shadow-lg">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">🧪</span>
+                            <h3 class="text-2xl font-bold text-gray-800">DBを使ったテスト</h3>
+                        </div>
+
+                        <p class="text-gray-700 text-lg mb-6">
+                            TDDは<strong>ハードコーディングされた単体テストだけで終わらせません</strong>。
+                        </p>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <p class="font-bold text-yellow-800 mb-2">💡 なぜDBを使ったテストが重要なのか？</p>
+                            <p class="text-gray-700">
+                                現場のバグの多くは<strong>データベースとの連携部分</strong>で発生します。<br>
+                                モックだけのテストでは、本番環境で起きる問題を検出できません。
+                            </p>
+                        </div>
+
+                        <div class="space-y-4 mb-6">
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-green-500">
+                                <p class="font-bold text-green-800 mb-2">✅ ORMでDBにデータを保存</p>
+                                <p class="text-gray-700">正常に完了したか、しなかったかのテスト</p>
+                                <p class="text-gray-500 text-sm mt-2">バリデーション、制約違反、トランザクションの検証</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-green-500">
+                                <p class="font-bold text-green-800 mb-2">✅ DBからデータを取得</p>
+                                <p class="text-gray-700">取得できたかどうかのテスト</p>
+                                <p class="text-gray-500 text-sm mt-2">クエリの正確性、リレーション、N+1問題の検出</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-green-500">
+                                <p class="font-bold text-green-800 mb-2">✅ テストごとにDBをリセット</p>
+                                <p class="text-gray-700">テストの独立性を保証</p>
+                                <p class="text-gray-500 text-sm mt-2">マイグレーション＆シーディングで毎回クリーンな状態から実行</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. CI/CD -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🔄 CI/CD パイプライン</h2>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-8">
+                        <p class="font-bold text-yellow-800 mb-2">💡 なぜCI/CDが必須スキルなのか？</p>
+                        <p class="text-gray-700">
+                            手動デプロイは<strong>ヒューマンエラーの温床</strong>です。<br>
+                            現代の開発チームでは、CI/CDパイプラインの構築・運用は<strong>当たり前のスキル</strong>として求められています。
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <!-- CI -->
+                        <div class="bg-blue-50 p-6 rounded-lg shadow-lg">
+                            <div class="flex items-center mb-4">
+                                <span class="text-3xl mr-3">⚙️</span>
+                                <h3 class="text-xl font-bold text-blue-800">CI（継続的インテグレーション）</h3>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg">
+                                <p class="text-gray-700 mb-3">GitHubへのpushにより：</p>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-center">
+                                        <span class="text-green-500 mr-2">✓</span>
+                                        自動テスト実行
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-green-500 mr-2">✓</span>
+                                        自動マージ
+                                    </li>
+                                </ul>
+                                <p class="text-gray-500 text-sm mt-3">問題を早期発見し、統合リスクを最小化</p>
+                            </div>
+                        </div>
+
+                        <!-- CD -->
+                        <div class="bg-purple-50 p-6 rounded-lg shadow-lg">
+                            <div class="flex items-center mb-4">
+                                <span class="text-3xl mr-3">🚀</span>
+                                <h3 class="text-xl font-bold text-purple-800">CD（継続的デリバリー）</h3>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg">
+                                <p class="text-gray-700 mb-3">実際に体験：</p>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-center">
+                                        <span class="text-green-500 mr-2">✓</span>
+                                        EC2へ自動デプロイ
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-green-500 mr-2">✓</span>
+                                        本番環境での確認
+                                    </li>
+                                </ul>
+                                <p class="text-gray-500 text-sm mt-3">コードをpushするだけで本番反映を実現</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 p-6 rounded-lg">
+                        <p class="text-gray-400 text-sm mb-3">GitHub Actions ワークフロー</p>
+                        <div class="flex items-center justify-center space-x-2 text-center flex-wrap gap-y-2">
+                            <div class="bg-gray-700 text-white px-4 py-2 rounded-lg text-sm">
+                                <p class="font-bold">Push</p>
+                            </div>
+                            <span class="text-green-400">→</span>
+                            <div class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+                                <p class="font-bold">Test</p>
+                            </div>
+                            <span class="text-green-400">→</span>
+                            <div class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
+                                <p class="font-bold">Build</p>
+                            </div>
+                            <span class="text-green-400">→</span>
+                            <div class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm">
+                                <p class="font-bold">Deploy</p>
+                            </div>
+                            <span class="text-green-400">→</span>
+                            <div class="bg-orange-500 text-white px-4 py-2 rounded-lg text-sm">
+                                <p class="font-bold">Live!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. チーム開発演習（既存維持） -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">👥 チーム開発演習</h2>
+
+                    <div class="bg-gradient-to-r from-orange-50 to-red-50 p-8 rounded-lg shadow-lg border-2 border-orange-200">
+                        <div class="flex items-center mb-6">
+                            <span class="text-4xl mr-4">🏃</span>
+                            <h3 class="text-2xl font-bold text-orange-800">2日目午後：スプリント実践</h3>
+                        </div>
+
+                        <p class="text-xl text-gray-700 mb-6">
+                            スプリントを<strong>実際に2回</strong>まわしていただきます。
+                        </p>
+
+                        <div class="bg-white p-6 rounded-lg">
+                            <div class="flex items-center justify-center space-x-4">
+                                <div class="text-center">
+                                    <div class="bg-orange-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-2">1</div>
+                                    <p class="font-bold">Sprint 1</p>
+                                </div>
+                                <span class="text-3xl">→</span>
+                                <div class="text-center">
+                                    <div class="bg-orange-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-2">2</div>
+                                    <p class="font-bold">Sprint 2</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-700 mt-6 text-center">
+                            フレームワークを使いながら<strong>チームで開発</strong>をしていただきます
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. 受講後に身につくスキル（新規） -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎓 受講後に身につくスキル</h2>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- 技術スキル -->
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg shadow-lg">
+                            <div class="flex items-center mb-4">
+                                <span class="text-3xl mr-3">💻</span>
+                                <h3 class="text-xl font-bold text-blue-800">技術スキル</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <span class="text-blue-500 mr-2 flex-shrink-0">●</span>
+                                    <span class="text-gray-700">TDDによる<strong>品質を担保したコーディング</strong></span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-500 mr-2 flex-shrink-0">●</span>
+                                    <span class="text-gray-700"><strong>Docker環境</strong>でのローカル開発</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-500 mr-2 flex-shrink-0">●</span>
+                                    <span class="text-gray-700">GitHub Actionsによる<strong>CI/CDパイプライン構築</strong></span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-500 mr-2 flex-shrink-0">●</span>
+                                    <span class="text-gray-700"><strong>AIを活用</strong>した効率的なコーディング</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 実践スキル -->
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg shadow-lg">
+                            <div class="flex items-center mb-4">
+                                <span class="text-3xl mr-3">🏆</span>
+                                <h3 class="text-xl font-bold text-green-800">実践スキル</h3>
+                            </div>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-2 flex-shrink-0">●</span>
+                                    <span class="text-gray-700"><strong>スプリント内での開発フロー</strong>理解</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-2 flex-shrink-0">●</span>
+                                    <span class="text-gray-700">チームでの<strong>協働開発経験</strong></span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-2 flex-shrink-0">●</span>
+                                    <span class="text-gray-700"><strong>現場ですぐに使える</strong>開発プラクティス</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. フッター -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12">
+            <div class="container mx-auto px-4">
+                <div class="text-center">
+                    <p class="text-gray-300 text-sm">
+                        &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+    <script src="global-menu.js"></script>
+</body>
+</html>

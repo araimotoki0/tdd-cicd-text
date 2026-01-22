@@ -283,6 +283,32 @@ git push -u origin main</pre>
                             </p>
                         </div>
                     </div>
+
+                    <!-- phpunit.xmlの設定 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📝 phpunit.xml の設定確認</h3>
+                        <p class="text-gray-700 mb-4">
+                            CI環境ではMySQLが使えないため、<code class="bg-gray-100 px-2 py-1 rounded">phpunit.xml</code>でSQLiteを使うよう設定します。<br>
+                            以下の設定が有効になっていることを確認してください。
+                        </p>
+
+                        <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
+<pre class="text-white"><span class="text-gray-500">&lt;!-- phpunit.xml --&gt;</span>
+<span class="text-purple-400">&lt;php&gt;</span>
+    <span class="text-blue-300">&lt;env</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"DB_CONNECTION"</span> <span class="text-yellow-300">value=</span><span class="text-green-300">"sqlite"</span> <span class="text-yellow-300">force=</span><span class="text-green-300">"true"</span><span class="text-blue-300">/&gt;</span>
+    <span class="text-blue-300">&lt;env</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"DB_DATABASE"</span> <span class="text-yellow-300">value=</span><span class="text-green-300">":memory:"</span> <span class="text-yellow-300">force=</span><span class="text-green-300">"true"</span><span class="text-blue-300">/&gt;</span>
+<span class="text-purple-400">&lt;/php&gt;</span></pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 設定の意味：</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>DB_CONNECTION="sqlite"</strong> - SQLiteを使用（CI環境で利用可能）</li>
+                                <li><strong>DB_DATABASE=":memory:"</strong> - メモリ上にDBを作成（高速・テスト後に自動削除）</li>
+                                <li><strong>force="true"</strong> - .envの設定を上書きしてこの値を使用</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

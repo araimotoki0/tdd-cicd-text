@@ -22,9 +22,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a href="handson-setup-mac.html" class="global-menu-item">Mac環境構築</a>
                     <a href="ai-coding.html" class="global-menu-item">AI Coding</a>
                     <a href="mob-ai.html" class="global-menu-item">Mob AI</a>
-                    <a href="replit-tdd.html" class="global-menu-item">Mob AI Replit</a>
                     <a href="index.html" class="global-menu-item">TDD講座</a>
                     <a href="cicd-index.html" class="global-menu-item">CI/CD講座</a>
+                    <hr class="global-menu-divider" style="border: none; border-top: 1px solid #ddd; margin: 12px 0;">
+                    <a href="csd-preview.html" class="global-menu-item" style="margin-top: 8px;">
+                        <span style="font-size: 0.75em; color: #fff;">2026/01/22</span><br>
+                        CSDクラス チラ見せ説明会
+                    </a>
                 </div>
             </div>
         </nav>
