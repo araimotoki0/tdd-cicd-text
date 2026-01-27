@@ -156,7 +156,7 @@
                                 </p>
                             </div>
 
-                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-6">
                                 <p class="font-bold text-yellow-800 mb-3">💡 認証の切り替え・ログアウト</p>
                                 <p class="text-gray-700 mb-3">
                                     別のGoogleアカウントに切り替えたい場合や、ログアウトしたい場合は<br>
@@ -168,6 +168,33 @@
                                 <p class="text-sm text-gray-600 mt-3">
                                     認証方法の選択画面が再表示され、別のアカウントでログインし直せます。
                                 </p>
+                            </div>
+
+                            <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                                <p class="font-bold text-blue-800 mb-3">💡 モデルの切り替え</p>
+                                <p class="text-gray-700 mb-3">
+                                    使用するAIモデルを変更したい場合は<br>
+                                    <code class="bg-gray-200 px-2 py-1 rounded">/model</code> コマンドを使います。
+                                </p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white"><span class="text-gray-500">❯</span> /model</pre>
+                                </div>
+                                <div class="mt-4 space-y-2">
+                                    <div class="bg-white p-3 rounded flex items-center">
+                                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold mr-3">おすすめ</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 text-sm">Gemini 3 Flash</p>
+                                            <p class="text-xs text-gray-600">高速かつ高性能。この研修ではこちらを使用</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-3 rounded flex items-center">
+                                        <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold mr-3">参考</span>
+                                        <div>
+                                            <p class="font-bold text-gray-800 text-sm">Gemini 3 Pro</p>
+                                            <p class="text-xs text-gray-600">複雑な推論向け。Flashより2〜3分遅いので研修では非推奨</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -408,6 +435,197 @@
             </div>
         </section>
 
+        <!-- Laravel基礎知識 -->
+        <section class="py-16 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">Laravelでアプリを作る前に</h2>
+                    <p class="text-xl text-gray-600 mb-12 text-center">
+                        データベース連携アプリを作るための基礎知識を確認しましょう
+                    </p>
+
+                    <!-- 注意事項 -->
+                    <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-10">
+                        <p class="font-bold text-red-800 mb-3">⚠️ 重要：Laravelコマンドの実行場所</p>
+                        <p class="text-gray-700 mb-4">
+                            Laravelの <code class="bg-gray-200 px-2 py-1 rounded">php artisan</code> コマンドは、<strong>Dockerコンテナの中</strong>で実行します。
+                        </p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+<pre class="text-white"><span class="text-gray-500"># まずコンテナに入る</span>
+docker compose exec app bash
+
+<span class="text-gray-500"># コンテナ内でartisanコマンドを実行</span>
+php artisan make:model Todo -m</pre>
+                        </div>
+                        <p class="text-sm text-gray-600">
+                            ※ コンテナから出るときは <code class="bg-gray-200 px-1 rounded">exit</code> を入力
+                        </p>
+                    </div>
+
+                    <!-- MVCの説明 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <span class="text-3xl mr-3">🏗️</span>
+                            MVCアーキテクチャとは？
+                        </h3>
+                        <p class="text-gray-700 mb-6">
+                            Laravelは<strong>MVC（Model-View-Controller）</strong>というパターンでコードを整理します。<br>
+                            役割ごとにファイルを分けることで、コードが整理され保守しやすくなります。
+                        </p>
+
+                        <div class="grid md:grid-cols-3 gap-4 mb-6">
+                            <!-- Model -->
+                            <div class="bg-blue-50 p-5 rounded-lg border-t-4 border-blue-500">
+                                <h4 class="font-bold text-blue-800 text-lg mb-2">📦 Model</h4>
+                                <p class="text-sm text-gray-700 mb-2">データの管理</p>
+                                <ul class="text-xs text-gray-600 space-y-1">
+                                    <li>• DBのテーブルと対応</li>
+                                    <li>• データの取得・保存</li>
+                                    <li>• ビジネスロジック</li>
+                                </ul>
+                                <div class="mt-3 bg-white p-2 rounded text-xs font-mono">
+                                    app/Models/Todo.php
+                                </div>
+                            </div>
+
+                            <!-- View -->
+                            <div class="bg-green-50 p-5 rounded-lg border-t-4 border-green-500">
+                                <h4 class="font-bold text-green-800 text-lg mb-2">🎨 View</h4>
+                                <p class="text-sm text-gray-700 mb-2">画面の表示</p>
+                                <ul class="text-xs text-gray-600 space-y-1">
+                                    <li>• HTMLの生成</li>
+                                    <li>• ユーザーへの表示</li>
+                                    <li>• Bladeテンプレート</li>
+                                </ul>
+                                <div class="mt-3 bg-white p-2 rounded text-xs font-mono">
+                                    resources/views/todo.blade.php
+                                </div>
+                            </div>
+
+                            <!-- Controller -->
+                            <div class="bg-purple-50 p-5 rounded-lg border-t-4 border-purple-500">
+                                <h4 class="font-bold text-purple-800 text-lg mb-2">🎮 Controller</h4>
+                                <p class="text-sm text-gray-700 mb-2">処理の制御</p>
+                                <ul class="text-xs text-gray-600 space-y-1">
+                                    <li>• リクエストの受付</li>
+                                    <li>• Modelを呼び出す</li>
+                                    <li>• Viewを返す</li>
+                                </ul>
+                                <div class="mt-3 bg-white p-2 rounded text-xs font-mono">
+                                    app/Http/Controllers/TodoController.php
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 処理の流れ -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="font-bold text-gray-800 mb-3">🔄 処理の流れ</p>
+                            <div class="flex items-center justify-center flex-wrap gap-2 text-sm">
+                                <span class="bg-gray-200 px-3 py-2 rounded">ユーザー</span>
+                                <span class="text-gray-400">→</span>
+                                <span class="bg-purple-100 px-3 py-2 rounded">Controller</span>
+                                <span class="text-gray-400">→</span>
+                                <span class="bg-blue-100 px-3 py-2 rounded">Model</span>
+                                <span class="text-gray-400">→</span>
+                                <span class="bg-yellow-100 px-3 py-2 rounded">DB</span>
+                                <span class="text-gray-400">→</span>
+                                <span class="bg-blue-100 px-3 py-2 rounded">Model</span>
+                                <span class="text-gray-400">→</span>
+                                <span class="bg-purple-100 px-3 py-2 rounded">Controller</span>
+                                <span class="text-gray-400">→</span>
+                                <span class="bg-green-100 px-3 py-2 rounded">View</span>
+                                <span class="text-gray-400">→</span>
+                                <span class="bg-gray-200 px-3 py-2 rounded">ユーザー</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DBの作り方 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <span class="text-3xl mr-3">🗄️</span>
+                            LaravelでDBを作る流れ
+                        </h3>
+
+                        <div class="space-y-6">
+                            <!-- Step 1 -->
+                            <div class="flex items-start">
+                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">1</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-gray-800 mb-2">Model と Migration を作成</h4>
+                                    <p class="text-sm text-gray-600 mb-2">1つのコマンドでModelとテーブル定義を同時に作れます</p>
+                                    <div class="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
+<pre class="text-white">php artisan make:model Todo -m</pre>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        <code>-m</code> オプションで migration（テーブル定義）も一緒に作成
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="flex items-start">
+                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">2</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-gray-800 mb-2">Migration ファイルを編集</h4>
+                                    <p class="text-sm text-gray-600 mb-2">テーブルのカラム（列）を定義します</p>
+                                    <div class="bg-gray-900 p-3 rounded-lg font-mono text-sm overflow-x-auto">
+<pre class="text-white"><span class="text-gray-500">// database/migrations/xxxx_create_todos_table.php</span>
+<span class="text-purple-400">public function</span> <span class="text-yellow-300">up</span>()
+{
+    Schema::create(<span class="text-green-400">'todos'</span>, <span class="text-purple-400">function</span> (Blueprint $table) {
+        $table->id();
+        $table->string(<span class="text-green-400">'title'</span>);        <span class="text-gray-500">// タイトル</span>
+        $table->boolean(<span class="text-green-400">'completed'</span>)->default(<span class="text-orange-400">false</span>); <span class="text-gray-500">// 完了フラグ</span>
+        $table->timestamps();        <span class="text-gray-500">// 作成日時・更新日時</span>
+    });
+}</pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="flex items-start">
+                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">3</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-gray-800 mb-2">Migration を実行</h4>
+                                    <p class="text-sm text-gray-600 mb-2">定義したテーブルを実際にDBに作成します</p>
+                                    <div class="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
+<pre class="text-white">php artisan migrate</pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="flex items-start">
+                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">4</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-gray-800 mb-2">Controller を作成</h4>
+                                    <p class="text-sm text-gray-600 mb-2">CRUD操作を行うControllerを作成します</p>
+                                    <div class="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
+<pre class="text-white">php artisan make:controller TodoController --resource</pre>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        <code>--resource</code> オプションでCRUD用のメソッドが自動生成されます
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 補足 -->
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                            <p class="font-bold text-yellow-800 mb-2">💡 AIに任せよう！</p>
+                            <p class="text-sm text-gray-700">
+                                これらの手順はAIが全てやってくれます。<br>
+                                「TodoアプリをLaravelで作って」と伝えれば、Model・Migration・Controllerを自動で作成・編集してくれます。
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
         <!-- チームハンズオン -->
         <section class="py-16 bg-blue-50">
             <div class="container mx-auto px-6">
@@ -418,7 +636,17 @@
                         以下からお好きなものを選んで挑戦してください！
                     </p>
 
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <!-- フロントエンドのみ -->
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="text-3xl mr-3">🎨</span>
+                        フロントエンドアプリ
+                    </h3>
+                    <div class="flex items-center mb-6">
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold">難易度：やさしい</span>
+                        <span class="text-gray-500 text-sm ml-3">HTML + CSS + JavaScript だけで作れます</span>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-12">
                         <!-- 1. Todoアプリ -->
                         <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
                             <div class="flex items-center mb-3">
@@ -447,63 +675,7 @@
                             </div>
                         </div>
 
-                        <!-- 3. タイマー -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
-                            <div class="flex items-center mb-3">
-                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
-                                <span class="text-2xl">⏱️</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">ポモドーロタイマー</h3>
-                            <p class="text-gray-600 text-sm mb-3">25分作業→5分休憩のカウントダウンタイマー</p>
-                            <div class="bg-gray-100 p-3 rounded">
-                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
-                                <code class="text-xs">「ポモドーロタイマーをHTMLで作って」</code>
-                            </div>
-                        </div>
-
-                        <!-- 4. メモ帳 -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
-                            <div class="flex items-center mb-3">
-                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
-                                <span class="text-2xl">📓</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">メモ帳アプリ</h3>
-                            <p class="text-gray-600 text-sm mb-3">ローカルストレージでデータを保存するメモ帳</p>
-                            <div class="bg-gray-100 p-3 rounded">
-                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
-                                <code class="text-xs">「ローカルストレージで保存するメモ帳を作って」</code>
-                            </div>
-                        </div>
-
-                        <!-- 5. タイピングゲーム -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
-                            <div class="flex items-center mb-3">
-                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
-                                <span class="text-2xl">⌨️</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">タイピングゲーム</h3>
-                            <p class="text-gray-600 text-sm mb-3">制限時間内にどれだけ入力できるかのゲーム</p>
-                            <div class="bg-gray-100 p-3 rounded">
-                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
-                                <code class="text-xs">「タイピング速度を測るゲームを作って」</code>
-                            </div>
-                        </div>
-
-                        <!-- 6. マークダウンプレビュー -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
-                            <div class="flex items-center mb-3">
-                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
-                                <span class="text-2xl">📄</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">Markdownプレビューアー</h3>
-                            <p class="text-gray-600 text-sm mb-3">左にMarkdown、右にプレビューを表示</p>
-                            <div class="bg-gray-100 p-3 rounded">
-                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
-                                <code class="text-xs">「Markdownのリアルタイムプレビュー画面を作って」</code>
-                            </div>
-                        </div>
-
-                        <!-- 7. じゃんけんゲーム -->
+                        <!-- 3. じゃんけんゲーム -->
                         <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
@@ -517,59 +689,90 @@
                             </div>
                         </div>
 
-                        <!-- 8. 数当てゲーム -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
-                            <div class="flex items-center mb-3">
-                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
-                                <span class="text-2xl">🔢</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">数当てゲーム</h3>
-                            <p class="text-gray-600 text-sm mb-3">1〜100の数字を当てる。ヒント付き</p>
-                            <div class="bg-gray-100 p-3 rounded">
-                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
-                                <code class="text-xs">「数当てゲームを作って。大きい小さいのヒント付き」</code>
-                            </div>
-                        </div>
-
-                        <!-- 9. クイズゲーム -->
+                        <!-- 4. ポモドーロタイマー -->
                         <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
-                                <span class="text-2xl">❓</span>
+                                <span class="text-2xl">⏱️</span>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">クイズゲーム</h3>
-                            <p class="text-gray-600 text-sm mb-3">4択クイズ、スコア表示と結果画面付き</p>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">ポモドーロタイマー</h3>
+                            <p class="text-gray-600 text-sm mb-3">25分作業→5分休憩のカウントダウンタイマー</p>
                             <div class="bg-gray-100 p-3 rounded">
                                 <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
-                                <code class="text-xs">「4択クイズゲームを作って。5問出題」</code>
+                                <code class="text-xs">「ポモドーロタイマーをHTMLで作って」</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DB連携アプリ -->
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="text-3xl mr-3">🗄️</span>
+                        データベース連携アプリ
+                    </h3>
+                    <div class="flex items-center mb-4">
+                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold">難易度：チャレンジ</span>
+                        <span class="text-gray-500 text-sm ml-3">Laravel + MySQL でデータを永続化します</span>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500 mb-6">
+                        <p class="text-sm text-gray-700">
+                            <strong>✅ 環境:</strong> 予習で構築した <strong>Laravel + MySQL</strong> 環境を使います。Sailが起動していることを確認してから始めましょう。
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- DB 1. Todo永続化 -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">DB初級</span>
+                                <span class="text-2xl">📝</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Todo永続化アプリ</h3>
+                            <p class="text-gray-600 text-sm mb-3">Part1のTodoをDB保存に拡張。ブラウザを閉じてもデータが残る</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「TodoアプリをPythonとSQLiteで作って。データをDBに保存」</code>
                             </div>
                         </div>
 
-                        <!-- 10. 神経衰弱 -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                        <!-- DB 2. シンプル掲示板 -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
                             <div class="flex items-center mb-3">
-                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
-                                <span class="text-2xl">🃏</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">DB初級</span>
+                                <span class="text-2xl">💬</span>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">神経衰弱ゲーム</h3>
-                            <p class="text-gray-600 text-sm mb-3">カードをめくってペアを揃えるメモリーゲーム</p>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">シンプル掲示板</h3>
+                            <p class="text-gray-600 text-sm mb-3">投稿・表示・削除ができる掲示板。名前とメッセージを保存</p>
                             <div class="bg-gray-100 p-3 rounded">
                                 <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
-                                <code class="text-xs">「神経衰弱ゲームを作って。8ペアで」</code>
+                                <code class="text-xs">「シンプルな掲示板を作って。投稿一覧と新規投稿フォーム」</code>
                             </div>
                         </div>
 
-                        <!-- 11. スネークゲーム -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                        <!-- DB 3. ブックマーク管理 -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
                             <div class="flex items-center mb-3">
-                                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-bold mr-3">上級</span>
-                                <span class="text-2xl">🐍</span>
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">DB中級</span>
+                                <span class="text-2xl">🔖</span>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">スネークゲーム</h3>
-                            <p class="text-gray-600 text-sm mb-3">キーボードで蛇を操作してエサを食べる</p>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">ブックマーク管理</h3>
+                            <p class="text-gray-600 text-sm mb-3">URL・タイトル・カテゴリを保存。検索・フィルタ機能付き</p>
                             <div class="bg-gray-100 p-3 rounded">
                                 <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
-                                <code class="text-xs">「Canvasでスネークゲームを作って」</code>
+                                <code class="text-xs">「ブックマーク管理アプリを作って。カテゴリ分けと検索機能」</code>
+                            </div>
+                        </div>
+
+                        <!-- DB 4. 日報管理 -->
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                            <div class="flex items-center mb-3">
+                                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">DB中級</span>
+                                <span class="text-2xl">📋</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">日報管理システム</h3>
+                            <p class="text-gray-600 text-sm mb-3">日付・作業内容・所感を記録。カレンダー表示で振り返り</p>
+                            <div class="bg-gray-100 p-3 rounded">
+                                <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                                <code class="text-xs">「日報管理システムを作って。日付で検索できるように」</code>
                             </div>
                         </div>
                     </div>
