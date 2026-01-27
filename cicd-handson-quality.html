@@ -116,7 +116,7 @@ composer require --dev larastan/larastan</code></pre>
     - ./vendor/larastan/larastan/extension.neon
 
 parameters:
-    level: 4
+    level: 1
     paths:
         - app
         - tests
@@ -128,16 +128,21 @@ parameters:
                         <h4 class="font-bold mb-2">💡 設定の解説</h4>
                         <ul class="list-disc ml-6 text-sm space-y-1">
                             <li><strong>includes:</strong> Larastanの拡張機能を読み込み（Laravel専用のルール）</li>
-                            <li><strong>level: 4:</strong> 実用的なバランスのチェックレベル（レベル0-9まであり、数字が大きいほど厳格）</li>
+                            <li><strong>level: 1:</strong> 入門向けの緩やかなチェックレベル（レベル0-9まであり、数字が大きいほど厳格。慣れてきたら徐々に上げていきましょう）</li>
                             <li><strong>excludePaths:</strong> <code>(?)</code>を付けることで、ファイルが存在しない場合もエラーにならない（Laravel 11以降では<code>Kernel.php</code>が廃止されているため）</li>
                         </ul>
                     </div>
 
-                    <h3 class="text-xl font-bold mb-3 mt-6">3. Laravel IDE Helperの生成</h3>
-                    <p class="mb-4">LarastanがEloquentモデルを正しく認識するために、IDE Helperファイルを生成します。</p>
+                    <h3 class="text-xl font-bold mb-3 mt-6">3. Laravel IDE Helperのインストールと生成</h3>
+                    <p class="mb-4">LarastanがEloquentモデルを正しく認識するために、IDE Helperパッケージをインストールし、ヘルパーファイルを生成します。</p>
 
                     <div class="code-block-wrapper relative mb-6">
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Docker環境の場合はコンテナ内で実行
+
+# IDE Helperパッケージをインストール
+composer require --dev barryvdh/laravel-ide-helper
+
+# ヘルパーファイルを生成
 php artisan ide-helper:generate
 php artisan ide-helper:models --nowrite</code></pre>
                     </div>
@@ -383,14 +388,24 @@ jobs:
                         </ul>
                     </div>
 
-                    <h3 class="text-xl font-bold mb-4 mt-8">2. GitHubにプッシュ</h3>
+                    <h3 class="text-xl font-bold mb-4 mt-8">2. .gitignoreの設定</h3>
+                    <p class="mb-4">IDE Helperやキャッシュファイルはローカルで生成するものなので、<code>src/.gitignore</code>に追加して除外します。</p>
+
+                    <div class="code-block-wrapper relative mb-6">
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># src/.gitignore に以下を追加
+_ide_helper.php
+_ide_helper_models.php
+.php-cs-fixer.cache</code></pre>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-4 mt-8">3. GitHubにプッシュ</h3>
                     <div class="code-block-wrapper relative mb-6">
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>git add .
 git commit -m "Add PHPStan and PHP CS Fixer to CI/CD"
 git push origin main</code></pre>
                     </div>
 
-                    <h3 class="text-xl font-bold mb-4 mt-8">3. GitHub Actionsで確認</h3>
+                    <h3 class="text-xl font-bold mb-4 mt-8">4. GitHub Actionsで確認</h3>
                     <ol class="list-decimal ml-6 space-y-3 mb-6">
                         <li>GitHubのリポジトリページで「Actions」タブをクリック</li>
                         <li>「Run Tests」ワークフローが実行されていることを確認</li>
