@@ -744,7 +744,7 @@ use PHPUnit\Framework\TestCase;
 
 class HikerTest extends TestCase
 {
-    public function test_1を渡すと1を返す()
+    public function testReturns1When1()
     {
         $this-&gt;assertEquals("1", fizzbuzz(1));
     }
@@ -776,7 +776,7 @@ function fizzbuzz($n)
                                     <p class="font-bold text-gray-800 mb-2">STEP 3: 次のテストを追加</p>
                                     <div>
                                         <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
-                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function test_2を渡すと2を返す()
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function testReturns2When2()
 {
     $this-&gt;assertEquals("2", fizzbuzz(2));
 }</code></pre>
@@ -805,7 +805,7 @@ function fizzbuzz($n)
                                     <p class="font-bold text-gray-800 mb-2">STEP 5: 3の倍数のテストを追加</p>
                                     <div>
                                         <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
-                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function test_3を渡すとFizzを返す()
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function testReturnsFizzWhen3()
 {
     $this-&gt;assertEquals("Fizz", fizzbuzz(3));
 }</code></pre>
@@ -886,7 +886,7 @@ function fizzbuzz($n)
                                         <p class="font-bold text-gray-800 mb-2">STEP 7: 5の倍数のテストを追加</p>
                                         <div>
                                             <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
-                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function test_5を渡すとBuzzを返す()
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function testReturnsBuzzWhen5()
 {
     $this-&gt;assertEquals("Buzz", fizzbuzz(5));
 }</code></pre>
@@ -921,7 +921,7 @@ function fizzbuzz($n)
                                         <p class="font-bold text-gray-800 mb-2">STEP 9: 15の倍数のテストを追加</p>
                                         <div>
                                             <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
-                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function test_15を渡すとFizzBuzzを返す()
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function testReturnsFizzBuzzWhen15()
 {
     $this-&gt;assertEquals("FizzBuzz", fizzbuzz(15));
 }</code></pre>
@@ -997,27 +997,27 @@ use PHPUnit\Framework\TestCase;
 
 class HikerTest extends TestCase
 {
-    public function test_1を渡すと1を返す()
+    public function testReturns1When1()
     {
         $this-&gt;assertEquals("1", fizzbuzz(1));
     }
 
-    public function test_2を渡すと2を返す()
+    public function testReturns2When2()
     {
         $this-&gt;assertEquals("2", fizzbuzz(2));
     }
 
-    public function test_3を渡すとFizzを返す()
+    public function testReturnsFizzWhen3()
     {
         $this-&gt;assertEquals("Fizz", fizzbuzz(3));
     }
 
-    public function test_5を渡すとBuzzを返す()
+    public function testReturnsBuzzWhen5()
     {
         $this-&gt;assertEquals("Buzz", fizzbuzz(5));
     }
 
-    public function test_15を渡すとFizzBuzzを返す()
+    public function testReturnsFizzBuzzWhen15()
     {
         $this-&gt;assertEquals("FizzBuzz", fizzbuzz(15));
     }
