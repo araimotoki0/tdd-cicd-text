@@ -798,11 +798,24 @@ function fizzbuzz($n)
                                 <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
                                     <p class="font-bold text-gray-800 mb-2">STEP 3: 次のテストを追加</p>
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
-                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function testReturns2When2()
+                                        <p class="text-sm text-gray-600 mb-1">HikerTest.php</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+require_once 'Hiker.php';
+use PHPUnit\Framework\TestCase;
+
+class HikerTest extends TestCase
 {
-    $this-&gt;assertEquals("2", fizzbuzz(2));
-}</code></pre>
+    public function testReturns1When1()
+    {
+        $this-&gt;assertEquals("1", fizzbuzz(1));
+    }
+
+    public function testReturns2When2()
+    {
+        $this-&gt;assertEquals("2", fizzbuzz(2));
+    }
+}
+?&gt;</code></pre>
                                     </div>
                                     <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（"1"が返るので失敗）</p>
                                 </div>
@@ -827,11 +840,29 @@ function fizzbuzz($n)
                                 <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
                                     <p class="font-bold text-gray-800 mb-2">STEP 5: 3の倍数のテストを追加</p>
                                     <div>
-                                        <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
-                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function testReturnsFizzWhen3()
+                                        <p class="text-sm text-gray-600 mb-1">HikerTest.php</p>
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+require_once 'Hiker.php';
+use PHPUnit\Framework\TestCase;
+
+class HikerTest extends TestCase
 {
-    $this-&gt;assertEquals("Fizz", fizzbuzz(3));
-}</code></pre>
+    public function testReturns1When1()
+    {
+        $this-&gt;assertEquals("1", fizzbuzz(1));
+    }
+
+    public function testReturns2When2()
+    {
+        $this-&gt;assertEquals("2", fizzbuzz(2));
+    }
+
+    public function testReturnsFizzWhen3()
+    {
+        $this-&gt;assertEquals("Fizz", fizzbuzz(3));
+    }
+}
+?&gt;</code></pre>
                                     </div>
                                     <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（"3"が返るので失敗）</p>
                                 </div>
@@ -908,11 +939,34 @@ function fizzbuzz($n)
                                     <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
                                         <p class="font-bold text-gray-800 mb-2">STEP 7: 5の倍数のテストを追加</p>
                                         <div>
-                                            <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
-                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function testReturnsBuzzWhen5()
+                                            <p class="text-sm text-gray-600 mb-1">HikerTest.php</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+require_once 'Hiker.php';
+use PHPUnit\Framework\TestCase;
+
+class HikerTest extends TestCase
 {
-    $this-&gt;assertEquals("Buzz", fizzbuzz(5));
-}</code></pre>
+    public function testReturns1When1()
+    {
+        $this-&gt;assertEquals("1", fizzbuzz(1));
+    }
+
+    public function testReturns2When2()
+    {
+        $this-&gt;assertEquals("2", fizzbuzz(2));
+    }
+
+    public function testReturnsFizzWhen3()
+    {
+        $this-&gt;assertEquals("Fizz", fizzbuzz(3));
+    }
+
+    public function testReturnsBuzzWhen5()
+    {
+        $this-&gt;assertEquals("Buzz", fizzbuzz(5));
+    }
+}
+?&gt;</code></pre>
                                         </div>
                                         <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（"5"が返るので失敗）</p>
                                     </div>
@@ -943,11 +997,39 @@ function fizzbuzz($n)
                                     <div class="bg-white p-4 rounded-lg mb-4 border-l-4 border-red-400">
                                         <p class="font-bold text-gray-800 mb-2">STEP 9: 15の倍数のテストを追加</p>
                                         <div>
-                                            <p class="text-sm text-gray-600 mb-1">HikerTest.php に追加</p>
-                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>public function testReturnsFizzBuzzWhen15()
+                                            <p class="text-sm text-gray-600 mb-1">HikerTest.php</p>
+                                            <pre class="bg-gray-900 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;?php
+require_once 'Hiker.php';
+use PHPUnit\Framework\TestCase;
+
+class HikerTest extends TestCase
 {
-    $this-&gt;assertEquals("FizzBuzz", fizzbuzz(15));
-}</code></pre>
+    public function testReturns1When1()
+    {
+        $this-&gt;assertEquals("1", fizzbuzz(1));
+    }
+
+    public function testReturns2When2()
+    {
+        $this-&gt;assertEquals("2", fizzbuzz(2));
+    }
+
+    public function testReturnsFizzWhen3()
+    {
+        $this-&gt;assertEquals("Fizz", fizzbuzz(3));
+    }
+
+    public function testReturnsBuzzWhen5()
+    {
+        $this-&gt;assertEquals("Buzz", fizzbuzz(5));
+    }
+
+    public function testReturnsFizzBuzzWhen15()
+    {
+        $this-&gt;assertEquals("FizzBuzz", fizzbuzz(15));
+    }
+}
+?&gt;</code></pre>
                                         </div>
                                         <p class="mt-2 text-sm"><span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span> testボタン → <strong>赤</strong>（"Fizz"が返る！15は3の倍数でもあるから）</p>
                                     </div>
