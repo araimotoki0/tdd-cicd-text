@@ -449,9 +449,10 @@ git push origin main</code></pre>
 
                     <div class="border-l-4 border-blue-600 pl-4">
                         <h3 class="font-bold text-lg mb-2">2. ベースラインの活用</h3>
-                        <p class="text-sm">既存のエラーは一旦ベースラインに登録し、新しいコードだけチェックする方法もあります。</p>
+                        <p class="text-sm">既存プロジェクトにPHPStanを導入する場合、既存のエラーは一旦ベースラインに登録し、新しいコードだけチェックする方法があります。</p>
                         <div class="code-block-wrapper relative mt-2">
-                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code>./vendor/bin/phpstan analyse --generate-baseline</code></pre>
+                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># 現在のエラーをベースラインとして記録
+./vendor/bin/phpstan analyse --generate-baseline</code></pre>
                         </div>
                     </div>
 
@@ -462,7 +463,10 @@ git push origin main</code></pre>
 
                     <div class="border-l-4 border-blue-600 pl-4">
                         <h3 class="font-bold text-lg mb-2">4. pre-commitフック</h3>
-                        <p class="text-sm">コミット前にローカルで自動チェックする設定も有効です。</p>
+                        <p class="text-sm mb-2">
+                            <strong>pre-commitフックとは：</strong>Gitで<code>git commit</code>を実行した瞬間、コミットが作られる「前」に自動実行されるスクリプトです。
+                            チェックに失敗したコードは<strong>そもそもコミットできなくなる</strong>ため、CIでの失敗を事前に防げます。
+                        </p>
                         <div class="code-block-wrapper relative mt-2">
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code>composer require --dev brainmaestro/composer-git-hooks
 
@@ -485,6 +489,95 @@ git push origin main</code></pre>
                             <li>コードスタイルは統一が重要ですが、完璧を求めすぎないようにしましょう</li>
                             <li>ツールはあくまでサポート役。人間のレビューも重要です</li>
                         </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- スクラムチームでの議論 -->
+            <section class="mb-12 bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-3xl font-bold mb-6 text-blue-600">👥 チームでの議論：品質基準を決めよう</h2>
+
+                <div class="prose max-w-none">
+                    <p class="text-lg mb-6">
+                        コード品質ツールを導入する際には、チームで話し合って基準を決めることが大切です。<br>
+                        以下のテーマについて、チームで議論してみましょう。
+                    </p>
+
+                    <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                        <p class="text-blue-800 font-bold mb-2">進め方のヒント</p>
+                        <p class="text-sm text-gray-700">
+                            まず<strong>「自分の会社（現場）ではどうしているか」</strong>を共有し、<br>
+                            その後<strong>「自分ならどう思うか」</strong>を話してみましょう。正解はありません。
+                        </p>
+                    </div>
+
+                    <!-- 議論1: PHPStanレベル -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                        <h3 class="text-xl font-bold text-blue-800 mb-3">議論1：PHPStanのチェックレベルをどうする？</h3>
+                        <p class="text-gray-700 mb-4">
+                            PHPStanにはレベル0〜9があり、数字が大きいほど厳格にチェックします。
+                            厳しすぎると開発速度が落ち、緩すぎるとバグを見逃します。
+                        </p>
+                        <div class="bg-white rounded p-4">
+                            <p class="font-bold text-gray-800 mb-2">話し合いのポイント：</p>
+                            <ul class="list-disc ml-6 text-gray-700 space-y-1">
+                                <li>皆さんの会社では、静的解析ツールを使っていますか？</li>
+                                <li>新規プロジェクトと既存プロジェクトで、基準を変えるべき？</li>
+                                <li>チームの経験レベルに合わせて段階的に上げていく？</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 議論2: コードスタイルルール -->
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                        <h3 class="text-xl font-bold text-green-800 mb-3">議論2：コードスタイルのルールをどこまで統一する？</h3>
+                        <p class="text-gray-700 mb-4">
+                            インデント、命名規則、改行位置など、スタイルの統一は可読性を高めます。
+                            しかし、細かすぎるルールは開発者のストレスになることも。
+                        </p>
+                        <div class="bg-white rounded p-4">
+                            <p class="font-bold text-gray-800 mb-2">話し合いのポイント：</p>
+                            <ul class="list-disc ml-6 text-gray-700 space-y-1">
+                                <li>皆さんの会社では、コーディング規約はありますか？どう決めましたか？</li>
+                                <li>PSR-12のような標準規約を採用する？独自ルールを追加する？</li>
+                                <li>自動修正できるものは自動修正に任せる？</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 議論3: DoDへの組み込み -->
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
+                        <h3 class="text-xl font-bold text-purple-800 mb-3">議論3：品質チェックをDone of Definitionに入れる？</h3>
+                        <p class="text-gray-700 mb-4">
+                            スクラムの「完成の定義（DoD）」に品質チェックを含めると、品質が保証されます。
+                            例：「PHPStanエラー0、CS Fixer警告0でないとDoneにならない」
+                        </p>
+                        <div class="bg-white rounded p-4">
+                            <p class="font-bold text-gray-800 mb-2">話し合いのポイント：</p>
+                            <ul class="list-disc ml-6 text-gray-700 space-y-1">
+                                <li>皆さんのチームのDoDには、どんな品質基準が含まれていますか？</li>
+                                <li>品質チェックをCIで強制する（失敗したらマージ不可）にすべき？</li>
+                                <li>レビュアーの負担を減らすために、どこまで自動化する？</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- AIレビュー演習 -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-yellow-800 mb-3">演習：AIにワークフローをレビューしてもらおう</h3>
+                        <p class="text-gray-700 mb-4">
+                            作成した<code>.github/workflows/test.yml</code>をAIツール（ChatGPT、Claude等）に見せて、
+                            改善点がないか聞いてみましょう。
+                        </p>
+                        <div class="bg-white rounded p-4">
+                            <p class="font-bold text-gray-800 mb-2">プロンプト例：</p>
+                            <p class="text-sm text-gray-600 bg-gray-100 p-3 rounded font-mono">
+                                「このGitHub Actionsワークフローをレビューして、改善点があれば教えてください。」
+                            </p>
+                            <p class="text-sm text-gray-600 mt-2">
+                                AIからの提案をチームで共有し、採用するかどうかを議論してみましょう。
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>

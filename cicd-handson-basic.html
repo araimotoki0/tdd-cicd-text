@@ -248,39 +248,386 @@ git push -u origin main</pre>
       <span class="text-yellow-300">run:</span> php artisan test</pre>
                         </div>
 
-                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
-                            <p class="font-bold text-blue-800 mb-4">📖 設定の解説:</p>
-                            <div class="space-y-3 text-gray-700 text-sm">
-                                <div>
-                                    <p class="font-bold">on: push / pull_request</p>
-                                    <p>main、master、developブランチへのpush、またはプルリクエスト作成時に実行</p>
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <p class="font-bold text-blue-800 mb-4">📖 ワークフロー構文の解説:</p>
+
+                            <!-- YAMLの階層構造 -->
+                            <div class="mb-6">
+                                <p class="font-bold text-gray-800 mb-3 border-b pb-2">YAMLの階層構造</p>
+                                <div class="bg-white p-4 rounded-lg">
+                                    <table class="w-full text-sm">
+                                        <thead>
+                                            <tr class="border-b">
+                                                <th class="text-left py-2 pr-4">階層</th>
+                                                <th class="text-left py-2 pr-4">何を定義？</th>
+                                                <th class="text-left py-2">キーワード例</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-700">
+                                            <tr class="border-b">
+                                                <td class="py-2 pr-4 font-bold">1階層目</td>
+                                                <td class="py-2 pr-4">ワークフローの設定</td>
+                                                <td class="py-2"><code class="bg-gray-100 px-1 rounded">name</code>, <code class="bg-gray-100 px-1 rounded">on</code>, <code class="bg-gray-100 px-1 rounded">jobs</code></td>
+                                            </tr>
+                                            <tr class="border-b">
+                                                <td class="py-2 pr-4 font-bold">2階層目</td>
+                                                <td class="py-2 pr-4">ジョブの定義</td>
+                                                <td class="py-2"><code class="bg-gray-100 px-1 rounded">test:</code>（ジョブ名）</td>
+                                            </tr>
+                                            <tr class="border-b">
+                                                <td class="py-2 pr-4 font-bold">3階層目</td>
+                                                <td class="py-2 pr-4">ジョブの設定</td>
+                                                <td class="py-2"><code class="bg-gray-100 px-1 rounded">runs-on</code>, <code class="bg-gray-100 px-1 rounded">steps</code></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-2 pr-4 font-bold">4階層目</td>
+                                                <td class="py-2 pr-4">個々のステップ</td>
+                                                <td class="py-2"><code class="bg-gray-100 px-1 rounded">- name:</code>, <code class="bg-gray-100 px-1 rounded">uses:</code>, <code class="bg-gray-100 px-1 rounded">run:</code></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div>
-                                    <p class="font-bold">runs-on: ubuntu-latest</p>
-                                    <p>Ubuntu最新版の仮想環境で実行</p>
+
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-xs mt-4">
+<pre class="text-white"><span class="text-gray-500"># 1階層目：ワークフローの設定</span>
+<span class="text-yellow-300">name:</span> Run Tests
+<span class="text-yellow-300">on:</span> [push, pull_request]
+<span class="text-yellow-300">jobs:</span>
+
+  <span class="text-gray-500"># 2階層目：ジョブの定義（ジョブ名）</span>
+  <span class="text-yellow-300">test:</span>
+
+    <span class="text-gray-500"># 3階層目：ジョブの設定</span>
+    <span class="text-yellow-300">runs-on:</span> ubuntu-latest
+    <span class="text-yellow-300">steps:</span>
+
+      <span class="text-gray-500"># 4階層目：個々のステップ</span>
+      - <span class="text-yellow-300">name:</span> Checkout code
+        <span class="text-yellow-300">uses:</span> actions/checkout@v3
+
+      - <span class="text-yellow-300">name:</span> Run tests
+        <span class="text-yellow-300">run:</span> php artisan test</pre>
                                 </div>
-                                <div>
-                                    <p class="font-bold">actions/checkout@v3</p>
-                                    <p>GitHubからコードをダウンロード</p>
+                            </div>
+
+                            <!-- YAMLの重要ポイント -->
+                            <div class="mb-6">
+                                <p class="font-bold text-gray-800 mb-3 border-b pb-2">YAMLの重要ポイント</p>
+
+                                <!-- インデントの重要性 -->
+                                <div class="bg-red-50 p-4 rounded-lg mb-4 border-l-4 border-red-400">
+                                    <p class="font-bold text-red-800 mb-2">インデント（字下げ）が重要</p>
+                                    <p class="text-sm text-gray-700 mb-2">
+                                        YAMLは<strong>インデントで階層を表現</strong>します。スペースの数がずれるとエラーになります。
+                                    </p>
+                                    <ul class="text-xs text-gray-600 space-y-1">
+                                        <li>・スペース2個ずつ下げるのが一般的</li>
+                                        <li>・タブ文字は使わない（スペースのみ）</li>
+                                        <li>・同じ階層は同じインデント数にする</li>
+                                    </ul>
                                 </div>
-                                <div>
-                                    <p class="font-bold">shivammathur/setup-php@v2</p>
-                                    <p>PHPと必要な拡張機能をインストール</p>
+
+                                <!-- ジョブは増やせる -->
+                                <div class="bg-green-50 p-4 rounded-lg mb-4 border-l-4 border-green-400">
+                                    <p class="font-bold text-green-800 mb-2">ジョブは複数追加できる</p>
+                                    <p class="text-sm text-gray-700 mb-2">
+                                        <code class="bg-white px-1 rounded">jobs:</code> の下にジョブを追加すると、<strong>並列で実行</strong>されます。
+                                    </p>
+                                    <div class="bg-gray-900 text-green-400 p-3 rounded font-mono text-xs">
+<pre class="text-white">jobs:
+  <span class="text-yellow-300">test:</span>       <span class="text-gray-500"># ジョブ1：テスト</span>
+    runs-on: ubuntu-latest
+    steps: ...
+
+  <span class="text-yellow-300">build:</span>      <span class="text-gray-500"># ジョブ2：ビルド（追加）</span>
+    runs-on: ubuntu-latest
+    steps: ...
+
+  <span class="text-yellow-300">deploy:</span>     <span class="text-gray-500"># ジョブ3：デプロイ（追加）</span>
+    runs-on: ubuntu-latest
+    steps: ...</pre>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="font-bold">working-directory: src</p>
-                                    <p>Laravelプロジェクトが<code class="bg-gray-100 px-1 rounded">src</code>ディレクトリ内にある場合に指定（プロジェクトがルートにある場合は不要）</p>
+
+                                <!-- 配列の書き方 -->
+                                <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                                    <p class="font-bold text-purple-800 mb-2">配列の書き方（<code class="bg-white px-1 rounded">-</code> と <code class="bg-white px-1 rounded">[]</code>）</p>
+                                    <p class="text-sm text-gray-700 mb-2">
+                                        YAMLで配列（複数の値）を書く方法は2つあります。どちらも同じ意味です。
+                                    </p>
+                                    <div class="grid md:grid-cols-2 gap-3">
+                                        <div class="bg-gray-900 text-green-400 p-3 rounded font-mono text-xs">
+<pre class="text-white"><span class="text-gray-500"># 書き方1：[] で横に並べる</span>
+branches: <span class="text-yellow-300">[main, master, develop]</span></pre>
+                                        </div>
+                                        <div class="bg-gray-900 text-green-400 p-3 rounded font-mono text-xs">
+<pre class="text-white"><span class="text-gray-500"># 書き方2：- で縦に並べる</span>
+branches:
+  <span class="text-yellow-300">- main</span>
+  <span class="text-yellow-300">- master</span>
+  <span class="text-yellow-300">- develop</span></pre>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-gray-600 mt-2">
+                                        <code class="bg-white px-1 rounded">steps:</code> の下の <code class="bg-white px-1 rounded">- name:</code> も配列の要素です（ステップが複数あるため）
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- 各キーワードの説明 -->
+                            <div class="mb-6">
+                                <p class="font-bold text-gray-800 mb-3 border-b pb-2">主なキーワード</p>
+                                <div class="grid md:grid-cols-2 gap-3 text-sm">
+                                    <div class="bg-white p-3 rounded">
+                                        <p class="font-bold text-gray-800"><code class="bg-gray-100 px-1 rounded">name:</code></p>
+                                        <p class="text-gray-600 text-xs">ワークフローやステップの名前（UIに表示）</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded">
+                                        <p class="font-bold text-gray-800"><code class="bg-gray-100 px-1 rounded">on:</code></p>
+                                        <p class="text-gray-600 text-xs">実行トリガー（push、pull_requestなど）</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded">
+                                        <p class="font-bold text-gray-800"><code class="bg-gray-100 px-1 rounded">runs-on:</code></p>
+                                        <p class="text-gray-600 text-xs">実行環境（ubuntu-latest など）</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded">
+                                        <p class="font-bold text-gray-800"><code class="bg-gray-100 px-1 rounded">steps:</code></p>
+                                        <p class="text-gray-600 text-xs">ステップの配列（上から順に実行）</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded">
+                                        <p class="font-bold text-gray-800"><code class="bg-gray-100 px-1 rounded">uses:</code></p>
+                                        <p class="text-gray-600 text-xs">外部アクションを使う</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded">
+                                        <p class="font-bold text-gray-800"><code class="bg-gray-100 px-1 rounded">run:</code></p>
+                                        <p class="text-gray-600 text-xs">シェルコマンドを実行</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded">
+                                        <p class="font-bold text-gray-800"><code class="bg-gray-100 px-1 rounded">with:</code></p>
+                                        <p class="text-gray-600 text-xs">アクションにパラメータを渡す</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded">
+                                        <p class="font-bold text-gray-800"><code class="bg-gray-100 px-1 rounded">working-directory:</code></p>
+                                        <p class="text-gray-600 text-xs">コマンド実行ディレクトリを指定</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- バージョン指定 -->
+                            <div>
+                                <p class="font-bold text-gray-800 mb-3 border-b pb-2">バージョン指定（@v3 など）</p>
+                                <div class="text-gray-700 text-sm">
+                                    <p class="mb-2">
+                                        <code class="bg-white px-2 py-1 rounded">uses: actions/checkout@v3</code> の <code class="bg-white px-1 rounded">@v3</code> はバージョン指定です。
+                                    </p>
+                                    <div class="bg-white p-3 rounded">
+                                        <ul class="text-xs space-y-1">
+                                            <li><code class="bg-gray-100 px-1 rounded">@v3</code> - メジャーバージョン3の最新（推奨）</li>
+                                            <li><code class="bg-gray-100 px-1 rounded">@v3.1.0</code> - 特定のバージョンを固定</li>
+                                            <li><code class="bg-gray-100 px-1 rounded">@main</code> - ブランチを指定（非推奨）</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mt-6">
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-6">
+                            <p class="font-bold text-green-800 mb-4">📖 使用しているアクションの解説:</p>
+                            <div class="space-y-3 text-gray-700 text-sm">
+                                <div>
+                                    <p class="font-bold"><code class="bg-white px-2 py-1 rounded">actions/checkout@v3</code></p>
+                                    <p>GitHub公式アクション。リポジトリのコードをダウンロードします。ほぼ全てのワークフローで最初に使います。</p>
+                                </div>
+                                <div>
+                                    <p class="font-bold"><code class="bg-white px-2 py-1 rounded">shivammathur/setup-php@v2</code></p>
+                                    <p>PHPをセットアップするアクション。バージョンや拡張機能を<code class="bg-white px-1 rounded">with:</code>で指定できます。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- アクションの探し方 -->
+                        <div class="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500 mb-6">
+                            <p class="font-bold text-purple-800 mb-4">🔍 アクションの探し方:</p>
+                            <div class="space-y-4 text-gray-700 text-sm">
+                                <div>
+                                    <p class="font-bold mb-2">GitHub Marketplace</p>
+                                    <p class="mb-2">
+                                        公式のアクション検索サイトで、様々なアクションを探せます。
+                                    </p>
+                                    <a href="https://github.com/marketplace?type=actions" target="_blank" class="inline-block bg-white px-3 py-2 rounded border hover:bg-gray-50">
+                                        https://github.com/marketplace?type=actions
+                                    </a>
+                                </div>
+                                <div>
+                                    <p class="font-bold mb-2">検索のコツ</p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>「github actions PHP」「github actions Laravel」などで検索</li>
+                                        <li>スター数や使用数が多いものを選ぶと安心</li>
+                                        <li><code class="bg-white px-1 rounded">actions/</code>で始まるものはGitHub公式</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white p-3 rounded">
+                                    <p class="text-xs text-gray-600 mb-2">よく使うアクションの例：</p>
+                                    <ul class="text-xs space-y-1">
+                                        <li><code class="bg-gray-100 px-1 rounded">actions/checkout</code> - コードのチェックアウト</li>
+                                        <li><code class="bg-gray-100 px-1 rounded">actions/cache</code> - キャッシュの保存・復元</li>
+                                        <li><code class="bg-gray-100 px-1 rounded">actions/upload-artifact</code> - ファイルの保存</li>
+                                        <li><code class="bg-gray-100 px-1 rounded">shivammathur/setup-php</code> - PHPのセットアップ</li>
+                                        <li><code class="bg-gray-100 px-1 rounded">actions/setup-node</code> - Node.jsのセットアップ</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ワークフローファイルの作り方 -->
+                        <div class="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500 mb-6">
+                            <p class="font-bold text-orange-800 mb-4">📝 ワークフローファイルの作り方:</p>
+                            <div class="space-y-4 text-gray-700 text-sm">
+
+                                <!-- 自動認識の仕組み -->
+                                <div class="bg-white p-4 rounded-lg border-2 border-orange-300">
+                                    <p class="font-bold text-orange-800 mb-2">GitHubが自動で認識する仕組み</p>
+                                    <p class="mb-2">
+                                        GitHubは <code class="bg-gray-100 px-1 rounded">.github/workflows/</code> ディレクトリ内の <code class="bg-gray-100 px-1 rounded">.yml</code> ファイルを<strong>自動的にワークフローとして認識</strong>します。
+                                    </p>
+                                    <ul class="text-xs space-y-1 text-gray-600">
+                                        <li>・特別な設定や登録は不要</li>
+                                        <li>・ファイルをプッシュするだけで有効になる</li>
+                                        <li>・ファイルを削除するとワークフローも消える</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <p class="font-bold mb-2">方法1：ローカルで作成（今回の方法）</p>
+                                    <ol class="list-decimal list-inside space-y-1">
+                                        <li><code class="bg-white px-1 rounded">.github/workflows/</code> ディレクトリを作成</li>
+                                        <li>その中に <code class="bg-white px-1 rounded">.yml</code> ファイルを作成</li>
+                                        <li>GitHubにプッシュすると自動で認識される</li>
+                                    </ol>
+                                </div>
+                                <div>
+                                    <p class="font-bold mb-2">方法2：GitHub上で作成</p>
+                                    <ol class="list-decimal list-inside space-y-1">
+                                        <li>リポジトリの「Actions」タブをクリック</li>
+                                        <li>「New workflow」をクリック</li>
+                                        <li>テンプレートを選ぶか、「set up a workflow yourself」で一から作成</li>
+                                    </ol>
+                                </div>
+                                <div class="bg-white p-3 rounded">
+                                    <p class="font-bold text-gray-800 mb-2">ファイル名について</p>
+                                    <ul class="text-xs space-y-1">
+                                        <li>ファイル名は自由（例：<code class="bg-gray-100 px-1 rounded">test.yml</code>、<code class="bg-gray-100 px-1 rounded">ci.yml</code>、<code class="bg-gray-100 px-1 rounded">deploy.yml</code>）</li>
+                                        <li>複数のファイルを作ると、複数のワークフローが動く</li>
+                                        <li>拡張子は <code class="bg-gray-100 px-1 rounded">.yml</code> または <code class="bg-gray-100 px-1 rounded">.yaml</code></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AIツールで作成 -->
+                        <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <p class="font-bold text-blue-800 mb-3">💡 実務でのおすすめ：AIツールで作成</p>
+                            <p class="text-gray-700 text-sm mb-3">
+                                実際の開発現場では、<strong>プロジェクトディレクトリでCLIのAIツール</strong>（Claude Code、GitHub Copilot CLIなど）を開いて、やりたいことをプロンプトで伝えて作成させる方が早く、ほとんど間違えません。
+                            </p>
+                            <div class="bg-white p-3 rounded text-sm">
+                                <p class="font-bold text-gray-800 mb-2">プロンプト例：</p>
+                                <p class="text-gray-600 italic">「このLaravelプロジェクト用のGitHub Actionsを作成して。pushとPR時にPHPUnitを実行したい」</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-3">
+                                AIがプロジェクト構造を読み取り、適切なワークフローファイルを生成してくれます。
+                            </p>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
                             <p class="text-sm text-gray-800">
                                 <strong>💡 プロジェクト構造について:</strong><br>
                                 上記の例は、Laravelプロジェクトが<code class="bg-gray-100 px-1 rounded">src</code>ディレクトリ内にある構造を想定しています。
                                 もしLaravelプロジェクトがリポジトリのルートに直接ある場合（<code class="bg-gray-100 px-1 rounded">composer.json</code>がルートにある場合）は、
                                 <code class="bg-gray-100 px-1 rounded">working-directory: src</code>の行を削除してください。
                             </p>
+                        </div>
+                    </div>
+
+                    <!-- DB使用時のマイグレーション設定 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">🔄 テスト時にマイグレーションを自動実行する</h3>
+
+                        <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
+                            <p class="font-bold text-red-800 mb-3">⚠️ TDDハンズオンでDB版Todoを実装した場合、このエラーが発生します</p>
+                            <div class="bg-gray-900 text-red-400 p-4 rounded-lg font-mono text-xs mb-4">
+<pre class="text-red-400">FAIL  Tests\Feature\ExampleTest
+⨯ the application returns a successful response
+
+PDOException: SQLSTATE[HY000]: General error: 1 no such table: todos</pre>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <p class="font-bold text-yellow-800 mb-3">🤔 なぜこのエラーが起きるのか？</p>
+                            <p class="text-gray-700 mb-4">
+                                テストコード（<code class="bg-gray-100 px-1 rounded">ExampleTest.php</code>）自体は<code class="bg-gray-100 px-1 rounded">todos</code>テーブルを直接使っていません。<br>
+                                しかし、テストがアクセスするページの処理がデータベースを使っています。
+                            </p>
+                            <div class="bg-white p-4 rounded-lg font-mono text-sm">
+<pre class="text-gray-800">ExampleTest
+    ↓ <span class="text-blue-600">$this->get('/')</span>
+ルート "/"
+    ↓ <span class="text-blue-600">TodoController@index</span>
+TodoController::index()
+    ↓ <span class="text-blue-600">Todo::orderBy(...)->get()</span>
+Todoモデル
+    ↓ <span class="text-red-600">SELECT * FROM todos</span>
+❌ <span class="text-red-600 font-bold">todosテーブルが存在しない！</span></pre>
+                            </div>
+                            <p class="text-gray-700 mt-4 text-sm">
+                                テスト用のSQLiteデータベースは空の状態で作られるため、<strong>マイグレーションを実行してテーブルを作成する必要があります。</strong>
+                            </p>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-6">
+                            <p class="font-bold text-green-800 mb-3">✅ 解決方法：RefreshDatabase トレイトを使う</p>
+                            <p class="text-gray-700 mb-4">
+                                Laravelの<code class="bg-gray-100 px-2 py-1 rounded">RefreshDatabase</code>トレイトを使うと、<br>
+                                <strong>各テスト実行時にマイグレーションが自動実行</strong>されます。
+                            </p>
+                            <p class="text-gray-700 mb-3">
+                                <code class="bg-gray-100 px-2 py-1 rounded">tests/Feature/ExampleTest.php</code> を以下のように修正してください：
+                            </p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white"><span class="text-gray-500">&lt;?php</span>
+
+<span class="text-purple-400">namespace</span> Tests\Feature;
+
+<span class="text-purple-400">use</span> Illuminate\Foundation\Testing\RefreshDatabase;  <span class="text-green-400">// ← コメントを外す</span>
+<span class="text-purple-400">use</span> Tests\TestCase;
+
+<span class="text-purple-400">class</span> <span class="text-yellow-300">ExampleTest</span> <span class="text-purple-400">extends</span> TestCase
+{
+    <span class="text-purple-400">use</span> RefreshDatabase;  <span class="text-green-400">// ← これを追加</span>
+
+    <span class="text-purple-400">public function</span> <span class="text-yellow-300">test_the_application_returns_a_successful_response</span>(): <span class="text-purple-400">void</span>
+    {
+        <span class="text-blue-300">$response</span> = <span class="text-blue-300">$this</span>-><span class="text-yellow-300">get</span>(<span class="text-green-300">'/'</span>);
+        <span class="text-blue-300">$response</span>-><span class="text-yellow-300">assertStatus</span>(200);
+    }
+}</pre>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <p class="font-bold text-blue-800 mb-3">📖 RefreshDatabase の動作</p>
+                            <ul class="space-y-2 text-gray-700 text-sm">
+                                <li><strong>各テスト実行前</strong> - マイグレーションを実行してテーブルを作成</li>
+                                <li><strong>各テスト実行後</strong> - データベースをリセット（他のテストに影響しない）</li>
+                                <li><strong>インメモリSQLite</strong> - 高速に動作（ファイルに書き込まない）</li>
+                            </ul>
+                            <div class="mt-4 bg-white p-4 rounded">
+                                <p class="text-sm text-gray-700">
+                                    <strong>💡 ポイント：</strong>データベースを使う<strong>Featureテスト</strong>には<code class="bg-gray-100 px-1 rounded">use RefreshDatabase;</code>を追加してください。<br>
+                                    データベースを使わない<strong>Unitテスト</strong>（Calculatorなど）には不要です。
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -704,6 +1051,264 @@ git push origin feature/new-feature
                                 <strong>推奨：</strong> スクラム開発では、<strong>PR + ブランチ保護ルール</strong>を必ず設定しましょう。<br>
                                 これにより、スプリント内でのコード品質が保たれ、技術的負債の蓄積を防ぐことができます。
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- チームワーク：演習課題 -->
+        <section class="py-16 bg-gradient-to-br from-purple-50 to-indigo-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">👥 チームワーク</h2>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-indigo-800 mb-6">ワークフローを拡張してみよう！</h3>
+                        <p class="text-gray-700 mb-6 text-lg">
+                            基本的なテスト自動化ができました。<br>
+                            以下の演習で、より実践的なCI/CDパイプラインを構築してみましょう。
+                        </p>
+
+                        <div class="space-y-6">
+                            <!-- 演習1 -->
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                                <h4 class="text-xl font-bold text-green-800 mb-3">📝 演習1：ジョブ名を変更する</h4>
+                                <p class="text-gray-700 mb-3">
+                                    現在のジョブ名 <code class="bg-gray-100 px-2 py-1 rounded">test</code> を、より分かりやすい名前に変更してみましょう。
+                                </p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+<pre class="text-white">jobs:
+  <span class="text-yellow-300">phpunit-tests</span>:    <span class="text-gray-500"># ← 名前を変更</span>
+    runs-on: ubuntu-latest</pre>
+                                </div>
+                                <p class="text-sm text-gray-600">
+                                    💡 変更後は、ブランチ保護ルールの「Add checks」も更新が必要です。
+                                </p>
+                            </div>
+
+                            <!-- 演習2 -->
+                            <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                                <h4 class="text-xl font-bold text-blue-800 mb-3">🔢 演習2：複数のPHPバージョンでテストする</h4>
+                                <p class="text-gray-700 mb-3">
+                                    マトリックスビルドを使って、PHP 8.2 と 8.3 の両方でテストを実行してみましょう。
+                                </p>
+
+                                <div class="bg-red-50 p-4 rounded-lg mb-4">
+                                    <p class="font-bold text-red-800 mb-2">📍 変更箇所1：<code class="bg-gray-100 px-1 rounded">runs-on</code> の下に追加</p>
+                                    <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">jobs:
+  test:
+    runs-on: ubuntu-latest
+<span class="text-yellow-300 bg-yellow-900 px-1">    strategy:                          # ← この3行を追加
+      matrix:
+        php-version: ['8.2', '8.3']</span>
+
+    steps:</pre>
+                                    </div>
+                                </div>
+
+                                <div class="bg-red-50 p-4 rounded-lg mb-4">
+                                    <p class="font-bold text-red-800 mb-2">📍 変更箇所2：<code class="bg-gray-100 px-1 rounded">Setup PHP</code> の <code class="bg-gray-100 px-1 rounded">php-version</code> を変更</p>
+                                    <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+<span class="text-gray-500 line-through">        php-version: '8.2'                        # 削除</span>
+<span class="text-yellow-300 bg-yellow-900 px-1">        php-version: ${{ matrix.php-version }}   # 追加</span>
+        extensions: mbstring, pdo, pdo_sqlite</pre>
+                                    </div>
+                                </div>
+
+                                <div class="bg-green-50 p-4 rounded-lg mb-4">
+                                    <p class="font-bold text-green-800 mb-2">✅ 確認方法</p>
+                                    <p class="text-sm text-gray-700">
+                                        pushした後、GitHub ActionsのUIで<strong>2つのジョブ</strong>（PHP 8.2 と 8.3）が並列で実行されることを確認してください。
+                                    </p>
+                                </div>
+
+                                <details class="bg-gray-50 rounded-lg">
+                                    <summary class="p-3 cursor-pointer text-gray-600 hover:text-gray-800 font-medium">
+                                        質問：どういう時に使う？（クリックで展開）
+                                    </summary>
+                                    <div class="p-4 pt-0 text-sm text-gray-700">
+                                        <p class="mb-2"><strong>よく使うケース：</strong></p>
+                                        <ul class="list-disc list-inside space-y-1 mb-3">
+                                            <li>オープンソースのライブラリ/パッケージ開発</li>
+                                            <li>複数のPHPバージョンをサポートする必要がある場合</li>
+                                            <li>PHPのバージョンアップを検討している時の事前検証</li>
+                                        </ul>
+                                        <p class="mb-2"><strong>あまり使わないケース：</strong></p>
+                                        <ul class="list-disc list-inside space-y-1">
+                                            <li>一般的なWebアプリ開発（本番環境のPHPバージョンは1つだけ）</li>
+                                            <li>社内システム開発</li>
+                                        </ul>
+                                    </div>
+                                </details>
+                            </div>
+
+                            <!-- 演習3 -->
+                            <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
+                                <h4 class="text-xl font-bold text-yellow-800 mb-3">⚡ 演習3：Composerキャッシュを追加する</h4>
+                                <p class="text-gray-700 mb-3">
+                                    依存関係のインストールを高速化するため、キャッシュを追加してみましょう。
+                                </p>
+
+                                <div class="bg-red-50 p-4 rounded-lg mb-4">
+                                    <p class="font-bold text-red-800 mb-2">📍 変更箇所：<code class="bg-gray-100 px-1 rounded">Install dependencies</code> の直前に追加</p>
+                                    <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">    - name: Set directory permissions
+      working-directory: src
+      run: chmod -R 777 storage bootstrap/cache
+
+<span class="text-yellow-300 bg-yellow-900 px-1">    # ↓↓↓ ここから追加 ↓↓↓
+    - name: Cache Composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: src/vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('src/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+    # ↑↑↑ ここまで追加 ↑↑↑</span>
+
+    - name: Install dependencies
+      working-directory: src
+      run: composer install --prefer-dist --no-progress</pre>
+                                    </div>
+                                </div>
+
+                                <div class="bg-green-50 p-4 rounded-lg mb-4">
+                                    <p class="font-bold text-green-800 mb-2">✅ 確認方法</p>
+                                    <div class="text-sm text-gray-700 space-y-3">
+                                        <p>
+                                            1回目の実行ログで「Cache not found」、2回目以降で「Cache restored successfully」と表示されれば成功です。
+                                        </p>
+                                        <div class="bg-white p-3 rounded border">
+                                            <p class="font-bold text-gray-800 mb-2">節約効果の確認：</p>
+                                            <p class="mb-2"><strong>Install dependencies</strong> ステップの実行時間を比較してください。</p>
+                                            <table class="w-full text-xs">
+                                                <tr class="border-b">
+                                                    <td class="py-1 font-bold">キャッシュなし（1回目）</td>
+                                                    <td class="py-1">30秒〜1分以上</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="py-1 font-bold">キャッシュあり（2回目以降）</td>
+                                                    <td class="py-1">数秒〜10秒程度</td>
+                                                </tr>
+                                            </table>
+                                            <p class="text-xs text-gray-500 mt-2">
+                                                ※ 依存関係が多いプロジェクトほど効果が大きくなります
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <details class="bg-gray-50 rounded-lg">
+                                    <summary class="p-3 cursor-pointer text-gray-600 hover:text-gray-800 font-medium">
+                                        質問：どういう時に使う？（クリックで展開）
+                                    </summary>
+                                    <div class="p-4 pt-0 text-sm text-gray-700">
+                                        <p class="mb-2"><strong>よく使うケース：</strong></p>
+                                        <ul class="list-disc list-inside space-y-1 mb-3">
+                                            <li>依存関係が多いプロジェクト（composer installに時間がかかる）</li>
+                                            <li>CIの実行時間を短縮したい場合</li>
+                                            <li>GitHub Actionsの無料枠を節約したい場合</li>
+                                        </ul>
+                                        <p class="mb-2"><strong>補足：</strong></p>
+                                        <p class="text-gray-600">
+                                            最近の <code class="bg-gray-200 px-1 rounded">shivammathur/setup-php</code> にはキャッシュ機能が内蔵されているため、手動設定が不要な場合もあります。
+                                        </p>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 演習4：AIでワークフローをレビュー -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-indigo-800 mb-6">AIを活用してみよう</h3>
+
+                        <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="text-xl font-bold text-blue-800 mb-3">🤖 演習4：AIでワークフローをレビューする</h4>
+                            <p class="text-gray-700 mb-4">
+                                プロジェクトのディレクトリでCLIのAIツール（Claude Codeなど）を開いて、今のワークフローに課題がないか確認してもらいましょう。
+                            </p>
+                            <div class="bg-white p-4 rounded-lg mb-4">
+                                <p class="font-bold text-gray-800 mb-2">プロンプト例：</p>
+                                <ul class="space-y-2 text-sm text-gray-600 italic">
+                                    <li>「.github/workflows/test.yml を確認して、改善点があれば教えて」</li>
+                                    <li>「このワークフローにセキュリティ上の問題はある？」</li>
+                                    <li>「実行時間を短縮するにはどうすればいい？」</li>
+                                </ul>
+                            </div>
+                            <p class="text-sm text-gray-600">
+                                AIがプロジェクト構造を読み取り、具体的な改善提案をしてくれます。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- スクラム文脈での演習 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-indigo-800 mb-6">チームで議論しよう（スクラム演習）</h3>
+                        <p class="text-gray-700 mb-4">
+                            以下のテーマについてチームで議論してください。
+                        </p>
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <p class="text-blue-800 font-bold mb-2">進め方のヒント</p>
+                            <p class="text-sm text-gray-700">
+                                まず<strong>「自分の会社（現場）ではどうしているか」</strong>を共有し、<br>
+                                その後<strong>「自分ならどう思うか」</strong>を話してみましょう。正解はありません。
+                            </p>
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- 議論1 -->
+                            <div class="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+                                <h4 class="text-lg font-bold text-orange-800 mb-3">議論1：完成の定義（DoD）にCI/CDを追加するか？</h4>
+                                <p class="text-gray-700 mb-3">
+                                    チームの「完成の定義」に以下の項目を追加すべきか議論してください。
+                                </p>
+                                <ul class="text-sm text-gray-600 space-y-1 mb-3">
+                                    <li>・「CIのテストが全てパスしている」</li>
+                                    <li>・「プルリクエストがレビューされている」</li>
+                                    <li>・「mainブランチにマージされている」</li>
+                                </ul>
+                                <p class="text-xs text-gray-500">
+                                    💬 あなたの会社ではDoDにCI/CD関連の項目はある？追加するメリット・デメリットは？
+                                </p>
+                            </div>
+
+                            <!-- 議論2 -->
+                            <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+                                <h4 class="text-lg font-bold text-red-800 mb-3">議論2：テストが失敗した時のチーム対応ルール</h4>
+                                <p class="text-gray-700 mb-3">
+                                    CIでテストが失敗した場合、チームとしてどう対応するかルールを決めてください。
+                                </p>
+                                <ul class="text-sm text-gray-600 space-y-1 mb-3">
+                                    <li>・誰が修正する？（失敗させた人？気づいた人？）</li>
+                                    <li>・いつまでに修正する？（即座？その日中？）</li>
+                                    <li>・他の作業は止める？続ける？</li>
+                                </ul>
+                                <p class="text-xs text-gray-500">
+                                    💬 あなたの会社ではビルドが壊れた時どう対応している？「壊れたビルドは最優先で直す」についてどう思う？
+                                </p>
+                            </div>
+
+                            <!-- 議論3 -->
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                                <h4 class="text-lg font-bold text-green-800 mb-3">議論3：ブランチ保護ルールをどこまで厳しくする？</h4>
+                                <p class="text-gray-700 mb-3">
+                                    mainブランチの保護ルールをどこまで厳しく設定するか議論してください。
+                                </p>
+                                <ul class="text-sm text-gray-600 space-y-1 mb-3">
+                                    <li>・レビュー承認は何人必要？（0人/1人/2人）</li>
+                                    <li>・管理者も例外なくルールを守るべき？</li>
+                                    <li>・緊急時のバイパスは認める？</li>
+                                </ul>
+                                <p class="text-xs text-gray-500">
+                                    💬 あなたの会社のブランチ保護ルールは？厳しすぎ？緩すぎ？ちょうどいい？
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
