@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>【旧】AI Coding入門：Gemini CLI - ハンズオン講座</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+    <title>AI Coding入門 新2026年6月以降版：Antigravity CLI - ハンズオン講座</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gray-50">
     <!-- ナビゲーション -->
-    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+    <nav class="bg-gradient-to-r from-indigo-600 to-purple-700 text-white shadow-lg fixed w-full top-0 z-50">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold">【旧】AI Coding入門</h1>
+                <h1 class="text-2xl font-bold">AI Coding入門 <span class="text-purple-200 text-base align-middle">新2026年6月以降版</span></h1>
                 <div class="hidden md:flex space-x-4 text-sm items-center">
-                    <a href="ai-coding.html" class="hover:text-blue-200">AI Coding</a>
-                    <span class="text-blue-200">|</span>
-                    <a href="index.html" class="hover:text-blue-200">TDD理論編</a>
-                    <a href="handson-basic.html" class="hover:text-blue-200">TDD基礎</a>
+                    <a href="ai-coding-antigravity.html" class="hover:text-purple-200">AI Coding（新）</a>
+                    <a href="ai-coding.html" class="hover:text-purple-200 text-purple-300">AI Coding（旧）</a>
+                    <span class="text-purple-200">|</span>
+                    <a href="index.html" class="hover:text-purple-200">TDD理論編</a>
+                    <a href="handson-basic.html" class="hover:text-purple-200">TDD基礎</a>
                 </div>
                 <button id="menuBtn" class="md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,60 +31,153 @@
     </nav>
 
     <!-- モバイルメニュー -->
-    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+    <div id="mobileMenu" class="hidden bg-indigo-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
         <div class="container mx-auto px-6 py-4 space-y-3">
-            <a href="ai-coding.html" class="block hover:text-blue-200">AI Coding</a>
-            <a href="index.html" class="block hover:text-blue-200">TDD理論編</a>
-            <a href="handson-basic.html" class="block hover:text-blue-200">TDD基礎</a>
+            <a href="ai-coding-antigravity.html" class="block hover:text-purple-200">AI Coding（新）</a>
+            <a href="ai-coding.html" class="block hover:text-purple-200">AI Coding（旧）</a>
+            <a href="index.html" class="block hover:text-purple-200">TDD理論編</a>
+            <a href="handson-basic.html" class="block hover:text-purple-200">TDD基礎</a>
         </div>
     </div>
 
     <div class="pt-20">
         <!-- ヒーローセクション -->
-        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+        <section class="bg-gradient-to-r from-indigo-600 to-purple-700 text-white py-20">
             <div class="container mx-auto px-6 text-center">
-                <h2 class="text-5xl font-bold mb-6">【旧】AI Coding入門：Gemini CLI</h2>
-                <p class="text-2xl mb-4">ターミナルからAIでコーディングを効率化</p>
-                <div class="bg-red-600 text-white max-w-3xl mx-auto mt-6 p-4 rounded-lg text-left">
-                    <p class="font-bold mb-1">⚠️ このページは旧版です</p>
-                    <p class="text-sm">
-                        Gemini CLI は <strong>2026年6月18日</strong> に無料／Pro／Ultra ユーザー向けの提供を終了します。<br>
-                        2026年6月以降は後継の <strong>Antigravity CLI</strong> をご利用ください。
-                        → <a href="ai-coding-antigravity.html" class="underline font-bold">新版（Antigravity CLI）はこちら</a>
-                    </p>
+                <span class="inline-block bg-white text-purple-700 font-bold px-4 py-1 rounded-full text-sm mb-4">新2026年6月以降版</span>
+                <h2 class="text-5xl font-bold mb-6">AI Coding入門：Antigravity CLI</h2>
+                <p class="text-2xl mb-4">ターミナルから「複数のAIエージェント」でコーディングを効率化</p>
+                <p class="text-purple-200">Google Antigravity が提供する次世代のターミナルAI（コマンド名：<code class="bg-purple-900/50 px-2 py-1 rounded">agy</code>）</p>
+            </div>
+        </section>
+
+        <!-- なぜAntigravity CLIなのか（経緯） -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">なぜ Antigravity CLI に移行したのか</h2>
+
+                    <div class="bg-red-50 p-8 rounded-lg border-l-4 border-red-500 mb-8">
+                        <h3 class="text-2xl font-bold text-red-800 mb-4">📢 結論：Gemini CLI は提供終了します</h3>
+                        <p class="text-gray-700 text-lg mb-4">
+                            これまで本講座で使ってきた <strong>Gemini CLI</strong> は、
+                            <span class="bg-yellow-200 px-2 py-1 rounded">2026年6月18日</span> をもって
+                            無料ユーザー・Google AI Pro／Ultra ユーザー向けのリクエスト処理を終了します。
+                        </p>
+                        <p class="text-gray-700">
+                            その後継として Google が公式に案内しているのが、本ページで学ぶ
+                            <strong>Antigravity CLI</strong> です。<br>
+                            （※ Standard／Enterprise ライセンスをもつ企業ユーザーは、引き続き Gemini CLI のサポートを受けられます）
+                        </p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-indigo-800 mb-4">🕒 これまでの流れ</h3>
+                        <div class="space-y-4">
+                            <div class="bg-white p-5 rounded-lg border-l-4 border-indigo-400">
+                                <p class="font-bold text-gray-800 mb-1">2025年11月18日：Gemini 3 と Google Antigravity を発表</p>
+                                <p class="text-sm text-gray-700">
+                                    Google が新モデル <strong>Gemini 3</strong> と、それを土台にした
+                                    エージェント型開発プラットフォーム <strong>Google Antigravity</strong>（IDE）を同時公開。
+                                    AIを「ツール」ではなく「能動的な開発パートナー」として位置づけ直しました。
+                                </p>
+                            </div>
+                            <div class="bg-white p-5 rounded-lg border-l-4 border-indigo-400">
+                                <p class="font-bold text-gray-800 mb-1">2026年5月19日：Antigravity CLI を一般公開</p>
+                                <p class="text-sm text-gray-700">
+                                    Antigravity プラットフォームの一部として、ターミナル版の
+                                    <strong>Antigravity CLI</strong> をリリース。あわせて Antigravity 2.0（デスクトップアプリ・CLI・SDK）が登場しました。
+                                </p>
+                            </div>
+                            <div class="bg-white p-5 rounded-lg border-l-4 border-red-400">
+                                <p class="font-bold text-gray-800 mb-1">2026年6月18日：Gemini CLI（無料／Pro／Ultra）が提供終了</p>
+                                <p class="text-sm text-gray-700">
+                                    開発リソースを後継製品に集約するため、Gemini CLI の一般向け提供を終了。
+                                    以降は Antigravity CLI に一本化されます。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-green-800 mb-4">💡 移行の理由</h3>
+                        <p class="text-gray-700 mb-4">
+                            Google の公式アナウンスでは、移行の背景がこう説明されています。
+                        </p>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="bg-white p-4 rounded border-l-4 border-green-500">
+                                <strong>① 開発のスタイルが「マルチエージェント」へ進化した</strong><br>
+                                <span class="text-sm">2025年初頭の「AIに1つずつ質問する」使い方から、
+                                <strong>複数のエージェントが互いに連携し、作業を分担して複雑な問題を解く</strong>使い方へとニーズが変化しました。</span>
+                            </li>
+                            <li class="bg-white p-4 rounded border-l-4 border-green-500">
+                                <strong>② 製品を1つに集約して品質を高めるため</strong><br>
+                                <span class="text-sm">複数のツールに力を分散させるのではなく、
+                                <strong>今日のマルチエージェント時代に合わせた単一の製品</strong>に開発リソースを集中することにしました。</span>
+                            </li>
+                            <li class="bg-white p-4 rounded border-l-4 border-green-500">
+                                <strong>③ Gemini CLI の資産はそのまま引き継げる</strong><br>
+                                <span class="text-sm">Agent Skills・Hooks・Subagents・Extensions（Antigravity では「プラグイン」）といった
+                                主要機能が Antigravity CLI に継承されるため、移行コストを抑えられます。</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-gray-400">
+                        <p class="text-sm text-gray-600">
+                            出典：
+                            <a href="https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/" target="_blank" class="text-indigo-600 hover:underline">Google Developers Blog「Transitioning Gemini CLI to Antigravity CLI」</a>、
+                            <a href="https://antigravity.google/" target="_blank" class="text-indigo-600 hover:underline">Google Antigravity 公式サイト</a>、
+                            <a href="https://en.wikipedia.org/wiki/Google_Antigravity" target="_blank" class="text-indigo-600 hover:underline">Wikipedia: Google Antigravity</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- イントロ -->
-        <section class="py-16 bg-white">
+        <section class="py-16 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Gemini CLIとは？</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Antigravity CLIとは？</h2>
 
-                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
-                        <h3 class="text-2xl font-bold text-blue-800 mb-4">🤖 概要</h3>
+                    <div class="bg-indigo-50 p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-indigo-800 mb-4">🚀 概要</h3>
                         <p class="text-gray-700 text-lg mb-4">
-                            <strong>Gemini CLI</strong>は、Googleが提供する<br>
-                            <span class="bg-yellow-200 px-2 py-1 rounded">ターミナルから直接AIを使えるオープンソースツール</span>です。
+                            <strong>Antigravity CLI</strong> は、Googleが提供する<br>
+                            <span class="bg-yellow-200 px-2 py-1 rounded">ターミナルから直接AIエージェントを動かせるコマンドラインツール</span>です。
                         </p>
-                        <div class="bg-white p-6 rounded-lg border-l-4 border-blue-600">
+                        <p class="text-gray-700 mb-4">
+                            エージェント型開発プラットフォーム「<strong>Google Antigravity</strong>」のターミナル版にあたり、
+                            裏側では <strong>Gemini 3</strong> が動いています。
+                            コマンド名は <code class="bg-gray-200 px-2 py-1 rounded">agy</code> です。
+                        </p>
+                        <div class="bg-white p-6 rounded-lg border-l-4 border-indigo-600">
                             <h4 class="font-bold text-gray-800 mb-3">✨ 主な特徴</h4>
                             <ul class="space-y-2 text-gray-700">
-                                <li>• <strong>無料で使える</strong>：60リクエスト/分、1,000リクエスト/日</li>
-                                <li>• <strong>大容量</strong>：100万トークンのコンテキストウィンドウ</li>
-                                <li>• <strong>ファイル操作</strong>：コードの読み取り・編集をAIに任せられる</li>
-                                <li>• <strong>シェル連携</strong>：コマンド実行もAIがサポート</li>
+                                <li>• <strong>Go製の軽量バイナリ</strong>：Node.js / npm は不要。高速・低オーバーヘッド</li>
+                                <li>• <strong>マルチエージェント</strong>：複数のサブエージェントを並列に動かしてタスクを分担</li>
+                                <li>• <strong>ファイル操作・コマンド実行</strong>：許可を取りながらコードの読み書きやコマンド実行を代行</li>
+                                <li>• <strong>無料枠あり</strong>：無料の Google アカウントでも利用可能</li>
+                                <li>• <strong>資産の継承</strong>：Gemini CLI の Skills / Hooks / Subagents / 拡張（プラグイン）に対応</li>
                             </ul>
                         </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-8">
+                        <p class="font-bold text-yellow-800 mb-3">⚠️ 無料枠を使うときの注意</p>
+                        <p class="text-gray-700">
+                            Antigravity CLI は複数のサブエージェントを<strong>並列</strong>で起動できるため、
+                            1つのコマンドが裏で複数のワーカーを動かし、<strong>無料枠の消費が想像より早くなる</strong>ことがあります。<br>
+                            消費量は <code class="bg-gray-200 px-2 py-1 rounded">/usage</code> コマンドで確認できます。
+                        </p>
                     </div>
 
                     <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-8">
                         <p class="font-bold text-green-800 mb-3">✅ 前提条件</p>
                         <p class="text-gray-700">
-                            環境構築ページでGemini CLIのインストールが完了していること。<br>
-                            まだの方は <a href="handson-setup-mac.html" class="text-blue-600 hover:underline">Mac環境構築</a> または
-                            <a href="handson-setup-windows.html" class="text-blue-600 hover:underline">Windows環境構築</a> を先に完了してください。
+                            ターミナル（Mac はターミナル.app、Windows は PowerShell など）が使えること。<br>
+                            個人の Google アカウントを用意しておいてください。
                         </p>
                     </div>
                 </div>
@@ -91,66 +185,94 @@
         </section>
 
         <!-- ハンズオン手順 -->
-        <section id="handson" class="py-16 bg-blue-50">
+        <section id="handson" class="py-16 bg-indigo-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
                     <div class="text-center mb-12">
-                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ハンズオン：Gemini CLIを使ってみよう</h2>
-                        <p class="text-xl text-gray-600">基本的な操作を体験します</p>
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ハンズオン：Antigravity CLIを使ってみよう</h2>
+                        <p class="text-xl text-gray-600">インストールから基本操作までを体験します</p>
                     </div>
 
                     <!-- 実装手順 -->
                     <div class="space-y-8">
-                        <!-- 手順1: 初回起動と認証 -->
-                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                        <!-- 手順0: インストール -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
-                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
-                                <h3 class="text-3xl font-bold text-gray-800">初回起動と認証</h3>
+                                <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">0</span>
+                                <h3 class="text-3xl font-bold text-gray-800">インストール</h3>
                             </div>
 
-                            <p class="text-gray-700 mb-6 text-lg">ターミナルでGemini CLIを起動します。</p>
+                            <p class="text-gray-700 mb-6 text-lg">
+                                公式インストーラを実行します。環境を自動判別し、<code class="bg-gray-100 px-1 rounded">agy</code> バイナリを配置します。
+                            </p>
 
-                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
-                                <p class="font-bold text-blue-800 mb-3">📝 実行するコマンド:</p>
-                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
-<pre class="text-white">gemini</pre>
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-indigo-800 mb-3">🍎 macOS / Linux:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">curl -fsSL https://antigravity.google/cli/install.sh | bash</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    バイナリは <code class="bg-gray-200 px-1 rounded">~/.local/bin/</code> に配置されます。
+                                </p>
+                            </div>
+
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-indigo-800 mb-3">🪟 Windows（PowerShell）:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">irm https://antigravity.google/cli/install.ps1 | iex</pre>
                                 </div>
                             </div>
 
-                            <div class="bg-red-50 p-6 rounded-lg mb-6 border-l-4 border-red-500">
-                                <p class="font-bold text-red-800 mb-3">⚠️ 重要：個人アカウントでログインしてください</p>
-                                <p class="text-gray-700 mb-2">
-                                    無料で使えるのは<strong>個人のGoogleアカウント</strong>のみです。
+                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600">
+                                <p class="font-bold text-green-800 mb-3">✅ インストール確認:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">agy --version</pre>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-3">
+                                    バージョンが表示されれば成功です。<br>
+                                    あとから更新したいときは <code class="bg-gray-200 px-1 rounded">agy update</code> を実行します。
                                 </p>
-                                <p class="text-gray-700 text-sm">
-                                    会社や学校の<strong>Google Workspaceアカウント</strong>では無料版が使えません。<br>
-                                    Workspaceで使うには有料プラン（Standard $19〜/月）が必要になります。<br>
-                                    <a href="https://developers.google.com/gemini-code-assist/resources/faqs" target="_blank" class="text-blue-600 hover:underline">公式FAQ →</a>
-                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 手順1: 初回起動と認証 -->
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
+                            <div class="flex items-center mb-6">
+                                <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
+                                <h3 class="text-3xl font-bold text-gray-800">初回起動と認証</h3>
+                            </div>
+
+                            <p class="text-gray-700 mb-6 text-lg">ターミナルで Antigravity CLI を起動します。</p>
+
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-indigo-800 mb-3">📝 実行するコマンド:</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono">
+<pre class="text-white">agy</pre>
+                                </div>
                             </div>
 
                             <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
                                 <p class="font-bold text-gray-800 mb-4">🎨 初回起動時の流れ:</p>
                                 <div class="space-y-4 text-gray-700">
                                     <div class="bg-white p-4 rounded">
-                                        <p class="font-bold text-gray-800 mb-2">1. テーマ選択</p>
+                                        <p class="font-bold text-gray-800 mb-2">1. 認証方法の選択</p>
                                         <p class="text-sm">
-                                            CLIの見た目のテーマを選びます。<br>
-                                            カーソルキー（↑↓）で選択し、Enterで決定。
+                                            ログイン方法の選択画面が出ます。<br>
+                                            「<strong>Google でサインイン（Google OAuth）</strong>」を選んで Enter。
                                         </p>
                                     </div>
                                     <div class="bg-white p-4 rounded">
-                                        <p class="font-bold text-gray-800 mb-2">2. 認証方法の選択</p>
+                                        <p class="font-bold text-gray-800 mb-2">2. ブラウザでログイン</p>
                                         <p class="text-sm">
-                                            「<strong>Login with Google</strong>」を選択してEnter。<br>
-                                            ブラウザが開き、<strong>個人のGoogleアカウント</strong>でログインします。
+                                            既定のブラウザが自動で開き、<strong>Google アカウント</strong>でログインします。<br>
+                                            （SSH などリモート接続中の場合は、ブラウザの代わりに認証用URLが表示されます）
                                         </p>
                                     </div>
                                     <div class="bg-white p-4 rounded">
                                         <p class="font-bold text-gray-800 mb-2">3. 認証完了</p>
                                         <p class="text-sm">
-                                            「許可」をクリックすると、ターミナルに戻ります。<br>
-                                            これで準備完了です！
+                                            「許可」をクリックするとターミナルに戻ります。<br>
+                                            認証情報はOSのキーチェーン（keyring）に保存され、次回からは自動でログインされます。
                                         </p>
                                     </div>
                                 </div>
@@ -159,30 +281,24 @@
                             <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600 mb-6">
                                 <p class="font-bold text-green-800 mb-3">✅ 成功のサイン:</p>
                                 <p class="text-gray-700">
-                                    プロンプト（入力待ち状態）が表示されれば成功です。<br>
-                                    <code class="bg-gray-100 px-2 py-1 rounded">❯</code> のような記号が表示されます。
+                                    プロンプト（入力待ち状態）が表示されれば成功です。
                                 </p>
                             </div>
 
                             <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-6">
-                                <p class="font-bold text-yellow-800 mb-3">💡 認証の切り替え・ログアウト</p>
+                                <p class="font-bold text-yellow-800 mb-3">💡 APIキーで使う場合（任意）</p>
                                 <p class="text-gray-700 mb-3">
-                                    別のGoogleアカウントに切り替えたい場合や、ログアウトしたい場合は<br>
-                                    <code class="bg-gray-200 px-2 py-1 rounded">/auth</code> コマンドを使います。
+                                    Google サインインの代わりに、APIキーを環境変数で渡すこともできます。
                                 </p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-<pre class="text-white"><span class="text-gray-500">❯</span> /auth</pre>
+<pre class="text-white">export ANTIGRAVITY_API_KEY=あなたのAPIキー</pre>
                                 </div>
-                                <p class="text-sm text-gray-600 mt-3">
-                                    認証方法の選択画面が再表示され、別のアカウントでログインし直せます。
-                                </p>
                             </div>
 
-                            <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
-                                <p class="font-bold text-blue-800 mb-3">💡 モデルの切り替え</p>
+                            <div class="bg-indigo-50 p-6 rounded-lg border-l-4 border-indigo-500">
+                                <p class="font-bold text-indigo-800 mb-3">💡 モデルの切り替え</p>
                                 <p class="text-gray-700 mb-3">
-                                    使用するAIモデルを変更したい場合は<br>
-                                    <code class="bg-gray-200 px-2 py-1 rounded">/model</code> コマンドを使います。
+                                    セッション中に使用するモデルを変更したい場合は <code class="bg-gray-200 px-2 py-1 rounded">/model</code> コマンドを使います。
                                 </p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
 <pre class="text-white"><span class="text-gray-500">❯</span> /model</pre>
@@ -192,14 +308,14 @@
                                         <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold mr-3">おすすめ</span>
                                         <div>
                                             <p class="font-bold text-gray-800 text-sm">Gemini 3 Flash</p>
-                                            <p class="text-xs text-gray-600">高速かつ高性能。この研修ではこちらを使用</p>
+                                            <p class="text-xs text-gray-600">高速・高性能。この研修ではこちらを使用</p>
                                         </div>
                                     </div>
                                     <div class="bg-white p-3 rounded flex items-center">
                                         <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold mr-3">参考</span>
                                         <div>
                                             <p class="font-bold text-gray-800 text-sm">Gemini 3 Pro</p>
-                                            <p class="text-xs text-gray-600">複雑な推論向け。Flashより2〜3分遅いので研修では非推奨</p>
+                                            <p class="text-xs text-gray-600">複雑な推論向け。Flashより応答が遅め</p>
                                         </div>
                                     </div>
                                 </div>
@@ -207,64 +323,58 @@
                         </div>
 
                         <!-- 手順2: 日本語設定 -->
-                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
-                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
-                                <h3 class="text-3xl font-bold text-gray-800">日本語設定（GEMINI.md）</h3>
+                                <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
+                                <h3 class="text-3xl font-bold text-gray-800">日本語設定（.antigravity.md）</h3>
                             </div>
 
                             <p class="text-gray-700 mb-6 text-lg">
                                 デフォルトでは英語で応答されることがあります。<br>
-                                <strong>GEMINI.md</strong>ファイルを編集して、常に日本語で応答させましょう。
+                                コンテキストファイルを編集して、常に日本語で応答させましょう。
                             </p>
 
-                            <div class="bg-blue-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
-                                <p class="font-bold text-blue-800 mb-3">📖 GEMINI.mdとは？</p>
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6 border-l-4 border-indigo-500">
+                                <p class="font-bold text-indigo-800 mb-3">📖 コンテキストファイルとは？</p>
                                 <p class="text-gray-700">
-                                    Gemini CLIが<strong>自動で読み込む設定ファイル</strong>です。<br>
+                                    Antigravity CLI が<strong>自動で読み込む指示ファイル</strong>です。<br>
                                     AIへの指示を書いておくと、毎回のプロンプトに自動で適用されます。
                                 </p>
                             </div>
 
                             <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
-                                <p class="font-bold text-gray-800 mb-4">📁 配置場所と優先順位:</p>
+                                <p class="font-bold text-gray-800 mb-4">📁 読み込まれるファイルと優先順位:</p>
                                 <div class="space-y-3 text-gray-700">
                                     <div class="bg-white p-4 rounded">
-                                        <p class="font-bold text-gray-800 mb-1">1. グローバル設定（全プロジェクト共通）</p>
-                                        <code class="text-sm bg-blue-100 px-2 py-1 rounded">~/.gemini/GEMINI.md</code>
-                                        <p class="text-sm text-gray-600 mt-1">← 日本語設定はここに書くのがおすすめ！</p>
+                                        <p class="font-bold text-gray-800 mb-1">1. <code class="text-sm bg-indigo-100 px-2 py-1 rounded">.antigravity.md</code>（推奨）</p>
+                                        <p class="text-sm text-gray-600 mt-1">Antigravity CLI 専用。最優先で読み込まれます</p>
                                     </div>
                                     <div class="bg-white p-4 rounded">
-                                        <p class="font-bold text-gray-800 mb-1">2. プロジェクト設定</p>
-                                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">プロジェクトルート/GEMINI.md</code>
-                                        <p class="text-sm text-gray-600 mt-1">プロジェクト固有の指示を追加</p>
+                                        <p class="font-bold text-gray-800 mb-1">2. <code class="text-sm bg-gray-100 px-2 py-1 rounded">AGENTS.md</code></p>
+                                        <p class="text-sm text-gray-600 mt-1">エージェント向けの共通標準ファイル</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded">
+                                        <p class="font-bold text-gray-800 mb-1">3. <code class="text-sm bg-gray-100 px-2 py-1 rounded">GEMINI.md</code>（後方互換）</p>
+                                        <p class="text-sm text-gray-600 mt-1">旧 Gemini CLI の設定もそのまま読み込めます</p>
                                     </div>
                                 </div>
                                 <p class="text-sm text-gray-600 mt-4">
-                                    ※ 複数のGEMINI.mdがある場合、全て統合されてAIに送信されます。<br>
-                                    <a href="https://google-gemini.github.io/gemini-cli/docs/cli/gemini-md.html" target="_blank" class="text-blue-600 hover:underline">公式ドキュメント →</a>
+                                    ※ <code class="bg-gray-200 px-1 rounded">.antigravity.md</code> と <code class="bg-gray-200 px-1 rounded">GEMINI.md</code> が両方ある場合は <code class="bg-gray-200 px-1 rounded">.antigravity.md</code> が優先されます。<br>
+                                    ※ いま読み込まれている設定ファイルは <code class="bg-gray-200 px-1 rounded">agy inspect</code> で確認できます。
                                 </p>
                             </div>
 
-                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
-                                <p class="font-bold text-blue-800 mb-3">📝 グローバル設定に追記:</p>
-                                <p class="text-gray-700 mb-3"><code class="bg-gray-200 px-2 py-1 rounded">~/.gemini/GEMINI.md</code> を開き、以下を追記：</p>
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-indigo-800 mb-3">📝 設定例:</p>
+                                <p class="text-gray-700 mb-3">プロジェクトルートに <code class="bg-gray-200 px-2 py-1 rounded">.antigravity.md</code> を作り、以下を記載：</p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
 <pre class="text-white">Always respond in Japanese.</pre>
                                 </div>
                             </div>
 
-                            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600 mb-6">
-                                <p class="font-bold text-green-800 mb-3">✅ 効果:</p>
-                                <p class="text-gray-700">
-                                    グローバル設定に書いておけば、<strong>どのプロジェクトでも</strong><br>
-                                    AIが常に日本語で応答するようになります。
-                                </p>
-                            </div>
-
                             <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500">
                                 <p class="font-bold text-yellow-800 mb-3">💡 プロジェクト固有の設定例</p>
-                                <p class="text-gray-700 mb-2 text-sm">プロジェクトルートのGEMINI.mdには、そのプロジェクト特有の情報を書きます：</p>
+                                <p class="text-gray-700 mb-2 text-sm">コンテキストファイルには、そのプロジェクト特有の情報を書いておくと便利です：</p>
                                 <ul class="text-gray-700 space-y-2 text-sm">
                                     <li>• プロジェクトの概要・目的</li>
                                     <li>• 使用している技術スタック</li>
@@ -275,9 +385,9 @@
                         </div>
 
                         <!-- 手順3: 基本的な使い方 -->
-                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
-                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
+                                <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
                                 <h3 class="text-3xl font-bold text-gray-800">基本的な使い方</h3>
                             </div>
 
@@ -285,10 +395,18 @@
                                 対話モードで質問してみましょう。自然な日本語で入力できます。
                             </p>
 
-                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
-                                <p class="font-bold text-blue-800 mb-3">📝 試してみよう:</p>
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-indigo-800 mb-3">📝 試してみよう（対話モード）:</p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
 <pre class="text-white"><span class="text-gray-500">❯</span> JSとHTMLとCSSでTodoアプリのUIを作って</pre>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
+                                <p class="font-bold text-gray-800 mb-3">⚡ ワンショット実行（非対話モード）:</p>
+                                <p class="text-gray-700 mb-3 text-sm"><code class="bg-gray-200 px-1 rounded">-p</code> オプションで、起動せずに1回だけ指示を渡せます。</p>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+<pre class="text-white">agy -p "このリポジトリの構成を説明して"</pre>
                                 </div>
                             </div>
 
@@ -296,7 +414,7 @@
                                 <p class="font-bold text-green-800 mb-3">✅ 期待される応答:</p>
                                 <p class="text-gray-700 mb-3">
                                     AIがHTML、CSS、JavaScriptのコードを生成してくれます。<br>
-                                    ファイルの作成や編集もAIに任せることができます。
+                                    ファイルの作成や編集も（許可を取りながら）AIに任せられます。
                                 </p>
                                 <p class="text-gray-700">
                                     続けて「タスクの削除機能を追加して」など、<br>
@@ -314,27 +432,34 @@
                             </div>
 
                             <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-gray-500">
-                                <p class="font-bold text-gray-800 mb-3">🚪 終了方法:</p>
+                                <p class="font-bold text-gray-800 mb-3">🧭 よく使うスラッシュコマンド / 終了方法:</p>
+                                <ul class="text-gray-700 space-y-2 text-sm mb-3">
+                                    <li>• <code class="bg-gray-200 px-1 rounded">?</code> … ヘルプを表示</li>
+                                    <li>• <code class="bg-gray-200 px-1 rounded">/usage</code> … 利用枠（クォータ）の確認</li>
+                                    <li>• <code class="bg-gray-200 px-1 rounded">/agents</code> / <code class="bg-gray-200 px-1 rounded">/tasks</code> … エージェント・タスクの管理</li>
+                                    <li>• <code class="bg-gray-200 px-1 rounded">/resume</code> / <code class="bg-gray-200 px-1 rounded">/rewind</code> … セッションの再開・巻き戻し</li>
+                                    <li>• <code class="bg-gray-200 px-1 rounded">/config</code> / <code class="bg-gray-200 px-1 rounded">/settings</code> / <code class="bg-gray-200 px-1 rounded">/permissions</code> … 設定・権限</li>
+                                </ul>
                                 <p class="text-gray-700">
-                                    <code class="bg-gray-200 px-2 py-1 rounded">/quit</code> または <code class="bg-gray-200 px-2 py-1 rounded">Ctrl + C</code> で終了できます。
+                                    終了は <code class="bg-gray-200 px-2 py-1 rounded">Ctrl + C</code>（または <code class="bg-gray-200 px-2 py-1 rounded">Ctrl + D</code>）でできます。
                                 </p>
                             </div>
                         </div>
 
                         <!-- 手順4: ファイル参照 -->
-                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-blue-500">
+                        <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
-                                <span class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">4</span>
+                                <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">4</span>
                                 <h3 class="text-3xl font-bold text-gray-800">ファイル参照（@記法）</h3>
                             </div>
 
                             <p class="text-gray-700 mb-6 text-lg">
                                 <code class="bg-gray-100 px-2 py-1 rounded">@</code> を使うと、ファイルの内容をAIに渡せます。<br>
-                                これがGemini CLIの最も便利な機能です。
+                                Gemini CLI から引き継がれた便利な機能です。
                             </p>
 
-                            <div class="bg-blue-50 p-6 rounded-lg mb-6">
-                                <p class="font-bold text-blue-800 mb-3">📝 使い方:</p>
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                                <p class="font-bold text-indigo-800 mb-3">📝 使い方:</p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
 <pre class="text-white"><span class="text-gray-500">❯</span> @main.py このコードを説明して</pre>
                                 </div>
@@ -364,15 +489,15 @@
                                     <div>
                                         <p class="text-xl font-bold text-green-800 mb-3">基本操作マスター！</p>
                                         <p class="text-gray-700 mb-3">
-                                            これでGemini CLIの基本的な使い方を習得しました。
+                                            これで Antigravity CLI の基本的な使い方を習得しました。
                                         </p>
                                         <div class="bg-white p-4 rounded">
                                             <p class="font-bold text-gray-800 mb-2">📚 学んだこと:</p>
                                             <ul class="text-sm text-gray-700 space-y-2">
-                                                <li>✓ Gemini CLIの起動と認証</li>
-                                                <li>✓ /authでの認証切り替え</li>
-                                                <li>✓ GEMINI.mdでの日本語設定</li>
-                                                <li>✓ 対話モードでの質問方法</li>
+                                                <li>✓ Antigravity CLI（agy）のインストールと起動</li>
+                                                <li>✓ Google サインインでの認証</li>
+                                                <li>✓ .antigravity.md での日本語設定</li>
+                                                <li>✓ 対話モード／ワンショット実行（-p）</li>
                                                 <li>✓ @記法でのファイル参照</li>
                                             </ul>
                                         </div>
@@ -383,21 +508,15 @@
                             <div class="bg-gray-50 p-6 rounded-lg border-l-4 border-gray-400 mt-6">
                                 <p class="font-bold text-gray-800 mb-3">💡 他のAI Codingツールについて</p>
                                 <p class="text-gray-700 mb-4">
-                                    <strong>Claude Code</strong>（Anthropic）や<strong>Codex</strong>（OpenAI）など、
-                                    より高性能なAI Codingツールも存在します。<br>
-                                    しかし、これらは<strong>有料</strong>（月額$20〜$200）のため、本講座では無料で使えるGemini CLIを採用しました。
+                                    <strong>Claude Code</strong>（Anthropic）や <strong>Codex</strong>（OpenAI）など、
+                                    他にも有力なAI Codingツールが存在します。<br>
+                                    いずれも<strong>使い方の基本は共通</strong>です。ターミナルで起動、@記法でファイル参照、自然言語でコード生成…という流れは同じなので、
+                                    <span class="text-indigo-600 font-bold">ここで学んだスキルは他のツールでもそのまま活かせます。</span>
                                 </p>
-                                <div class="bg-white p-4 rounded mb-4">
-                                    <p class="text-sm text-gray-700">
-                                        <strong>良いニュース：</strong>これらのツールは使い方が非常に似ています。<br>
-                                        ターミナルで起動、@記法でファイル参照、自然言語でコード生成...など基本は同じです。<br>
-                                        <span class="text-blue-600 font-bold">今回のGemini講座で学んだスキルは、他のツールでもそのまま活かせます。</span>
-                                    </p>
-                                </div>
-                                <div class="bg-blue-100 p-4 rounded">
-                                    <p class="text-sm text-blue-800">
-                                        <strong>📌 <span id="currentDate"></span>現在</strong>、CLIベースのAI Codingツールは
-                                        開発の生産性と品質を飛躍的に向上させる<strong>最先端の手法</strong>です。<br>
+                                <div class="bg-indigo-100 p-4 rounded">
+                                    <p class="text-sm text-indigo-800">
+                                        <strong>📌 2026年6月以降</strong>、Google系のCLIベースAI Codingは
+                                        <strong>Antigravity CLI（agy）</strong> が標準です。
                                         この講座で身につけたスキルは、今後のキャリアで大きな武器になります。
                                     </p>
                                 </div>
@@ -414,26 +533,27 @@
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">まとめ</h2>
 
-                    <div class="bg-blue-50 p-8 rounded-lg shadow-lg mb-8">
+                    <div class="bg-indigo-50 p-8 rounded-lg shadow-lg mb-8">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">AI Codingで学んだこと</h3>
 
                         <div class="space-y-4">
                             <div class="bg-white p-6 rounded-lg shadow">
-                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ Gemini CLIの基本</h4>
+                                <h4 class="text-xl font-bold text-indigo-600 mb-4">✓ Antigravity CLIの基本</h4>
                                 <ul class="space-y-2 text-gray-700">
-                                    <li>• ターミナルから起動（<code class="bg-gray-100 px-1 rounded">gemini</code>）</li>
-                                    <li>• Googleアカウントで認証</li>
-                                    <li>• <code class="bg-gray-100 px-1 rounded">/auth</code>で認証切り替え・ログアウト</li>
-                                    <li>• 無料で十分な利用枠</li>
+                                    <li>• インストーラで導入（バイナリ名は <code class="bg-gray-100 px-1 rounded">agy</code>）</li>
+                                    <li>• ターミナルから起動（<code class="bg-gray-100 px-1 rounded">agy</code>）</li>
+                                    <li>• Google アカウントで認証（認証情報はキーチェーンに保存）</li>
+                                    <li>• <code class="bg-gray-100 px-1 rounded">/usage</code> で利用枠を確認</li>
                                 </ul>
                             </div>
 
                             <div class="bg-white p-6 rounded-lg shadow">
-                                <h4 class="text-xl font-bold text-blue-600 mb-4">✓ 便利な機能</h4>
+                                <h4 class="text-xl font-bold text-indigo-600 mb-4">✓ 便利な機能</h4>
                                 <ul class="space-y-2 text-gray-700">
-                                    <li>• GEMINI.mdで日本語設定・カスタム指示</li>
+                                    <li>• .antigravity.md で日本語設定・カスタム指示</li>
                                     <li>• @記法でファイルをAIに渡せる</li>
-                                    <li>• コードの説明・レビュー・リファクタリングを依頼</li>
+                                    <li>• <code class="bg-gray-100 px-1 rounded">agy -p "..."</code> でワンショット実行</li>
+                                    <li>• 複数エージェントの並列実行（マルチエージェント）</li>
                                 </ul>
                             </div>
                         </div>
@@ -483,8 +603,8 @@ php artisan make:model Todo -m</pre>
 
                         <div class="grid md:grid-cols-3 gap-4 mb-6">
                             <!-- Model -->
-                            <div class="bg-blue-50 p-5 rounded-lg border-t-4 border-blue-500">
-                                <h4 class="font-bold text-blue-800 text-lg mb-2">📦 Model</h4>
+                            <div class="bg-indigo-50 p-5 rounded-lg border-t-4 border-indigo-500">
+                                <h4 class="font-bold text-indigo-800 text-lg mb-2">📦 Model</h4>
                                 <p class="text-sm text-gray-700 mb-2">データの管理</p>
                                 <ul class="text-xs text-gray-600 space-y-1">
                                     <li>• DBのテーブルと対応</li>
@@ -533,11 +653,11 @@ php artisan make:model Todo -m</pre>
                                 <span class="text-gray-400">→</span>
                                 <span class="bg-purple-100 px-3 py-2 rounded">Controller</span>
                                 <span class="text-gray-400">→</span>
-                                <span class="bg-blue-100 px-3 py-2 rounded">Model</span>
+                                <span class="bg-indigo-100 px-3 py-2 rounded">Model</span>
                                 <span class="text-gray-400">→</span>
                                 <span class="bg-yellow-100 px-3 py-2 rounded">DB</span>
                                 <span class="text-gray-400">→</span>
-                                <span class="bg-blue-100 px-3 py-2 rounded">Model</span>
+                                <span class="bg-indigo-100 px-3 py-2 rounded">Model</span>
                                 <span class="text-gray-400">→</span>
                                 <span class="bg-purple-100 px-3 py-2 rounded">Controller</span>
                                 <span class="text-gray-400">→</span>
@@ -558,7 +678,7 @@ php artisan make:model Todo -m</pre>
                         <div class="space-y-6">
                             <!-- Step 1 -->
                             <div class="flex items-start">
-                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">1</span>
+                                <span class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">1</span>
                                 <div class="flex-1">
                                     <h4 class="font-bold text-gray-800 mb-2">Model と Migration を作成</h4>
                                     <p class="text-sm text-gray-600 mb-2">1つのコマンドでModelとテーブル定義を同時に作れます</p>
@@ -573,7 +693,7 @@ php artisan make:model Todo -m</pre>
 
                             <!-- Step 2 -->
                             <div class="flex items-start">
-                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">2</span>
+                                <span class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">2</span>
                                 <div class="flex-1">
                                     <h4 class="font-bold text-gray-800 mb-2">Migration ファイルを編集</h4>
                                     <p class="text-sm text-gray-600 mb-2">テーブルのカラム（列）を定義します</p>
@@ -594,7 +714,7 @@ php artisan make:model Todo -m</pre>
 
                             <!-- Step 3 -->
                             <div class="flex items-start">
-                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">3</span>
+                                <span class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">3</span>
                                 <div class="flex-1">
                                     <h4 class="font-bold text-gray-800 mb-2">Migration を実行</h4>
                                     <p class="text-sm text-gray-600 mb-2">定義したテーブルを実際にDBに作成します</p>
@@ -606,7 +726,7 @@ php artisan make:model Todo -m</pre>
 
                             <!-- Step 4 -->
                             <div class="flex items-start">
-                                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">4</span>
+                                <span class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">4</span>
                                 <div class="flex-1">
                                     <h4 class="font-bold text-gray-800 mb-2">Controller を作成</h4>
                                     <p class="text-sm text-gray-600 mb-2">CRUD操作を行うControllerを作成します</p>
@@ -635,12 +755,12 @@ php artisan make:model Todo -m</pre>
         </section>
 
         <!-- チームハンズオン -->
-        <section class="py-16 bg-blue-50">
+        <section class="py-16 bg-indigo-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">チームでハンズオンをしてみよう</h2>
                     <p class="text-xl text-gray-600 mb-12 text-center">
-                        Gemini CLIを使って、実際にツールやアプリを作ってみましょう。<br>
+                        Antigravity CLI を使って、実際にツールやアプリを作ってみましょう。<br>
                         以下からお好きなものを選んで挑戦してください！
                     </p>
 
@@ -815,7 +935,7 @@ php artisan make:model Todo -m</pre>
                         次は<strong>TDD（テスト駆動開発）</strong>を学んで、品質の高いコードを書く方法を身につけましょう。
                     </p>
 
-                    <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                    <a href="index.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
                         TDD講座へ進む →
                     </a>
                 </div>
@@ -836,12 +956,6 @@ php artisan make:model Todo -m</pre>
         <script>
             // 現在の年を自動挿入
             document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-            // 現在の年月を自動挿入
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth() + 1;
-            document.getElementById('currentDate').textContent = `${year}年${month}月`;
         </script>
     </div>
 
