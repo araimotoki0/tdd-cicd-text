@@ -1262,6 +1262,32 @@ git push origin feature/new-feature
                         </div>
 
                         <div class="space-y-6">
+                            <!-- 議論0（ウォームアップ） -->
+                            <div class="bg-indigo-50 p-6 rounded-lg border-l-4 border-indigo-500">
+                                <div class="flex items-center mb-3">
+                                    <span class="bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded mr-2">まず最初に</span>
+                                    <h4 class="text-lg font-bold text-indigo-800">議論0（ウォームアップ）：自社と他社の開発フローを共有しよう</h4>
+                                </div>
+                                <p class="text-gray-700 mb-3">
+                                    本題の前に、まず<strong>「自分の会社・現場では、コードを書いてから本番に届くまでをどう回しているか」</strong>を
+                                    一人ずつ共有しましょう。他社のやり方を知ると、自社のフローを客観的に見直せます。
+                                </p>
+                                <div class="bg-white p-4 rounded-lg mb-3">
+                                    <p class="text-sm font-bold text-gray-800 mb-2">共有してみる項目（30秒〜1分で1人ずつ）</p>
+                                    <ul class="text-sm text-gray-600 space-y-1">
+                                        <li>・ブランチ運用：mainに直接？ ブランチ＋PR？ どんなブランチ名ルール？</li>
+                                        <li>・テスト：CIで自動？ 手動？ そもそも回していない？</li>
+                                        <li>・レビュー：必須？ 何人？ 形だけになっていない？</li>
+                                        <li>・リリース頻度：1日に何回／週次／月次／不定期？</li>
+                                        <li>・デプロイ：自動（CD）？ 手動でサーバー作業？</li>
+                                    </ul>
+                                </div>
+                                <p class="text-xs text-gray-500">
+                                    💬 全員が話したら比べてみよう：「一番自動化が進んでいる会社」「一番手作業が多い会社」はどこ？
+                                    その差はどこから来ている？　— ここで出た“自社の現状”を、次の議論1〜3の土台にします。
+                                </p>
+                            </div>
+
                             <!-- 議論1 -->
                             <div class="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
                                 <h4 class="text-lg font-bold text-orange-800 mb-3">議論1：完成の定義（DoD）にCI/CDを追加するか？</h4>
