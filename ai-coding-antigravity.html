@@ -900,6 +900,64 @@ php artisan make:model Todo -m</pre>
                         </div>
                     </div>
 
+                    <!-- スキル(Skills)を作ってみよう -->
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 mt-16 flex items-center">
+                        <span class="text-3xl mr-3">🛠️</span>
+                        スキル(Skills)を作ってみよう
+                    </h3>
+                    <div class="flex items-center mb-4">
+                        <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm font-bold">発展編</span>
+                        <span class="text-gray-500 text-sm ml-3">よく使う作業手順をAIに覚えさせて再利用する</span>
+                    </div>
+                    <p class="text-gray-600 mb-6">
+                        「スキル(Skills)」とは、<strong>よく使う作業手順や指示をひとまとめにして、いつでも呼び出せるようにする仕組み</strong>です。<br>
+                        毎回同じ説明を書かなくても、登録したスキルを呼ぶだけでAIが決まった手順で作業してくれます。
+                    </p>
+
+                    <div class="bg-yellow-50 border border-yellow-300 p-6 rounded-lg mb-8">
+                        <p class="font-bold text-yellow-800 mb-2">💡 スキルを使ったことがある人へ</p>
+                        <p class="text-gray-700">
+                            すでにスキルを使ったことがある人がいれば、ぜひ <strong>AIを活用して新しいスキルを作ってみましょう</strong>。<br>
+                            「○○をするスキルを作って」とAIに頼めば、スキルの定義ファイルそのものをAIが書いてくれます。
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                            <div class="text-2xl mb-2">📄</div>
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">コミットメッセージ作成</h4>
+                            <p class="text-gray-600 text-sm">変更内容を読んで、規約に沿ったコミットメッセージを自動で考えてくれるスキル</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                            <div class="text-2xl mb-2">🧪</div>
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">テストひな形生成</h4>
+                            <p class="text-gray-600 text-sm">関数やクラスを渡すと、テストコードのひな形を決まった形式で作るスキル</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                            <div class="text-2xl mb-2">📝</div>
+                            <h4 class="text-lg font-bold text-gray-800 mb-2">日報まとめ</h4>
+                            <p class="text-gray-600 text-sm">その日の作業内容を箇条書きで渡すと、整った日報フォーマットに整形するスキル</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50 border-l-4 border-pink-500 p-8 rounded-lg">
+                        <h4 class="text-xl font-bold text-pink-800 mb-4">🎯 ハンズオン：便利そうなスキルを自分で考えて作ってみよう</h4>
+                        <p class="text-gray-700 mb-4">
+                            お題は決まっていません。<strong>「自分の作業でこれを毎回やるの面倒だな」</strong>と思うものを1つ選び、それをスキルにしてみましょう。<br>
+                            まずはどんなスキルがあると便利かをチームで出し合い、AIに作ってもらうところから始めます。
+                        </p>
+                        <div class="bg-white p-4 rounded mb-4">
+                            <p class="text-xs text-gray-500 mb-1">プロンプト例:</p>
+                            <code class="text-xs text-gray-800">「Antigravity CLI でスキルを作りたい。○○をする作業をスキルにして。まずスキルの作り方を教えてから、定義ファイルを作って」</code>
+                        </div>
+                        <ul class="text-gray-700 text-sm space-y-2">
+                            <li>① どんな作業をスキルにすると便利か、チームでアイデアを出す</li>
+                            <li>② AIにスキルの作り方を聞き、定義ファイルを作ってもらう</li>
+                            <li>③ 実際にスキルを呼び出して、期待どおり動くか試す</li>
+                            <li>④ うまく動かない部分はAIに相談して改善する</li>
+                        </ul>
+                    </div>
+
                     <div class="mt-12 bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">💡 ハンズオンのコツ</h3>
                         <div class="space-y-4 text-gray-700">
