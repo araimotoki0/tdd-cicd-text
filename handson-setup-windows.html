@@ -547,11 +547,36 @@ docker compose version</pre>
 
                         <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
                             <h4 class="font-bold text-red-800 mb-2">⚠️ 重要: 個人アカウントでログイン</h4>
-                            <p class="text-gray-700">
+                            <p class="text-gray-700 mb-4">
                                 必ず個人のGoogleアカウント（@gmail.com）でログインしてください。
                                 <strong>Google Workspace（会社）アカウントは現在サポート対象外</strong>で、
                                 「account not eligible」というエラーになります。
                             </p>
+
+                            <div class="bg-white p-5 rounded-lg">
+                                <p class="font-bold text-gray-800 mb-2">
+                                    🔄 Googleアカウントを複数お持ちの方は、必ず切り替えてください
+                                </p>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    認証時に開くブラウザが<strong>会社のアカウントでログインしたままになっている</strong>と、
+                                    アカウント選択の画面が出ずに、そのまま会社のアカウントで進んでしまうことがあります。
+                                    その場合はエラーになり、先に進めません。
+                                </p>
+
+                                <p class="font-bold text-gray-800 mb-2 text-sm">確実に切り替える方法</p>
+                                <ol class="space-y-2 text-sm text-gray-700 mb-3">
+                                    <li>1. 認証画面が出たら、表示されているアカウントのメールアドレスを必ず確認する</li>
+                                    <li>2. 会社のアカウントだったら「別のアカウントを使用」を選び、個人の @gmail.com に切り替える</li>
+                                    <li>3. アカウント選択画面が出ない場合は、認証用URLをコピーして
+                                        <strong>シークレットウィンドウ（プライベートウィンドウ）</strong>に貼り付けて開く</li>
+                                </ol>
+
+                                <p class="text-sm text-gray-700">
+                                    <strong>間違ったアカウントでログインしてしまった場合:</strong><br>
+                                    CLI内で <code class="bg-gray-200 px-1 rounded">/logout</code> を実行してから、
+                                    もう一度 <code class="bg-gray-200 px-1 rounded">agy</code> を起動してやり直してください。
+                                </p>
+                            </div>
                         </div>
 
                         <!-- 無料枠 -->
@@ -571,7 +596,7 @@ docker compose version</pre>
                                     <li>• <strong>Google AI Ultra</strong> - 最大のクォータ。5時間ごとに回復＋週次上限が最も高い。サードパーティモデルも利用可</li>
                                 </ul>
                                 <p class="text-xs text-gray-500 mt-3">
-                                    ※ 全プランで Gemini 3.1 Pro / 3.5 Flash とCLIを含む全機能が使えます。Tab補完は全プラン無制限。
+                                    ※ 全プランで Gemini モデルとCLIを含む全機能が使えます。Tab補完は全プラン無制限。
                                 </p>
                             </div>
 
@@ -593,11 +618,51 @@ docker compose version</pre>
                                     <strong>⚠️ 消費が想像より早い点に注意</strong><br>
                                     Antigravity のクォータはトークン数ではなく「エージェントがこなした作業量」で計算されます。
                                     1回の指示で裏側の複数エージェントが動くため、体感より早く消費します。
-                                    研修中は軽量な <strong>Gemini 3.5 Flash</strong> を使うことをおすすめします。
+                                    研修中は <strong>Gemini 3.6 Flash</strong> を使うことをおすすめします（下記参照）。
                                 </p>
                                 <p class="text-sm text-gray-700">
                                     残量はCLI内で <code class="bg-gray-200 px-1 rounded">/usage</code>（別名 <code
                                         class="bg-gray-200 px-1 rounded">/quota</code>）を実行すると、モデルごとに確認できます。
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <!-- モデル選択 -->
+                        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <h4 class="font-bold text-blue-800 mb-3">🎯 どのモデルを使えばいい？</h4>
+                            <p class="text-gray-700 mb-4 text-sm">
+                                研修では <strong>Gemini 3.6 Flash</strong> をおすすめします。
+                                2026年7月21日にリリースされた新しいモデルで、
+                                <strong>ひとつ前の 3.5 Flash より出力トークンを17%削減</strong>できます。
+                                マルチステップの作業でも推論ステップとツール呼び出しが少なく済むため、
+                                無料枠の消費を抑えられます。
+                            </p>
+
+                            <div class="bg-white p-4 rounded mb-4">
+                                <p class="font-bold text-gray-800 mb-2 text-sm">Antigravity で使える主なモデル</p>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li>• <strong>Gemini 3.6 Flash</strong> - 高速。コード生成向けのバランス型。<span
+                                            class="text-green-700 font-bold">研修ではこれ</span></li>
+                                    <li>• <strong>Gemini 3.5 Flash</strong> - ひとつ前の高速モデル</li>
+                                    <li>• <strong>Gemini 3.1 Pro</strong> - 複雑な推論向け。応答は遅め、消費も大きい</li>
+                                </ul>
+                                <p class="text-xs text-gray-500 mt-3">
+                                    ※ Flash系には Low / Medium / High の強度指定があります。迷ったら既定のままで構いません。<br>
+                                    ※ 利用できるモデルはプランによって異なります。一覧に出ていない場合は
+                                    Gemini 3.5 Flash を選んでください。
+                                </p>
+                            </div>
+
+                            <div class="bg-gray-100 p-4 rounded">
+                                <p class="text-sm text-gray-700 mb-2">
+                                    <strong>💡 「Flash-Lite」を探さないでください</strong>
+                                </p>
+                                <p class="text-sm text-gray-700">
+                                    より軽い <code class="bg-gray-200 px-1 rounded">Gemini 3.5 Flash-Lite</code>
+                                    というモデルも存在しますが、これは大量データの処理・抽出向けで、
+                                    <strong>Antigravity では提供されていません。</strong>
+                                    コーディング用途では 3.6 Flash のほうが適しています。
                                 </p>
                             </div>
                         </div>
