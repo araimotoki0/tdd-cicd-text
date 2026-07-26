@@ -41,7 +41,7 @@
             <div class="container mx-auto px-6 text-center">
                 <h2 class="text-5xl font-bold mb-4">Windows環境構築ガイド</h2>
                 <p class="text-xl mb-4">Laravel開発環境をWindowsにセットアップしよう</p>
-                <p class="text-sm mb-8 opacity-90">VSCode、WSL2、Docker、Gitなどの必須ツールをインストール</p>
+                <p class="text-sm mb-8 opacity-90">VSCode、WSL2、Docker、Git などの必須ツールをインストール</p>
             </div>
         </section>
 
@@ -59,7 +59,18 @@
                                     <span class="text-2xl mr-3">1️⃣ 📝</span>
                                     <h4 class="font-bold text-lg">VSCode</h4>
                                 </div>
-                                <p class="text-sm text-gray-600">コードエディタ（基盤）</p>
+                                <p class="text-sm text-gray-600 mb-3">コードエディタ（基盤）</p>
+                                <div class="bg-yellow-50 p-3 rounded border-l-4 border-yellow-400">
+                                    <p class="text-xs font-bold text-yellow-800 mb-1">💡 コードエディターは何でもいいです</p>
+                                    <p class="text-xs text-gray-700 mb-2">
+                                        Antigravity（アンチグラビティ）を使っていただいてもいいですし、Cursor を使っていただいても構いません。お好きなものを使ってください。
+                                        また、すでに使い慣れているものがあれば、そちらを使っていただいて構いません。
+                                    </p>
+                                    <p class="text-xs text-gray-700">
+                                        ※ ただし後述の「WSL拡張機能」の手順は VSCode の画面で説明しています。
+                                        他のエディタでも WSL 接続は可能ですが、操作方法が少し異なります。
+                                    </p>
+                                </div>
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
@@ -70,45 +81,67 @@
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
-                                    <span class="text-2xl mr-3">3️⃣ 📦</span>
-                                    <h4 class="font-bold text-lg">Node.js と npm</h4>
-                                </div>
-                                <p class="text-sm text-gray-600">JavaScriptランタイム</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg shadow">
-                                <div class="flex items-center mb-2">
-                                    <span class="text-2xl mr-3">4️⃣ 🔧</span>
+                                    <span class="text-2xl mr-3">3️⃣ 🔧</span>
                                     <h4 class="font-bold text-lg">Git</h4>
                                 </div>
-                                <p class="text-sm text-gray-600">バージョン管理</p>
+                                <p class="text-sm text-gray-600 mb-3">バージョン管理</p>
+                                <div class="bg-yellow-50 p-3 rounded border-l-4 border-yellow-400">
+                                    <p class="text-xs font-bold text-yellow-800 mb-1">💡 すでに入っていることが多いです</p>
+                                    <p class="text-xs text-gray-700">
+                                        Microsoft公式によると、多くのWSLディストリビューションにはGitが最初から入っています。
+                                        まず <code class="bg-gray-200 px-1 rounded">git --version</code> で確認してください。
+                                        ただし <code class="bg-gray-200 px-1 rounded">git config</code> での初期設定は必要です。
+                                    </p>
+                                </div>
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
-                                    <span class="text-2xl mr-3">5️⃣ 🐳</span>
+                                    <span class="text-2xl mr-3">4️⃣ 🐳</span>
                                     <h4 class="font-bold text-lg">Docker Desktop</h4>
                                 </div>
                                 <p class="text-sm text-gray-600">コンテナ環境</p>
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
-                                    <span class="text-2xl mr-3">6️⃣ 🤖</span>
-                                    <h4 class="font-bold text-lg">Gemini CLI</h4>
+                                    <span class="text-2xl mr-3">5️⃣ 🤖</span>
+                                    <h4 class="font-bold text-lg">Antigravity CLI</h4>
                                 </div>
-                                <p class="text-sm text-gray-600">AIコーディングアシスタント</p>
+                                <p class="text-sm text-gray-600 mb-3">AIコーディングアシスタント（コマンド名：<code
+                                        class="bg-gray-100 px-1 rounded">agy</code>）</p>
+                                <div class="bg-yellow-50 p-3 rounded border-l-4 border-yellow-400">
+                                    <p class="text-xs font-bold text-yellow-800 mb-1">💡 使い慣れたものがあればそれでOK</p>
+                                    <p class="text-xs text-gray-700 mb-2">
+                                        Claude Code や Codex など、すでに使い慣れているものがあれば、それを使っていただいても構いません。
+                                    </p>
+                                    <p class="text-xs text-gray-700">
+                                        <strong>Antigravity CLI を推奨している理由は、無料だからです。</strong><br>
+                                        個人のGoogleアカウントがあればクレジットカード不要で使えます（無料枠の目安は後述）。
+                                    </p>
+                                </div>
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
-                                    <span class="text-2xl mr-3">7️⃣ 🔌</span>
+                                    <span class="text-2xl mr-3">6️⃣ 🔌</span>
                                     <h4 class="font-bold text-lg">WSL拡張機能</h4>
                                 </div>
                                 <p class="text-sm text-gray-600">VSCode統合</p>
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
-                                    <span class="text-2xl mr-3">8️⃣ 🗄️</span>
+                                    <span class="text-2xl mr-3">7️⃣ 🗄️</span>
                                     <h4 class="font-bold text-lg">A5M2</h4>
                                 </div>
-                                <p class="text-sm text-gray-600">データベース管理ツール</p>
+                                <p class="text-sm text-gray-600 mb-3">データベース管理ツール</p>
+                                <div class="bg-yellow-50 p-3 rounded border-l-4 border-yellow-400">
+                                    <p class="text-xs font-bold text-yellow-800 mb-1">💡 他のDB管理ツールでも構いません</p>
+                                    <p class="text-xs text-gray-700 mb-2">
+                                        HeidiSQL、TablePlus、DBeaver、MySQL Workbench、DataGrip など、
+                                        他のデータベース管理ツールを使っていただいても構いません。
+                                    </p>
+                                    <p class="text-xs text-gray-700">
+                                        <strong>すでに持っている場合はインストール不要です。</strong>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -187,7 +220,7 @@
                                     </div>
                                     <div class="bg-orange-500 text-white p-6 rounded-lg text-center">
                                         <p class="font-bold text-lg mb-2">Ubuntu (Linux)</p>
-                                        <p class="text-xs opacity-90">Docker、Git、Node.js</p>
+                                        <p class="text-xs opacity-90">Docker、Git、Antigravity CLI</p>
                                     </div>
                                 </div>
 
@@ -264,71 +297,46 @@
             </div>
         </section>
 
-        <!-- Node.jsとnpmのインストール -->
-        <section id="nodejs" class="py-16 bg-gray-50">
-            <div class="container mx-auto px-6">
-                <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">3️⃣ Node.js と npm のインストール</h2>
-
-                    <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
-                            <p class="text-sm text-gray-700">
-                                <strong>⚠️ WSL2では権限問題を避けるため、nvmを使います</strong>
-                            </p>
-                        </div>
-
-                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
-                        <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre># curlをインストール
-sudo apt update && sudo apt install -y curl
-
-# nvmをインストール
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
-
-# 設定を再読み込み
-source ~/.bashrc
-
-# Node.js 24をインストール
-nvm install 24
-nvm use 24</pre>
-                        </div>
-
-                        <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>node -v
-npm -v</pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- Gitのインストール -->
         <section id="git" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">4️⃣ Git のインストール</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">3️⃣ Git の確認と初期設定</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
-                            <p class="text-sm text-gray-700">
-                                <strong>💡 重要:</strong> GitもNode.jsと同様に<strong>WSL2（Ubuntu）内</strong>にインストールします。
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-6">
+                            <h4 class="font-bold text-green-800 mb-2">✅ すでに入っていることが多いです</h4>
+                            <p class="text-gray-700 mb-2">
+                                Microsoft公式ドキュメントによると、
+                                <strong>多くのWSLディストリビューションにはGitが最初から入っています。</strong>
+                                まずは確認コマンドを実行してください。
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                表示されればインストールは不要です。そのまま「初期設定」に進んでください。
                             </p>
                         </div>
 
-                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
-                        <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>sudo apt install -y git</pre>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 重要:</strong> Gitは<strong>WSL2（Ubuntu）内</strong>のものを使います。
+                                Windows側とWSL2側は別々のファイルシステムなので、Gitもそれぞれ独立しています。
+                            </p>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
+                        <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
                             <pre>git --version</pre>
                         </div>
 
-                        <h4 class="font-bold text-gray-800 mb-3">初期設定</h4>
+                        <h4 class="font-bold text-gray-800 mb-3">表示されなかった場合のみ実行</h4>
+                        <p class="text-gray-700 mb-3">「command not found」と出た場合だけ、以下でインストールします:</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>sudo apt update && sudo apt install -y git</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">初期設定（こちらは必須です）</h4>
                         <p class="text-gray-700 mb-4">Gitを使うために、ユーザー名とメールアドレスを設定します。</p>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
                             <pre>git config --global user.name "あなたの名前"
@@ -344,7 +352,7 @@ git config --list</pre>
         <section id="docker" class="py-16 bg-gray-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">5️⃣ Docker Desktop for Windows のインストール</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">4️⃣ Docker Desktop for Windows のインストール</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
                         <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-6">
@@ -387,54 +395,183 @@ docker compose version</pre>
             </div>
         </section>
 
-        <!-- Gemini CLIのインストール -->
-        <section id="gemini" class="py-16 bg-white">
+        <!-- Antigravity CLIのインストール -->
+        <section id="antigravity" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">6️⃣ Gemini CLI のインストールと基本操作</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">5️⃣ Antigravity CLI のインストールと基本操作</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
                         <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-6">
                             <h4 class="font-bold text-green-800 mb-2">✅ 無料で利用可能！</h4>
-                            <p class="text-gray-700 mb-2">個人のGoogleアカウントなら無料で利用できます。</p>
-                            <p class="text-sm text-gray-600">無料枠: 60リクエスト/分、1,000リクエスト/日</p>
+                            <p class="text-gray-700 mb-2">個人のGoogleアカウント（@gmail.com）があれば、クレジットカード登録なしで無料で使えます。</p>
+                            <p class="text-sm text-gray-600">
+                                <strong>本講座で Antigravity CLI を推奨している理由は、無料だからです。</strong>
+                            </p>
+                        </div>
+
+                        <div class="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <h4 class="font-bold text-yellow-800 mb-2">💡 使い慣れているものがあればそちらでOK</h4>
+                            <p class="text-gray-700">
+                                Claude Code や Codex など、すでに使い慣れているものがあれば、それを使っていただいても構いません。
+                                その場合はこのセクションのインストール作業は不要です。
+                            </p>
                         </div>
 
                         <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
                             <h4 class="font-bold text-red-800 mb-2">⚠️ 重要: 個人アカウントでログイン</h4>
                             <p class="text-gray-700">
-                                必ず個人のGmailアカウント（Workspaceではないアカウント）でログインしてください。Workspaceアカウントでは無料枠が利用できない場合があります。</p>
+                                必ず個人のGoogleアカウント（@gmail.com）でログインしてください。
+                                <strong>Google Workspace（会社）アカウントは現在サポート対象外</strong>で、
+                                「account not eligible」というエラーになります。
+                            </p>
+                        </div>
+
+                        <!-- 無料枠 -->
+                        <div class="bg-indigo-50 p-6 rounded-lg border-l-4 border-indigo-500 mb-6">
+                            <h4 class="font-bold text-indigo-800 mb-3">📊 無料枠はどのくらい？</h4>
+                            <p class="text-gray-700 mb-4 text-sm">
+                                Googleは無料枠の正確なリクエスト数を公開していません。公式ドキュメントでは
+                                「Google AI Pro／Ultra 以外のユーザーには、<strong>週次で回復する相応のクォータ</strong>が割り当てられる」
+                                とだけ書かれています。
+                            </p>
+
+                            <div class="bg-white p-4 rounded mb-4">
+                                <p class="font-bold text-gray-800 mb-2 text-sm">プラン別のクォータ（公式）</p>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li>• <strong>無料（その他のユーザー）</strong> - 相応のクォータ。<strong>週次</strong>で回復</li>
+                                    <li>• <strong>Google AI Pro</strong> - 潤沢なクォータ。<strong>5時間ごと</strong>に回復（週次上限に達するまで）</li>
+                                    <li>• <strong>Google AI Ultra</strong> - 最大のクォータ。5時間ごとに回復＋週次上限が最も高い。サードパーティモデルも利用可</li>
+                                </ul>
+                                <p class="text-xs text-gray-500 mt-3">
+                                    ※ 全プランで Gemini 3.1 Pro / 3.5 Flash とCLIを含む全機能が使えます。Tab補完は全プラン無制限。
+                                </p>
+                            </div>
+
+                            <div class="bg-white p-4 rounded mb-4">
+                                <p class="font-bold text-gray-800 mb-2 text-sm">実際の目安（非公式・コミュニティ報告）</p>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li>• Gemini Flash で <strong>1日あたり約20リクエスト</strong>、5時間ごとのローリング回復</li>
+                                    <li>• モデルごとに<strong>別々のクォータ枠</strong>（Flashを使い切ってもPro側は残る）</li>
+                                    <li>• 週次上限に達すると、リセットまで<strong>最大7日間ロック</strong>されることがある</li>
+                                </ul>
+                                <p class="text-xs text-gray-500 mt-3">
+                                    ※ 2026年4月時点の第三者調査による数値です。提供開始時（2025年11月）は約250リクエスト/日でしたが大幅に縮小されました。
+                                    公式の数値ではないため、今後も変動する可能性があります。
+                                </p>
+                            </div>
+
+                            <div class="bg-yellow-50 p-4 rounded border-l-4 border-yellow-500">
+                                <p class="text-sm text-gray-700 mb-2">
+                                    <strong>⚠️ 消費が想像より早い点に注意</strong><br>
+                                    Antigravity のクォータはトークン数ではなく「エージェントがこなした作業量」で計算されます。
+                                    1回の指示で裏側の複数エージェントが動くため、体感より早く消費します。
+                                    研修中は軽量な <strong>Gemini 3.5 Flash</strong> を使うことをおすすめします。
+                                </p>
+                                <p class="text-sm text-gray-700">
+                                    残量はCLI内で <code class="bg-gray-200 px-1 rounded">/usage</code>（別名 <code
+                                        class="bg-gray-200 px-1 rounded">/quota</code>）を実行すると、モデルごとに確認できます。
+                                </p>
+                            </div>
                         </div>
 
                         <div class="bg-blue-50 p-4 rounded-lg mb-6">
-                            <p class="font-bold text-blue-800">公式ドキュメント</p>
-                            <a href="https://geminicli.com/" target="_blank" class="text-blue-600 hover:underline">https://geminicli.com/</a>
+                            <p class="font-bold text-blue-800">公式サイト・ドキュメント</p>
+                            <a href="https://antigravity.google/" target="_blank"
+                                class="text-blue-600 hover:underline block">https://antigravity.google/</a>
+                            <a href="https://antigravity.google/docs/cli/install" target="_blank"
+                                class="text-blue-600 hover:underline block">https://antigravity.google/docs/cli/install（インストール手順）</a>
+                        </div>
+
+                        <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
+                            <h4 class="font-bold text-red-800 mb-2">⚠️ 必ず WSL2（Ubuntu）内にインストールしてください</h4>
+                            <p class="text-gray-700 mb-2">
+                                Laravelのプロジェクトは WSL2 側に置くため、AIにコードを読ませるには
+                                CLIも WSL2 側にある必要があります。
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                公式には Windows（PowerShell）用のインストーラー
+                                <code class="bg-gray-200 px-1 rounded">irm https://antigravity.google/cli/install.ps1 | iex</code>
+                                もありますが、<strong>本研修では使いません。</strong>
+                                Windows側に入れるとWSL2内のファイルを扱いづらくなります。
+                            </p>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
                         <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre># Gemini CLIをインストール
-npm install -g @google/gemini-cli
-
-# 確認
-gemini --version</pre>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                            <pre>curl -fsSL https://antigravity.google/cli/install.sh | bash</pre>
                         </div>
+                        <p class="text-sm text-gray-600 mb-6">
+                            Node.js や Python のランタイムは不要で、単体の実行ファイルとして
+                            <code class="bg-gray-200 px-1 rounded">~/.local/bin/agy</code> に配置されます。
+                            コマンド名は <code class="bg-gray-200 px-1 rounded">agy</code> です。
+                        </p>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>⚠️ PATHが通っていない場合:</strong>
+                                <code class="bg-gray-200 px-1 rounded">~/.local/bin</code> がPATHに含まれていないと、
+                                インストーラーが「シェル設定ファイルに追記する1行」を表示します。その行を
+                                <code class="bg-gray-200 px-1 rounded">~/.bashrc</code> に追記し、
+                                <code class="bg-gray-200 px-1 rounded">source ~/.bashrc</code> を実行してください。
+                            </p>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストール確認</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                            <pre>agy --version</pre>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-6">
+                            バージョンが表示されれば成功です。<br>
+                            ※ <code class="bg-gray-200 px-1 rounded">agy version</code>（ハイフンなし）は対話モードで動くため、
+                            確認には <code class="bg-gray-200 px-1 rounded">agy --version</code> を使ってください。
+                        </p>
 
                         <h4 class="font-bold text-gray-800 mb-3">初回セットアップ</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                            <pre>gemini</pre>
+                            <pre>agy</pre>
                         </div>
-                        <ol class="space-y-2 text-gray-700 mb-6">
-                            <li>1. テーマカラーを選択</li>
-                            <li>2. 認証方法で「Login with Google」を選択</li>
-                            <li>3. ブラウザで個人のGoogleアカウントで認証</li>
+                        <ol class="space-y-2 text-gray-700 mb-4">
+                            <li>1. OSのキーチェーンに保存済みの認証情報があれば、自動でログインされます</li>
+                            <li>2. 初回はブラウザが自動で開くので、個人のGoogleアカウントでログイン</li>
+                            <li>3. 「許可」をクリックするとターミナルに戻り、プロンプトが表示されれば成功</li>
                         </ol>
+                        <p class="text-sm text-gray-600 mb-6">
+                            ※ WSL2からブラウザが自動で開かない場合は、認証用URLが表示されるので、
+                            Windows側のブラウザで開いて、表示されたコードをターミナルに貼り付けます。<br>
+                            ※ ログアウトしたいときは、CLI内で <code class="bg-gray-200 px-1 rounded">/logout</code> を実行します。
+                        </p>
+
+                        <h4 class="font-bold text-gray-800 mb-3">よく使うコマンド</h4>
+                        <div class="bg-gray-100 p-6 rounded-lg mb-6">
+                            <p class="font-bold text-gray-800 mb-2 text-sm">ターミナルで実行するコマンド</p>
+                            <ul class="space-y-2 text-sm text-gray-700 mb-5">
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy</code> - CLIを起動</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy --version</code> - バージョン確認</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy update</code> - 最新版に更新</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy changelog</code> - 更新履歴を表示</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy help</code> - ヘルプを表示</li>
+                            </ul>
+
+                            <p class="font-bold text-gray-800 mb-2 text-sm">CLI起動中に使うスラッシュコマンド</p>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/usage</code>（<code
+                                        class="bg-gray-200 px-2 py-1 rounded">/quota</code>） - モデルごとのクォータ残量を確認</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/credits</code> - AIクレジットの使用状況を確認</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/diff</code> - 変更差分を表示</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/codesearch</code> - コードベースを検索</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/agents</code> - エージェントの管理</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/permissions</code> - 権限設定</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/resume</code> - 前回のセッションを再開</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/logout</code> - ログアウト</li>
+                            </ul>
+                        </div>
 
                         <div class="bg-white p-8 rounded-lg shadow-lg mb-6">
                             <h3 class="text-2xl font-bold text-blue-600 mb-4">ファイル指定方法 (`@`マーク)</h3>
                             <div class="bg-gray-100 p-6 rounded-lg space-y-3">
-                                <p class="text-gray-700 pb-2">プロンプト内で `@` に続けてファイルパスを入力すると、そのファイルをコンテキストとして Gemini
+                                <p class="text-gray-700 pb-2">プロンプト内で `@` に続けてファイルパスを入力すると、そのファイルをコンテキストとして Antigravity CLI
                                     に渡すことができます。これにより、ファイルの内容に基づいた質問や指示が可能になります。</p>
                                 <div>
                                     <p class="text-gray-700 mb-2"><strong>単一ファイルの例:</strong></p>
@@ -458,7 +595,7 @@ gemini --version</pre>
         <section id="wsl-extension" class="py-16 bg-gray-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">7️⃣ VSCode WSL拡張機能のインストール</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">6️⃣ VSCode WSL拡張機能のインストール</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
                         <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
@@ -519,7 +656,7 @@ code .</pre>
         <section id="a5m2" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">8️⃣ A5M2 のインストール</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">7️⃣ A5M2 のインストール</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
                         <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
@@ -550,12 +687,86 @@ code .</pre>
 
                         <div class="bg-gray-100 p-6 rounded-lg">
                             <h4 class="font-bold text-gray-800 mb-3">代替ツール</h4>
-                            <ul class="space-y-2 text-gray-700">
+                            <ul class="space-y-2 text-gray-700 mb-4">
                                 <li>• <strong>HeidiSQL</strong> - 無料・オープンソース</li>
                                 <li>• <strong>TablePlus</strong> - 有料、無料トライアルあり</li>
                                 <li>• <strong>DBeaver</strong> - 無料・オープンソース</li>
                                 <li>• <strong>MySQL Workbench</strong> - MySQL公式ツール</li>
+                                <li>• <strong>DataGrip</strong> - 有料（JetBrains製）</li>
                             </ul>
+                            <div class="bg-yellow-50 p-4 rounded border-l-4 border-yellow-500">
+                                <p class="text-sm text-gray-700">
+                                    これらを使っていただいても構いません。<br>
+                                    <strong>すでに持っている場合はインストール不要です。</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Node.jsとnpmのインストール（任意） -->
+        <section id="nodejs" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">
+                        （任意）Node.js と npm のインストール
+                    </h2>
+                    <p class="text-center text-gray-600 mb-8">この研修では使いません。入れなくて構いません。</p>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-gray-400 mb-6">
+                            <h4 class="font-bold text-gray-800 mb-2">💡 インストール不要です</h4>
+                            <p class="text-sm text-gray-700 mb-2">
+                                本研修で扱うのは TDD（PHPUnit）、静的解析（PHPStan）、CI/CD（GitHub Actions）で、
+                                フロントエンドのビルドは行いません。Node.js が必要な場面はありません。
+                            </p>
+                            <p class="text-sm text-gray-700 mb-2">
+                                以前は AIコーディング用の Gemini CLI を <code
+                                    class="bg-gray-200 px-1 rounded">npm install -g</code> で入れていたため Node.js が必要でしたが、
+                                後継の Antigravity CLI は単体の実行ファイルを配置する方式なので Node.js は不要になりました。
+                            </p>
+                            <p class="text-sm text-gray-700 mb-2">
+                                Laravelプロジェクト側で Node.js を使いたくなった場合も、
+                                Dockerコンテナの中に Node.js が入っているため、以下のように実行できます。
+                            </p>
+                            <div class="bg-gray-900 text-green-400 p-3 rounded font-mono text-xs">
+                                <pre>docker compose exec app npm install</pre>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-sm">
+                            以下は、WSL2（Ubuntu）内にも Node.js を入れておきたい方向けの手順です。
+                        </p>
+
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>⚠️ WSL2では権限問題を避けるため、nvmを使います</strong>
+                            </p>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
+                        <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre># curlをインストール
+sudo apt update && sudo apt install -y curl
+
+# nvmをインストール
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+
+# 設定を再読み込み
+source ~/.bashrc
+
+# Node.js 24をインストール
+nvm install 24
+nvm use 24</pre>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                            <pre>node -v
+npm -v</pre>
                         </div>
                     </div>
                 </div>
@@ -572,12 +783,10 @@ code .</pre>
                         <h3 class="text-2xl font-bold text-green-800 mb-6">✅ 確認コマンド一覧</h3>
                         <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>node -v
-npm -v
-git --version
+                            <pre>git --version
 docker --version
 docker compose version
-gemini --version</pre>
+agy --version</pre>
                         </div>
 
                         <h3 class="text-2xl font-bold text-green-800 mb-6">📋 チェックリスト</h3>
@@ -589,14 +798,6 @@ gemini --version</pre>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
                                 <label class="text-gray-700">WSL2（Ubuntu）起動確認</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-3 w-5 h-5">
-                                <label class="text-gray-700">node -vでバージョン表示</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-3 w-5 h-5">
-                                <label class="text-gray-700">npm -vでバージョン表示</label>
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
@@ -612,7 +813,7 @@ gemini --version</pre>
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
-                                <label class="text-gray-700">Gemini CLI ログイン確認</label>
+                                <label class="text-gray-700">Antigravity CLI ログイン確認（agy --version / agy）</label>
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
