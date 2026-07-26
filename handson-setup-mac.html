@@ -45,6 +45,130 @@
             </div>
         </section>
 
+        <!-- はじめに確認：スペックと権限 -->
+        <section id="requirements" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-5xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">はじめに確認してください</h2>
+                    <p class="text-center text-gray-600 mb-10">
+                        研修当日になって「インストールできない」となると、その場では解決できないことがあります。<br>
+                        <strong>事前に必ず確認をお願いします。</strong>
+                    </p>
+
+                    <!-- スペック -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold text-blue-600 mb-6">💻 必要なパソコンのスペック</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="text-left p-3 font-bold text-gray-800">項目</th>
+                                        <th class="text-left p-3 font-bold text-gray-800">必要な条件</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-700">
+                                    <tr class="border-b">
+                                        <td class="p-3 font-bold whitespace-nowrap">OS</td>
+                                        <td class="p-3">macOS の最新版、または2世代前まで<br>
+                                            <span class="text-xs text-gray-500">（Docker Desktop のサポート範囲）</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3 font-bold whitespace-nowrap">CPU</td>
+                                        <td class="p-3">Apple シリコン（M1以降）または Intel<br>
+                                            <span class="text-xs text-gray-500">どちらでも動作します</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3 font-bold whitespace-nowrap">メモリ</td>
+                                        <td class="p-3"><strong>8GB以上（16GB推奨）</strong><br>
+                                            <span class="text-xs text-gray-500">Docker公式の最低要件は4GBですが、Docker・エディタ・ブラウザを
+                                                同時に開くため8GB以上を推奨します</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3 font-bold whitespace-nowrap">空き容量</td>
+                                        <td class="p-3"><strong>20GB以上</strong><br>
+                                            <span class="text-xs text-gray-500">Docker Desktop本体に加え、この研修で使うコンテナイメージだけで
+                                                約1.7GB使います（PHP 835MB / MySQL 812MB / nginx 62MB）。
+                                                作業領域を含めて余裕をもって確保してください</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-bold whitespace-nowrap">ネットワーク</td>
+                                        <td class="p-3">インターネット接続（数GBのダウンロードが発生します）</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 権限 -->
+                    <div class="bg-yellow-50 p-8 rounded-lg shadow-lg border-l-4 border-yellow-500 mb-8">
+                        <h3 class="text-2xl font-bold text-yellow-800 mb-4">🔑 インストールには管理者権限が必要です</h3>
+                        <p class="text-gray-700 mb-4">
+                            この研修で使うツールの多くは、インストール時に
+                            <strong>Macのログインパスワード（管理者権限）</strong>の入力を求められます。
+                        </p>
+                        <ul class="space-y-2 text-gray-700 mb-4">
+                            <li>• <strong>Docker Desktop</strong> - インストール時に管理者パスワードが必要</li>
+                            <li>• <strong>Homebrew</strong> - インストール時に管理者パスワードが必要</li>
+                            <li>• <strong>Xcode Command Line Tools</strong> - Homebrewが自動導入する際に必要</li>
+                        </ul>
+                        <p class="text-sm text-gray-700">
+                            管理者権限がないアカウントでは、これらのインストールが途中で失敗します。
+                        </p>
+                    </div>
+
+                    <!-- 会社PC -->
+                    <div class="bg-red-50 p-8 rounded-lg shadow-lg border-l-4 border-red-500 mb-8">
+                        <h3 class="text-2xl font-bold text-red-800 mb-4">🏢 会社のパソコンで参加される方へ</h3>
+                        <p class="text-gray-700 mb-4">
+                            会社から貸与されているパソコンの場合、
+                            <strong>セキュリティポリシーによってソフトウェアのインストールが制限されている</strong>ことがあります。
+                            その場合、研修を進めることができません。
+                        </p>
+
+                        <div class="bg-white p-5 rounded-lg mb-5">
+                            <p class="font-bold text-gray-800 mb-3">事前にご確認ください</p>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li>☑️ 管理者権限を持つアカウントでログインできますか？</li>
+                                <li>☑️ 会社の規定として、Docker Desktop をインストールしてよいですか？</li>
+                                <li>☑️ 情報システム部門の許可・申請が必要ではありませんか？</li>
+                            </ul>
+                            <p class="text-xs text-gray-500 mt-3">
+                                申請が必要な場合、承認までに数日〜数週間かかることがあります。お早めにご確認ください。
+                            </p>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-lg mb-5">
+                            <p class="font-bold text-gray-800 mb-2">⚖️ Docker Desktop のライセンスにもご注意ください</p>
+                            <p class="text-sm text-gray-700 mb-2">
+                                Docker Desktop は、<strong>従業員250人未満かつ年間売上1,000万ドル未満</strong>の企業、
+                                および個人利用・教育目的であれば無料です。
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                この規模を超える企業での業務利用には、<strong>有償サブスクリプションが必要</strong>になります。
+                                会社のパソコンで使う場合は、自社が契約済みかどうかを確認しておくと安心です。
+                            </p>
+                        </div>
+
+                        <div class="bg-green-50 p-5 rounded-lg border-l-4 border-green-500">
+                            <p class="font-bold text-green-800 mb-2">💡 個人のパソコンでのご参加もおすすめです</p>
+                            <p class="text-sm text-gray-700 mb-2">
+                                <strong>ご自身のパソコンで参加していただくのも、とても良い選択です。</strong>
+                                権限やライセンスを気にせず自由に環境を作れますし、研修が終わったあとも
+                                そのまま自分の学習環境として使い続けられます。
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                会社のパソコンで制限に引っかかりそうな方は、無理をせず個人のパソコンをご用意ください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- インストール対象ツール一覧 -->
         <section id="tools" class="py-16 bg-white">
             <div class="container mx-auto px-6">
