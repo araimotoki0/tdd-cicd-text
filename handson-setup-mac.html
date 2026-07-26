@@ -41,7 +41,7 @@
             <div class="container mx-auto px-6 text-center">
                 <h2 class="text-5xl font-bold mb-4">Mac環境構築ガイド</h2>
                 <p class="text-xl mb-4">Laravel開発環境をMacにセットアップしよう</p>
-                <p class="text-sm mb-8 opacity-90">VSCode、Docker、Git、Node.jsなどの必須ツールをインストール</p>
+                <p class="text-sm mb-8 opacity-90">VSCode、Docker、Git などの必須ツールをインストール</p>
             </div>
         </section>
 
@@ -67,13 +67,6 @@
                                         また、すでに使い慣れているものがあれば、そちらを使っていただいて構いません。
                                     </p>
                                 </div>
-                            </div>
-                            <div class="bg-white p-4 rounded-lg shadow">
-                                <div class="flex items-center mb-2">
-                                    <span class="text-2xl mr-3">📦</span>
-                                    <h4 class="font-bold text-lg">Node.js と npm</h4>
-                                </div>
-                                <p class="text-sm text-gray-600">JavaScriptランタイム環境</p>
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
@@ -174,7 +167,7 @@
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Homebrew のインストール</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <p class="text-gray-700 mb-6">Homebrewは、Macで使えるパッケージ管理ツールです。これを使ってNode.js、Gitなどをインストールします。</p>
+                        <p class="text-gray-700 mb-6">Homebrewは、Macで使えるパッケージ管理ツールです。これを使ってGitなどをインストールします。</p>
 
                         <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
@@ -198,13 +191,35 @@
             </div>
         </section>
 
-        <!-- Node.jsとnpmのインストール -->
+        <!-- Node.jsとnpmのインストール（任意） -->
         <section id="nodejs" class="py-16 bg-gray-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Node.js と npm のインストール</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">
+                        （任意）Node.js と npm のインストール
+                    </h2>
+                    <p class="text-center text-gray-600 mb-8">この研修では使いません。入れなくて構いません。</p>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <div class="bg-gray-100 p-6 rounded-lg border-l-4 border-gray-400 mb-6">
+                            <h4 class="font-bold text-gray-800 mb-2">💡 インストール不要です</h4>
+                            <p class="text-sm text-gray-700 mb-2">
+                                本研修で扱うのは TDD（PHPUnit）、静的解析（PHPStan）、CI/CD（GitHub Actions）で、
+                                フロントエンドのビルドは行いません。Node.js が必要な場面はありません。
+                            </p>
+                            <p class="text-sm text-gray-700 mb-2">
+                                Laravelプロジェクト側で Node.js を使いたくなった場合も、
+                                Dockerコンテナの中に Node.js が入っているため、以下のように実行できます。
+                            </p>
+                            <div class="bg-gray-900 text-green-400 p-3 rounded font-mono text-xs">
+                                <pre>docker compose exec app npm install</pre>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-700 mb-6 text-sm">
+                            以下は、Mac本体にも Node.js を入れておきたい方向けの手順です。
+                        </p>
+
                         <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
                             <pre>brew install node</pre>
@@ -534,11 +549,10 @@ docker compose version</pre>
                     <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-lg shadow-lg">
                         <h3 class="text-2xl font-bold text-green-800 mb-6">✅ 確認コマンド一覧</h3>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>node -v
-npm -v
-git --version
+                            <pre>git --version
 docker --version
-docker compose version</pre>
+docker compose version
+agy --version</pre>
                         </div>
 
                         <h3 class="text-2xl font-bold text-green-800 mb-6">📋 チェックリスト</h3>
@@ -546,14 +560,6 @@ docker compose version</pre>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
                                 <label class="text-gray-700">VSCode起動確認</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-3 w-5 h-5">
-                                <label class="text-gray-700">node -vでバージョン表示</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" class="mr-3 w-5 h-5">
-                                <label class="text-gray-700">npm -vでバージョン表示</label>
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
