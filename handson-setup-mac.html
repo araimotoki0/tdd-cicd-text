@@ -73,7 +73,15 @@
                                     <span class="text-2xl mr-3">🔧</span>
                                     <h4 class="font-bold text-lg">Git</h4>
                                 </div>
-                                <p class="text-sm text-gray-600">バージョン管理システム</p>
+                                <p class="text-sm text-gray-600 mb-3">バージョン管理システム</p>
+                                <div class="bg-yellow-50 p-3 rounded border-l-4 border-yellow-400">
+                                    <p class="text-xs font-bold text-yellow-800 mb-1">💡 個別のインストールは基本不要</p>
+                                    <p class="text-xs text-gray-700">
+                                        Homebrew を入れると Xcode Command Line Tools が一緒に入り、Git も使えるようになります。
+                                        <strong>フル版の Xcode（15GB以上）は不要です。</strong>
+                                        ただし <code class="bg-gray-200 px-1 rounded">git config</code> での初期設定は必要です。
+                                    </p>
+                                </div>
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
@@ -167,7 +175,14 @@
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Homebrew のインストール</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <p class="text-gray-700 mb-6">Homebrewは、Macで使えるパッケージ管理ツールです。これを使ってGitなどをインストールします。</p>
+                        <p class="text-gray-700 mb-4">Homebrewは、Macで使えるパッケージ管理ツールです。</p>
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 Homebrewを入れると Git も使えるようになります。</strong><br>
+                                Homebrewのインストーラーが「Xcode Command Line Tools」を自動で導入するためです。
+                                （フル版の Xcode は不要です）
+                            </p>
+                        </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
@@ -246,20 +261,66 @@ npm -v</pre>
         <section id="git" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Git のインストール</h2>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Git の確認と初期設定</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>brew install git</pre>
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-6">
+                            <h4 class="font-bold text-green-800 mb-2">✅ ほとんどの場合、インストールは不要です</h4>
+                            <p class="text-gray-700 mb-2">
+                                前の手順で Homebrew を入れた時点で、Git は使えるようになっています。
+                                まずは確認コマンドを実行してください。
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                <strong>フル版の Xcode（15GB以上あるアプリ）は不要です。</strong>
+                                必要なのは「Xcode Command Line Tools」という開発ツール一式だけで、
+                                これは Homebrew のインストール時に自動で入ります。
+                            </p>
                         </div>
 
                         <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
                             <pre>git --version</pre>
                         </div>
+                        <p class="text-sm text-gray-600 mb-6">
+                            <code class="bg-gray-200 px-1 rounded">git version 2.x.x</code> のように表示されればOKです。
+                            この後の「初期設定」に進んでください。
+                        </p>
 
-                        <h4 class="font-bold text-gray-800 mb-3">初期設定</h4>
+                        <div class="bg-gray-100 p-6 rounded-lg mb-6">
+                            <h4 class="font-bold text-gray-800 mb-3">🔍 Macに Git は最初から入っているの？</h4>
+                            <p class="text-sm text-gray-700 mb-3">
+                                「入っているように見えて、実は入っていない」というのが正確なところです。
+                            </p>
+                            <p class="text-sm text-gray-700 mb-3">
+                                <code class="bg-gray-200 px-1 rounded">/usr/bin/git</code> というファイルは最初から存在しますが、
+                                これは Git 本体ではなく<strong>ダミー（案内役）</strong>です。実際
+                                <code class="bg-gray-200 px-1 rounded">/usr/bin/clang</code> や
+                                <code class="bg-gray-200 px-1 rounded">/usr/bin/swift</code> と中身が同一のファイルで、
+                                「どのコマンドとして呼ばれたか」を見て本物へ取り次いでいるだけです。
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                そのため Command Line Tools が未導入の状態で
+                                <code class="bg-gray-200 px-1 rounded">git</code> と打つと、Gitは動かず
+                                <strong>「"git" コマンドにはコマンドラインデベロッパツールが必要です」</strong>
+                                というダイアログが出ます。その場合は「インストール」を押せばOKです（数分〜十数分かかります）。
+                            </p>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <p class="text-sm text-gray-700 mb-2">
+                                <strong>💡 補足：新しいバージョンの Git を使いたい場合（任意）</strong><br>
+                                Apple が同梱している Git はやや古めです（例：2.39.3）。
+                                最新版を使いたい場合のみ、以下でインストールできます。
+                            </p>
+                            <div class="bg-gray-900 text-green-400 p-3 rounded font-mono text-xs">
+                                <pre>brew install git</pre>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-2">
+                                本研修の内容はどちらのバージョンでも問題なく進められます。
+                            </p>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">初期設定（こちらは必須です）</h4>
                         <p class="text-gray-700 mb-4">Gitを使うために、ユーザー名とメールアドレスを設定します。</p>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
                             <pre>git config --global user.name "あなたの名前"
