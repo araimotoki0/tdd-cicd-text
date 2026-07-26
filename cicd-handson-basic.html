@@ -218,7 +218,7 @@ git push -u origin main</pre>
     - <span class="text-yellow-300">name:</span> <span class="text-green-300">Setup PHP</span>
       <span class="text-yellow-300">uses:</span> shivammathur/setup-php@v2
       <span class="text-yellow-300">with:</span>
-        <span class="text-yellow-300">php-version:</span> <span class="text-green-300">'8.2'</span>
+        <span class="text-yellow-300">php-version:</span> <span class="text-green-300">'8.4'</span>
         <span class="text-yellow-300">extensions:</span> mbstring, pdo, pdo_sqlite
         <span class="text-yellow-300">coverage:</span> none
 
@@ -1091,7 +1091,7 @@ git push origin feature/new-feature
                             <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
                                 <h4 class="text-xl font-bold text-blue-800 mb-3">🔢 演習2：複数のPHPバージョンでテストする</h4>
                                 <p class="text-gray-700 mb-3">
-                                    マトリックスビルドを使って、PHP 8.2 と 8.3 の両方でテストを実行してみましょう。
+                                    マトリックスビルドを使って、PHP 8.3 と 8.4 の両方でテストを実行してみましょう。
                                 </p>
 
                                 <div class="bg-red-50 p-4 rounded-lg mb-4">
@@ -1102,7 +1102,7 @@ git push origin feature/new-feature
     runs-on: ubuntu-latest
 <span class="text-yellow-300 bg-yellow-900 px-1">    strategy:                          # ← この3行を追加
       matrix:
-        php-version: ['8.2', '8.3']</span>
+        php-version: ['8.3', '8.4']</span>
 
     steps:</pre>
                                     </div>
@@ -1114,7 +1114,7 @@ git push origin feature/new-feature
 <pre class="text-white">    - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-<span class="text-gray-500 line-through">        php-version: '8.2'                        # 削除</span>
+<span class="text-gray-500 line-through">        php-version: '8.4'                        # 削除</span>
 <span class="text-yellow-300 bg-yellow-900 px-1">        php-version: ${{ matrix.php-version }}   # 追加</span>
         extensions: mbstring, pdo, pdo_sqlite</pre>
                                     </div>
@@ -1123,7 +1123,7 @@ git push origin feature/new-feature
                                 <div class="bg-green-50 p-4 rounded-lg mb-4">
                                     <p class="font-bold text-green-800 mb-2">✅ 確認方法</p>
                                     <p class="text-sm text-gray-700">
-                                        pushした後、GitHub ActionsのUIで<strong>2つのジョブ</strong>（PHP 8.2 と 8.3）が並列で実行されることを確認してください。
+                                        pushした後、GitHub ActionsのUIで<strong>2つのジョブ</strong>（PHP 8.3 と 8.4）が並列で実行されることを確認してください。
                                     </p>
                                 </div>
 

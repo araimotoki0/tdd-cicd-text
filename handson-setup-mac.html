@@ -809,11 +809,37 @@ cd リポジトリ名</pre>
 
                         <h4 class="font-bold text-gray-800 mb-3">Docker立ち上げ</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>docker compose up -d
-docker compose exec app bash
-composer create-project laravel/laravel:"^12.0" .
+                            <pre>docker compose up -d</pre>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>💡 Laravel はすでに <code
+                                        class="bg-gray-200 px-1 rounded">src/</code> に入っています。</strong><br>
+                                <code class="bg-gray-200 px-1 rounded">composer create-project</code> を実行する必要はありません。
+                                ただし <code class="bg-gray-200 px-1 rounded">vendor/</code> と
+                                <code class="bg-gray-200 px-1 rounded">.env</code> は Git管理外のため、
+                                初回だけ次のセットアップが必要です。
+                            </p>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">Laravelの初回セットアップ</h4>
+                        <p class="text-gray-700 mb-3">コンテナに入って実行します:</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                            <pre>docker compose exec app bash
+
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+
 exit</pre>
                         </div>
+                        <p class="text-sm text-gray-600 mb-6">
+                            <code class="bg-gray-200 px-1 rounded">src/.env.example</code> には
+                            DBの接続先（<code class="bg-gray-200 px-1 rounded">DB_HOST=db</code> など）が設定済みなので、
+                            コピーするだけで接続できます。
+                        </p>
 
                     </div>
                 </div>
@@ -827,12 +853,17 @@ exit</pre>
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">データベース設定</h2>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
-                        <h4 class="font-bold text-gray-800 mb-3">編集ファイル</h4>
-                        <p class="text-gray-700 mb-4"><code class="bg-gray-200 px-2 py-1 rounded">src/.env</code>
-                            を編集します。</p>
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-6">
+                            <h4 class="font-bold text-green-800 mb-2">✅ 設定済みです</h4>
+                            <p class="text-gray-700">
+                                前の手順で <code class="bg-gray-200 px-1 rounded">cp .env.example .env</code> を実行していれば、
+                                DBの接続設定はすでに完了しています。書き換えは不要です。
+                            </p>
+                        </div>
 
-                        <h4 class="font-bold text-gray-800 mb-3">設定内容</h4>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
+                        <h4 class="font-bold text-gray-800 mb-3">設定内容（src/.env）</h4>
+                        <p class="text-gray-700 mb-3">中身は次のようになっています。確認だけしておきましょう。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
                             <pre>DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
@@ -840,24 +871,31 @@ DB_DATABASE=laravel
 DB_USERNAME=udemy123
 DB_PASSWORD=pass123</pre>
                         </div>
-
-                        <h4 class="font-bold text-gray-800 mb-3">コンテナ再起動</h4>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>docker compose down -v
-docker compose up -d</pre>
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>⚠️ DB_HOST は <code class="bg-gray-200 px-1 rounded">db</code> です。</strong>
+                                <code class="bg-gray-200 px-1 rounded">127.0.0.1</code> や
+                                <code class="bg-gray-200 px-1 rounded">localhost</code> ではありません。
+                                アプリはコンテナの中で動いており、同じDockerネットワーク上の
+                                <code class="bg-gray-200 px-1 rounded">db</code> というコンテナ名で接続するためです。
+                            </p>
                         </div>
 
-                        <h4 class="font-bold text-gray-800 mb-3">マイグレーション実行</h4>
+                        <h4 class="font-bold text-gray-800 mb-3">接続確認</h4>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>docker compose exec app bash
-php artisan migrate</pre>
+                            <pre>docker compose exec app php artisan migrate:status</pre>
                         </div>
 
                         <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
                             <h4 class="font-bold text-green-800 mb-2">✅ 確認</h4>
                             <p class="text-gray-700 mb-2">ブラウザで以下のURLにアクセス:</p>
-                            <a href="http://localhost" target="_blank"
-                                class="text-blue-600 hover:underline font-bold">http://localhost</a>
+                            <a href="http://localhost:8086" target="_blank"
+                                class="text-blue-600 hover:underline font-bold">http://localhost:8086</a>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Laravelの初期画面が表示されれば成功です。<br>
+                                テストも動かしてみましょう:
+                                <code class="bg-gray-200 px-1 rounded">docker compose exec app php artisan test</code>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -895,7 +933,7 @@ php artisan migrate</pre>
                             </div>
                             <div class="flex">
                                 <span class="font-bold text-gray-700 w-32">ポート:</span>
-                                <span class="text-gray-600">3306</span>
+                                <span class="text-gray-600">3386</span>
                             </div>
                         </div>
                     </div>
