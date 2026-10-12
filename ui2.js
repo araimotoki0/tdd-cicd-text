@@ -17,9 +17,6 @@
     var EXTRAS = {
         'home.html': { chapter: 'home', label: 'ホーム' },
         'app.html': { chapter: 'home', label: 'スマホアプリとして使う' },
-        'ai-coding.html': { chapter: 'ai', label: '【旧】Gemini CLI版' },
-        'mob-ai-cyberdojo.html': { chapter: 'mobai', label: '【旧】Cyber-Dojo版' },
-        'replit-tdd.html': { chapter: 'extra', home: 'mobai', label: 'Replit で TDD 練習' },
         'csd-preview.html': { chapter: 'extra', home: 'ai', label: 'チラ見せ説明会（2026/01/22）' }
     };
     // 前へ・次へでたどる順番（環境構築は各自の準備なので含めない）
@@ -159,7 +156,7 @@
                 '<div class="ui2-dh"><div><small>CSD COURSE</small><b>講座メニュー</b></div>' +
                 '<button type="button" class="ui2-close" aria-label="閉じる"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
                 '<div class="ui2-dbody">' + list +
-                '<div class="ui2-extra"><a href="https://learn.scrum.abi-agile.com/" target="_blank" rel="noopener">🎮 SCRUM QUEST（ゲームで復習）</a><a class="' + (file === 'app.html' ? 'is-current' : '') + '" href="app.html">📱 スマホアプリとして使う</a><a class="' + (file === 'csd-preview.html' ? 'is-current' : '') + '" href="csd-preview.html">チラ見せ説明会（2026/01/22）</a><a class="' + (file === 'replit-tdd.html' ? 'is-current' : '') + '" href="replit-tdd.html">Replit で TDD 練習</a></div>' +
+                '<div class="ui2-extra"><a href="https://learn.scrum.abi-agile.com/" target="_blank" rel="noopener">🎮 SCRUM QUEST（ゲームで復習）</a><a class="' + (file === 'app.html' ? 'is-current' : '') + '" href="app.html">📱 スマホアプリとして使う</a><a class="' + (file === 'csd-preview.html' ? 'is-current' : '') + '" href="csd-preview.html">チラ見せ説明会（2026/01/22）</a></div>' +
                 '</div><div class="ui2-dfoot"><kbd>Esc</kbd> で閉じる</div></aside>');
             var scrim = el('<div class="ui2-scrim"></div>');
             document.body.appendChild(scrim);
