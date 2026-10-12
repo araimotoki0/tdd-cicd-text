@@ -45,6 +45,31 @@
             </div>
         </section>
 
+        <!-- 講義までにやっておいてほしいこと（動画） -->
+        <section id="before-class" class="py-16 bg-gradient-to-b from-amber-50 to-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-center mb-3"><span class="inline-block bg-amber-400 text-amber-950 font-bold text-sm px-4 py-1.5 rounded-full">★ 講義までにお願いします</span></p>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center">講義までにやっておいてほしいこと</h2>
+
+                    <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-gray-900/10 bg-black mb-3">
+                        <video class="w-full h-auto block" src="video/setup-mac.mp4?v=1" poster="video/setup-mac-poster.jpg?v=1" controls preload="metadata" playsinline></video>
+                    </div>
+                    <p class="text-sm text-gray-500 text-center mb-8">🎬 「Mac の準備、はじめよう」（約1分40秒・音声あり）</p>
+
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <p class="font-bold text-gray-800 mb-4">✅ 講義までのゴール</p>
+                        <ol class="text-gray-700 space-y-3"><li class="flex gap-3"><span class="flex-none w-7 h-7 rounded-full bg-indigo-600 text-white grid place-items-center text-sm font-bold">1</span><span class="min-w-0"><strong>確認する</strong>：macOS のバージョン・メモリ・空き容量、管理者パスワード。会社の Mac は Docker Desktop を入れてよいかも確認（このページの「はじめに確認してください」）</span></li><li class="flex gap-3"><span class="flex-none w-7 h-7 rounded-full bg-indigo-600 text-white grid place-items-center text-sm font-bold">2</span><span class="min-w-0"><strong>6つの道具を入れる</strong>：VSCode・Homebrew・Git・Docker Desktop・Antigravity CLI・Sequel Ace（ページの上から順番に）</span></li><li class="flex gap-3"><span class="flex-none w-7 h-7 rounded-full bg-indigo-600 text-white grid place-items-center text-sm font-bold">3</span><span class="min-w-0"><strong>動くことを確かめる</strong>：チェックリストで確認し、テンプレートから作ったリポジトリを <code class="bg-gray-100 px-1 rounded">docker compose up -d</code> で起動。<code class="bg-gray-100 px-1 rounded">http://localhost:8086</code> に Laravel の画面が出たらゴール</span></li></ol>
+                    </div>
+
+                    <div class="bg-indigo-600 text-white p-6 md:p-8 rounded-2xl shadow-lg">
+                        <p class="text-xl font-bold mb-2">ブラウザに Laravel の画面が出たら、準備はばっちりです。</p>
+                        <p class="text-indigo-100">つまずいても大丈夫。ページ下の「よくあるトラブルと対処法」を見たり、エラーの文をそのまま AI に聞いたりしてみてください。それでも解決しないときは、講義の前に相談してください。当日、お会いできるのを楽しみにしています！</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- はじめに確認：スペックと権限 -->
         <section id="requirements" class="py-16 bg-white">
             <div class="container mx-auto px-6">
