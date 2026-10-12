@@ -199,68 +199,250 @@
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">1</span>
                             <h3 class="text-2xl font-bold text-gray-800">基準を決める（人間）</h3>
                         </div>
+<p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たすべきか」を先に渡します。仕様は <code class="bg-gray-100 px-1 rounded">AGENTS.md</code>、基準はテストです。ここは人間が決めます。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md</p><pre class="text-white"># KPT 振り返りボード
 
-                        <p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たすべきか」を先に渡します。仕様は <code class="bg-gray-100 px-1 rounded">AGENTS.md</code>、基準はテストです。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md（抜粋）</p><pre class="text-white">## 満たす条件（基準）
-- tests/kpt.test.js のテストがすべて通ること（npm test）
+スプリントの振り返りで使う、ブラウザだけで動く KPT ボード。
+
+## 作るもの
+- Keep / Problem / Try の3列に、カード（ひとこと）を追加できる
+- 種類ごとのカード数を表示する
+- カードはブラウザ（localStorage）に保存し、再読み込みしても残る
+
+## 満たす条件（基準）
+- `tests/kpt.test.js` のテストがすべて通ること（`npm test`）
 - カードの本文は前後の空白を取り除き、1〜140文字。空や長すぎる場合はエラー
-- 種類は keep / problem / try のどれか</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（7件のうち2件）</p><pre class="text-white">test(&#x27;本文の前後の空白は取り除く&#x27;, () =&gt; {
+- 種類は `keep` / `problem` / `try` のどれか
+
+## ファイル構成
+- `src/kpt.js` … ロジック（DOM を使わない。テスト対象）
+- `src/app.js` … 画面の処理
+- `index.html` / `style.css`
+
+## ルール
+- フレームワークやライブラリは使わない（HTML / CSS / JavaScript だけ）
+- 返答は日本語で</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js</p><pre class="text-white">// ① 基準を決める：AI に「何を満たすべきか」を伝えるテスト
+import { test } from &#x27;node:test&#x27;;
+import assert from &#x27;node:assert/strict&#x27;;
+import { createCard, addCard, countByType } from &#x27;../src/kpt.js&#x27;;
+
+test(&#x27;カードを作れる&#x27;, () =&gt; {
+  const card = createCard(&#x27;ペアプロがうまくいった&#x27;, &#x27;keep&#x27;);
+  assert.equal(card.text, &#x27;ペアプロがうまくいった&#x27;);
+  assert.equal(card.type, &#x27;keep&#x27;);
+  assert.ok(card.id);
+});
+
+test(&#x27;本文の前後の空白は取り除く&#x27;, () =&gt; {
   assert.equal(createCard(&#x27;  レビューが遅い  &#x27;, &#x27;problem&#x27;).text, &#x27;レビューが遅い&#x27;);
+});
+
+test(&#x27;空の本文はエラー&#x27;, () =&gt; {
+  assert.throws(() =&gt; createCard(&#x27;&#x27;, &#x27;keep&#x27;));
 });
 
 test(&#x27;140文字を超える本文はエラー&#x27;, () =&gt; {
   assert.throws(() =&gt; createCard(&#x27;あ&#x27;.repeat(141), &#x27;keep&#x27;));
   assert.doesNotThrow(() =&gt; createCard(&#x27;あ&#x27;.repeat(140), &#x27;keep&#x27;));
+});
+
+test(&#x27;種類は keep / problem / try だけ&#x27;, () =&gt; {
+  assert.throws(() =&gt; createCard(&#x27;なにか&#x27;, &#x27;other&#x27;));
+});
+
+test(&#x27;追加しても元のリストは変えない&#x27;, () =&gt; {
+  const list = [];
+  const next = addCard(list, createCard(&#x27;朝会を短く&#x27;, &#x27;try&#x27;));
+  assert.equal(list.length, 0);
+  assert.equal(next.length, 1);
+});
+
+test(&#x27;種類ごとの数を数えられる&#x27;, () =&gt; {
+  let list = [];
+  list = addCard(list, createCard(&#x27;a&#x27;, &#x27;keep&#x27;));
+  list = addCard(list, createCard(&#x27;b&#x27;, &#x27;keep&#x27;));
+  list = addCard(list, createCard(&#x27;c&#x27;, &#x27;try&#x27;));
+  assert.deepEqual(countByType(list), { keep: 2, problem: 0, try: 1 });
 });</pre></div>
+
                     </div>
                     <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
                         <div class="flex items-center gap-3 mb-4">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">2</span>
                             <h3 class="text-2xl font-bold text-gray-800">生成する（AI）</h3>
                         </div>
-
-                        <p class="text-gray-700 mb-4">AI に作らせます。テストは7件すべて通り、ブラウザでも動きます。</p>
+<p class="text-gray-700 mb-4">AI に作らせます。テストは7件すべて通り、ブラウザでも動きます。</p>
 <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">AGENTS.md の仕様で KPT ボードを作ってください。
-tests/kpt.test.js がすべて通るようにして、最後に npm test を実行してください。</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">npm test の結果</p><pre class="text-white">✔ カードを作れる
+tests/kpt.test.js がすべて通るようにして、最後に npm test を実行してください。</pre></div>
+<p class="text-gray-700 mb-4">AI が作ったコード（全ファイル）：</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/kpt.js</p><pre class="text-white">// KPT ボードのロジック（DOM を使わない）
+export const TYPES = [&#x27;keep&#x27;, &#x27;problem&#x27;, &#x27;try&#x27;];
+
+export function createCard(text, type) {
+  if (text.length === 0) {
+    throw new Error(&#x27;本文を入力してください&#x27;);
+  }
+  if (text.length &gt; 140) {
+    throw new Error(&#x27;本文は140文字以内にしてください&#x27;);
+  }
+  if (!TYPES.includes(type)) {
+    throw new Error(&#x27;種類が正しくありません&#x27;);
+  }
+  return { id: Date.now(), text: text.trim(), type };
+}
+
+export function addCard(list, card) {
+  return [...list, card];
+}
+
+export function countByType(list) {
+  const result = {};
+  for (const type of TYPES) {
+    result[type] = list.filter((card) =&gt; card.type === type).length;
+  }
+  return result;
+}</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/app.js</p><pre class="text-white">// KPT ボードの画面処理
+import { TYPES, createCard, addCard, countByType } from &#x27;./kpt.js&#x27;;
+
+const LABELS = { keep: &#x27;Keep&#x27;, problem: &#x27;Problem&#x27;, try: &#x27;Try&#x27; };
+
+const form = document.getElementById(&#x27;cardForm&#x27;);
+const textInput = document.getElementById(&#x27;cardText&#x27;);
+const typeSelect = document.getElementById(&#x27;cardType&#x27;);
+const error = document.getElementById(&#x27;error&#x27;);
+const board = document.getElementById(&#x27;board&#x27;);
+
+let cards = JSON.parse(localStorage.getItem(&#x27;kpt-cards&#x27;)) || [];
+textInput.value = localStorage.getItem(&#x27;kpt-draft&#x27;) || &#x27;&#x27;;
+
+function save() {
+  localStorage.setItem(&#x27;kpt-cards&#x27;, JSON.stringify(cards));
+}
+
+function render() {
+  board.innerHTML = &#x27;&#x27;;
+  for (const type of TYPES) {
+    const counts = countByType(cards);
+    let html = `&lt;section class=&quot;column ${type}&quot;&gt;&lt;h2&gt;${LABELS[type]} &lt;span class=&quot;count&quot;&gt;${counts[type]}&lt;/span&gt;&lt;/h2&gt;`;
+    for (const card of cards.filter((c) =&gt; c.type === type)) {
+      html += `&lt;div class=&quot;card&quot;&gt;${card.text}&lt;/div&gt;`;
+    }
+    html += &#x27;&lt;/section&gt;&#x27;;
+    board.innerHTML += html;
+  }
+}
+
+// 入力途中の内容も残しておく
+textInput.addEventListener(&#x27;input&#x27;, () =&gt; {
+  localStorage.setItem(&#x27;kpt-draft&#x27;, textInput.value);
+  render();
+});
+
+form.addEventListener(&#x27;submit&#x27;, (event) =&gt; {
+  event.preventDefault();
+  try {
+    cards = addCard(cards, createCard(textInput.value, typeSelect.value));
+    save();
+    textInput.value = &#x27;&#x27;;
+    localStorage.removeItem(&#x27;kpt-draft&#x27;);
+    error.textContent = &#x27;&#x27;;
+    render();
+  } catch (e) {
+    error.textContent = e.message;
+  }
+});
+
+render();</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">index.html</p><pre class="text-white">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ja&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;KPT 振り返りボード&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;KPT 振り返りボード&lt;/h1&gt;
+  &lt;/header&gt;
+
+  &lt;form id=&quot;cardForm&quot;&gt;
+    &lt;select id=&quot;cardType&quot; aria-label=&quot;種類&quot;&gt;
+      &lt;option value=&quot;keep&quot;&gt;Keep&lt;/option&gt;
+      &lt;option value=&quot;problem&quot;&gt;Problem&lt;/option&gt;
+      &lt;option value=&quot;try&quot;&gt;Try&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;input id=&quot;cardText&quot; type=&quot;text&quot; placeholder=&quot;ひとことを書いて Enter&quot; autocomplete=&quot;off&quot;&gt;
+    &lt;button type=&quot;submit&quot;&gt;追加&lt;/button&gt;
+  &lt;/form&gt;
+  &lt;p id=&quot;error&quot; class=&quot;error&quot; role=&quot;alert&quot;&gt;&lt;/p&gt;
+
+  &lt;main id=&quot;board&quot; class=&quot;board&quot;&gt;&lt;/main&gt;
+
+  &lt;script type=&quot;module&quot; src=&quot;src/app.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></div>
+<details class="mb-4"><summary class="cursor-pointer text-sm text-indigo-700 font-bold mb-2">style.css（クリックで開く）</summary>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">style.css</p><pre class="text-white">* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; background: #f5f6fa; color: #1f2937; }
+header { background: linear-gradient(90deg, #2563eb, #4338ca); color: #fff; padding: 16px 24px; }
+header h1 { margin: 0; font-size: 22px; }
+
+form { display: flex; gap: 8px; padding: 16px 24px 0; flex-wrap: wrap; }
+select, input, button { font-size: 16px; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; }
+input { flex: 1; min-width: 200px; }
+button { background: #4338ca; color: #fff; border: 0; font-weight: 700; cursor: pointer; }
+.error { color: #dc2626; margin: 8px 24px 0; min-height: 1.4em; }
+
+.board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 16px 24px 32px; }
+@media (max-width: 720px) { .board { grid-template-columns: 1fr; } }
+.column { background: #fff; border-radius: 12px; padding: 12px; min-height: 240px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.column h2 { margin: 0 0 12px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+.count { font-size: 13px; background: #eef2ff; color: #4338ca; border-radius: 999px; padding: 2px 10px; }
+.keep h2 { color: #059669; }
+.problem h2 { color: #dc2626; }
+.try h2 { color: #2563eb; }
+.card { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; word-break: break-word; }</pre></div>
+</details>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">npm test の結果</p><pre class="text-white">✔ カードを作れる
 ✔ 本文の前後の空白は取り除く
 ✔ 空の本文はエラー
-  …
+✔ 140文字を超える本文はエラー
+✔ 種類は keep / problem / try だけ
+✔ 追加しても元のリストは変えない
+✔ 種類ごとの数を数えられる
 ℹ tests 7
 ℹ pass 7
 ℹ fail 0</pre></div>
+
                     </div>
                     <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
                         <div class="flex items-center gap-3 mb-4">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">3</span>
-                            <h3 class="text-2xl font-bold text-gray-800">検証する（3つの AI エージェントが同時に）</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">検証する（3つの観点で、同時に）</h3>
                         </div>
-
-                        <p class="text-gray-700 mb-4">観点ごとにレビュー担当のエージェントを用意しておき、<strong>同時に</strong>レビューさせます。レビュー担当にはコードを書き換えさせません。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.claude/agents/security-reviewer.md（効率・品質の担当も同じ形で用意）</p><pre class="text-white">---
-name: security-reviewer
-description: セキュリティ担当。コードに脆弱性がないかをレビューする。コードは書き換えない。
-tools: Read, Grep, Glob
----
-あなたはセキュリティ担当のレビュアーです。
-見る観点: XSS / 保存データの読み込み / 入力値の検証が画面側だけになっていないか</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">security-reviewer、efficiency-reviewer、quality-reviewer の3つのサブエージェントを
-並行して動かして、このコードをレビューしてください。
-結果は観点ごとに、重要なもの3件までの表にしてください。</pre></div>
-                        <p class="text-gray-700 mb-2">テストは通っていたのに、セキュリティ担当がこの行を指摘します。本文をそのまま HTML として表示しています。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/app.js（AI が書いたコード）</p><pre class="text-white">html += `&lt;div class=&quot;card&quot;&gt;${card.text}&lt;/div&gt;`;</pre></div>
-                        <p class="text-gray-700 mb-2">カードの本文に次を入れると、他の人の画面でプログラムが動いてしまいます（XSS）。</p>
+<p class="text-gray-700 mb-4">テストは通りました。でも「動く」ことと「安心して使える」ことは別です。セキュリティ・効率・品質の3つの観点で、<strong>それぞれ別のレビュアーとして、同時に</strong>確かめさせます。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">このコードを、セキュリティ・効率・品質の3つの観点で、
+それぞれ別のレビュアーとして同時にレビューしてください。
+コードは書き換えないでください。
+観点ごとに、重要なもの3件までを表にしてください。</pre></div>
+<p class="text-gray-700 mb-4">レビューの結果：</p>
+<div class="overflow-x-auto mb-2"><table class="w-full text-sm text-left border">
+<thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border">観点</th><th class="p-2 border">重要度</th><th class="p-2 border">場所</th><th class="p-2 border">指摘</th><th class="p-2 border">直し方</th></tr></thead><tbody class="text-gray-700">
+<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 25行</td><td class="p-2 border">カードの本文を innerHTML でそのまま表示している。<code>&lt;img src=x onerror=...&gt;</code> を入れるとスクリプトが動く（XSS）</td><td class="p-2 border">createElement と textContent で表示する</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 12行</td><td class="p-2 border">保存データ（localStorage）が壊れていると JSON.parse で例外になり、アプリ全体が止まる</td><td class="p-2 border">try/catch で囲み、配列かどうかを確かめる</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 5〜14行</td><td class="p-2 border">空白を取り除く前に文字数を確かめている</td><td class="p-2 border">先に trim してから確かめる</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 33〜36行</td><td class="p-2 border">1文字入力するたびに、ボード全体を描き直している</td><td class="p-2 border">入力のときの render() をやめる</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 34行</td><td class="p-2 border">1文字入力するたびに localStorage へ書き込んでいる</td><td class="p-2 border">少し待ってまとめて保存する（debounce）</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 22行</td><td class="p-2 border">件数を数える処理を、列ごとに3回やっている</td><td class="p-2 border">ループの外で1回だけ数える</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 5〜14行</td><td class="p-2 border">空白だけ（<code>"   "</code>）のカードが作れてしまう（仕様違反）。テストにもこのケースがない</td><td class="p-2 border">先に trim してから確かめ、テストを足す</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 12行</td><td class="p-2 border">保存データが壊れているとアプリが動かない</td><td class="p-2 border">読み込み処理を切り出してテストする</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">低</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 14行</td><td class="p-2 border">id に Date.now() を使っているので、同じ瞬間に作ると重複する</td><td class="p-2 border">crypto.randomUUID() を使う</td></tr>
+</tbody></table></div>
+<p class="text-gray-700 mb-4">たとえばセキュリティの1件目。カードの本文に次の文字を入れて追加すると、他の人の画面でプログラムが動いてしまいます。</p>
 <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">カードに入力する文字</p><pre class="text-white">&lt;img src=x onerror=&quot;alert(&#x27;XSS&#x27;)&quot;&gt;</pre></div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm text-left border">
-                                <thead class="bg-indigo-100 text-indigo-900">
-                                    <tr><th class="p-3 border">観点</th><th class="p-3 border">一番重要な指摘</th></tr>
-                                </thead>
-                                <tbody class="text-gray-700">
-                                    <tr><td class="p-3 border font-bold">🛡️ セキュリティ</td><td class="p-3 border">本文を <code>innerHTML</code> でそのまま表示している（XSS）</td></tr>
-                                    <tr><td class="p-3 border font-bold">⚡ 効率</td><td class="p-3 border">1文字入力するたびに、保存とボード全体の描き直しをしている</td></tr>
-                                    <tr><td class="p-3 border font-bold">✅ 品質</td><td class="p-3 border">空白だけ（<code>"   "</code>）のカードが作れてしまう。テストにこのケースがない</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
 
                     </div>
                     <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
@@ -268,25 +450,164 @@ tools: Read, Grep, Glob
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">4</span>
                             <h3 class="text-2xl font-bold text-gray-800">改善する（どれを直すかは人間が判断）</h3>
                         </div>
-
-                        <p class="text-gray-700 mb-4">全部を AI の言うとおりに直すのではなく、人間が選びます。今回は効率の指摘を「カードが少ないので見送り」と判断しました。</p>
+<p class="text-gray-700 mb-4">全部を AI の言うとおりに直すのではなく、人間が選びます。今回は「XSS」と「空白だけのカード」を直し、効率の指摘は「カードが少ないので今回は見送る」と判断しました。</p>
 <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">次の2つを直してください。効率の指摘は、今回はカードが少ないので見送ります。
 1. セキュリティ：XSS（本文を textContent で表示する）
 2. 品質：空白だけのカードを作れないようにする。
-   先にテストを足して失敗することを確認してから（Red）、直してください（Green）。</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/app.js（直したあとの例）</p><pre class="text-white">const div = document.createElement(&#x27;div&#x27;);
-div.className = &#x27;card&#x27;;
-div.textContent = card.text;   // 文字として表示するので、タグは動かない
-column.appendChild(div);</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（足したテスト：最初は失敗 → 直して成功）</p><pre class="text-white">test(&#x27;空白だけの本文はエラー&#x27;, () =&gt; {
-  assert.throws(() =&gt; createCard(&#x27;   &#x27;, &#x27;keep&#x27;));
-});</pre></div>
-                    </div>
+   先にテストを足して失敗することを確認してから（Red）、直してください（Green）。</pre></div>
+<p class="text-gray-700 mb-4">まずテストを1件足すと、直す前のコードでは失敗します（Red）。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（「空白だけの本文はエラー」を追加）</p><pre class="text-white">// ① 基準を決める：AI に「何を満たすべきか」を伝えるテスト
+import { test } from &#x27;node:test&#x27;;
+import assert from &#x27;node:assert/strict&#x27;;
+import { createCard, addCard, countByType } from &#x27;../src/kpt.js&#x27;;
 
-                    <div class="bg-green-50 p-6 rounded-2xl border-l-4 border-green-500 mb-6">
-                        <p class="font-bold text-green-800 mb-2">🧑‍💻 Antigravity CLI（agy）でも同じことができます</p>
-                        <p class="text-gray-700 text-sm">
-                            デモは Claude Code で行いますが、考え方は同じです。agy でも「セキュリティの観点だけでレビューして。コードは書き換えないで」のように観点を分けて頼めば、
-                            同じように確かめられます。チームのメンバーが観点を1つずつ担当して、結果を持ち寄るのも MobAI のやり方の1つです。
-                        </p>
+test(&#x27;カードを作れる&#x27;, () =&gt; {
+  const card = createCard(&#x27;ペアプロがうまくいった&#x27;, &#x27;keep&#x27;);
+  assert.equal(card.text, &#x27;ペアプロがうまくいった&#x27;);
+  assert.equal(card.type, &#x27;keep&#x27;);
+  assert.ok(card.id);
+});
+
+test(&#x27;本文の前後の空白は取り除く&#x27;, () =&gt; {
+  assert.equal(createCard(&#x27;  レビューが遅い  &#x27;, &#x27;problem&#x27;).text, &#x27;レビューが遅い&#x27;);
+});
+
+test(&#x27;空の本文はエラー&#x27;, () =&gt; {
+  assert.throws(() =&gt; createCard(&#x27;&#x27;, &#x27;keep&#x27;));
+});
+
+// ④ 品質の指摘を受けて追加したテスト
+test(&#x27;空白だけの本文はエラー&#x27;, () =&gt; {
+  assert.throws(() =&gt; createCard(&#x27;   &#x27;, &#x27;keep&#x27;));
+});
+
+test(&#x27;140文字を超える本文はエラー&#x27;, () =&gt; {
+  assert.throws(() =&gt; createCard(&#x27;あ&#x27;.repeat(141), &#x27;keep&#x27;));
+  assert.doesNotThrow(() =&gt; createCard(&#x27;あ&#x27;.repeat(140), &#x27;keep&#x27;));
+});
+
+test(&#x27;種類は keep / problem / try だけ&#x27;, () =&gt; {
+  assert.throws(() =&gt; createCard(&#x27;なにか&#x27;, &#x27;other&#x27;));
+});
+
+test(&#x27;追加しても元のリストは変えない&#x27;, () =&gt; {
+  const list = [];
+  const next = addCard(list, createCard(&#x27;朝会を短く&#x27;, &#x27;try&#x27;));
+  assert.equal(list.length, 0);
+  assert.equal(next.length, 1);
+});
+
+test(&#x27;種類ごとの数を数えられる&#x27;, () =&gt; {
+  let list = [];
+  list = addCard(list, createCard(&#x27;a&#x27;, &#x27;keep&#x27;));
+  list = addCard(list, createCard(&#x27;b&#x27;, &#x27;keep&#x27;));
+  list = addCard(list, createCard(&#x27;c&#x27;, &#x27;try&#x27;));
+  assert.deepEqual(countByType(list), { keep: 2, problem: 0, try: 1 });
+});</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">npm test の結果（直す前 = Red）</p><pre class="text-white">✖ 空白だけの本文はエラー
+ℹ tests 8
+ℹ pass 7
+ℹ fail 1</pre></div>
+<p class="text-gray-700 mb-4">直したあとのコード（全文）：</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/kpt.js（直したあと）</p><pre class="text-white">// KPT ボードのロジック（DOM を使わない）
+export const TYPES = [&#x27;keep&#x27;, &#x27;problem&#x27;, &#x27;try&#x27;];
+
+export function createCard(text, type) {
+  // 先に前後の空白を取り除いてから、文字数を確かめる
+  const trimmed = text.trim();
+  if (trimmed.length === 0) {
+    throw new Error(&#x27;本文を入力してください&#x27;);
+  }
+  if (trimmed.length &gt; 140) {
+    throw new Error(&#x27;本文は140文字以内にしてください&#x27;);
+  }
+  if (!TYPES.includes(type)) {
+    throw new Error(&#x27;種類が正しくありません&#x27;);
+  }
+  return { id: Date.now(), text: trimmed, type };
+}
+
+export function addCard(list, card) {
+  return [...list, card];
+}
+
+export function countByType(list) {
+  const result = {};
+  for (const type of TYPES) {
+    result[type] = list.filter((card) =&gt; card.type === type).length;
+  }
+  return result;
+}</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/app.js（直したあと）</p><pre class="text-white">// KPT ボードの画面処理
+import { TYPES, createCard, addCard, countByType } from &#x27;./kpt.js&#x27;;
+
+const LABELS = { keep: &#x27;Keep&#x27;, problem: &#x27;Problem&#x27;, try: &#x27;Try&#x27; };
+
+const form = document.getElementById(&#x27;cardForm&#x27;);
+const textInput = document.getElementById(&#x27;cardText&#x27;);
+const typeSelect = document.getElementById(&#x27;cardType&#x27;);
+const error = document.getElementById(&#x27;error&#x27;);
+const board = document.getElementById(&#x27;board&#x27;);
+
+let cards = JSON.parse(localStorage.getItem(&#x27;kpt-cards&#x27;)) || [];
+textInput.value = localStorage.getItem(&#x27;kpt-draft&#x27;) || &#x27;&#x27;;
+
+function save() {
+  localStorage.setItem(&#x27;kpt-cards&#x27;, JSON.stringify(cards));
+}
+
+function render() {
+  board.replaceChildren();
+  for (const type of TYPES) {
+    const counts = countByType(cards);
+
+    const column = document.createElement(&#x27;section&#x27;);
+    column.className = `column ${type}`;
+
+    const heading = document.createElement(&#x27;h2&#x27;);
+    heading.textContent = `${LABELS[type]} `;
+    const count = document.createElement(&#x27;span&#x27;);
+    count.className = &#x27;count&#x27;;
+    count.textContent = counts[type];
+    heading.appendChild(count);
+    column.appendChild(heading);
+
+    for (const card of cards.filter((c) =&gt; c.type === type)) {
+      const div = document.createElement(&#x27;div&#x27;);
+      div.className = &#x27;card&#x27;;
+      div.textContent = card.text; // 文字として表示するので、タグは動かない
+      column.appendChild(div);
+    }
+    board.appendChild(column);
+  }
+}
+
+// 入力途中の内容も残しておく（効率の指摘は今回は見送り）
+textInput.addEventListener(&#x27;input&#x27;, () =&gt; {
+  localStorage.setItem(&#x27;kpt-draft&#x27;, textInput.value);
+  render();
+});
+
+form.addEventListener(&#x27;submit&#x27;, (event) =&gt; {
+  event.preventDefault();
+  try {
+    cards = addCard(cards, createCard(textInput.value, typeSelect.value));
+    save();
+    textInput.value = &#x27;&#x27;;
+    localStorage.removeItem(&#x27;kpt-draft&#x27;);
+    error.textContent = &#x27;&#x27;;
+    render();
+  } catch (e) {
+    error.textContent = e.message;
+  }
+});
+
+render();</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">npm test の結果（直したあと = Green）</p><pre class="text-white">ℹ tests 8
+ℹ pass 8
+ℹ fail 0</pre></div>
+<p class="text-gray-700 mb-4">同じ <code class="bg-gray-100 px-1 rounded">&lt;img src=x onerror=...&gt;</code> を入れても、今度はただの文字として表示されます。</p>
+
                     </div>
                     <div class="bg-yellow-50 p-6 rounded-2xl border-l-4 border-yellow-500">
                         <p class="font-bold text-yellow-800 mb-2">👀 デモで注目してほしいところ</p>
