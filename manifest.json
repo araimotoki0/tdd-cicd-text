@@ -4,7 +4,7 @@
   "description": "アジャイル ビジネス インスティテュートの CSD 講座テキスト。ハンズオンの手順と解説動画を、いつでも復習できます。",
   "lang": "ja",
   "dir": "ltr",
-  "start_url": "/index.html?source=pwa",
+  "start_url": "/home.html?source=pwa",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",

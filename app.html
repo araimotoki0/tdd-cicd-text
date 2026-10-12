@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b1020">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CSD講座">
+    <title>スマホアプリとして使う - CSD講座</title>
+    <link rel="icon" href="icons/icon-192.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css?v=20261012d">
+    <link rel="stylesheet" href="ui2.css?v=13">
+</head>
+<body class="bg-gray-50 ui2" data-chapter="home">
+    <!-- ナビゲーションバー -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="ui2-brand"><button type="button" class="ui2-menu-btn" aria-label="講座メニューを開く" aria-expanded="false" aria-controls="ui2Drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span class="lbl">コース</span></button><h1 class="text-2xl font-bold">CSD講座</h1></div>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="home.html" class="hover:text-blue-200">ホーム</a>
+                    <a href="app.html" class="hover:text-blue-200">スマホアプリ</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-20">
+        <!-- ヒーロー -->
+        <section class="ui2-hero bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <span class="ui2-eyebrow"><b>📱</b>いつでも復習</span>
+                <h2 class="text-5xl font-bold mb-4">スマホアプリとして使う</h2>
+                <p class="text-xl mb-3">ホーム画面に追加すると、この講座テキストがスマホアプリになります</p>
+                <p class="text-sm opacity-80">今日の復習を、通勤中でも、電波の弱い場所でも</p>
+            </div>
+        </section>
+
+        <!-- スマホアプリとして使う（PWA） -->
+        <section id="app" class="ui2-app py-16">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="ui2-app-card">
+                        <div class="ui2-app-main">
+                            <p class="ui2-app-eyebrow">📱 スマホアプリとして使えます</p>
+                            <h2 class="ui2-app-title">ホーム画面に追加して、いつでも復習</h2>
+                            <p class="ui2-app-lead">このサイトをホーム画面に追加すると、スマートフォンアプリとして<strong>今日の復習がいつでも</strong>できます。一度開いたページは、電波が弱い場所でも読めます。</p>
+                            <div class="ui2-app-url"><span>https://csd.scrum.abi-agile.com/home.html</span><button type="button" class="ui2-copy-url" data-url="https://csd.scrum.abi-agile.com/home.html">URL をコピー</button></div>
+                            <button type="button" id="ui2InstallBtn" class="ui2-install" hidden>この端末にインストール</button>
+                            <p id="ui2Standalone" class="ui2-standalone" hidden>✓ いまアプリとして開いています</p>
+                        </div>
+                        <div class="ui2-app-qr">
+                            <img src="img/qr-site.svg" width="168" height="168" alt="このサイトの QR コード">
+                            <small>スマホのカメラで読み取り</small>
+                        </div>
+                    </div>
+
+                    <div class="ui2-app-steps">
+                        <details data-os="ios">
+                            <summary><span class="ico"></span>iPhone / iPad<small>Safari</small></summary>
+                            <ol>
+                                <li><strong>Safari</strong> でこのページを開く（Chrome ではなく Safari）</li>
+                                <li>画面下の <strong>共有ボタン</strong>（四角から矢印が出ているマーク）をタップ</li>
+                                <li>「<strong>ホーム画面に追加</strong>」をタップ</li>
+                                <li>右上の「<strong>追加</strong>」をタップ → ホーム画面に「CSD講座」のアイコンが出ます</li>
+                            </ol>
+                        </details>
+                        <details data-os="android">
+                            <summary><span class="ico">🤖</span>Android<small>Chrome</small></summary>
+                            <ol>
+                                <li><strong>Chrome</strong> でこのページを開く</li>
+                                <li>右上の「<strong>⋮</strong>」メニューをタップ</li>
+                                <li>「<strong>ホーム画面に追加</strong>」または「<strong>アプリをインストール</strong>」をタップ</li>
+                                <li>「インストール」をタップ → ホーム画面にアイコンが出ます</li>
+                            </ol>
+                        </details>
+                        <details data-os="win">
+                            <summary><span class="ico">🪟</span>Windows<small>Chrome / Edge</small></summary>
+                            <ol>
+                                <li><strong>Chrome</strong> または <strong>Edge</strong> でこのページを開く</li>
+                                <li>アドレスバーの右端にある「<strong>インストール</strong>」のアイコン（画面にマイナスが付いたマーク）をクリック</li>
+                                <li>「インストール」をクリック → スタートメニューとデスクトップから、アプリとして開けます</li>
+                                <li>アイコンが出ない場合は、右上の「⋮」→「キャスト、保存、共有」→「<strong>ページをアプリとしてインストール</strong>」（Edge は「アプリ」→「このサイトをアプリとしてインストール」）</li>
+                            </ol>
+                        </details>
+                        <details data-os="mac">
+                            <summary><span class="ico">💻</span>Mac<small>Chrome / Safari</small></summary>
+                            <ol>
+                                <li><strong>Chrome</strong>：アドレスバーの右端にある「<strong>インストール</strong>」のアイコンをクリック → 「インストール」</li>
+                                <li><strong>Safari</strong>：メニューの「ファイル」→「<strong>Dock に追加</strong>」（macOS Sonoma 以降）</li>
+                                <li>Dock や Launchpad から、アプリとして開けます</li>
+                            </ol>
+                        </details>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 mt-6">
+                        <p class="font-bold text-gray-800 mb-2">💡 追加したあと</p>
+                        <ul class="text-gray-700 text-sm space-y-2">
+                            <li>• ホーム画面の「CSD講座」から開くと、ブラウザの枠なしで、アプリのように使えます</li>
+                            <li>• 最初にパスワードを聞かれたら、講義で案内したものを入力してください（1回だけです）</li>
+                            <li>• 一度開いたページは、電波がない場所でも読めます。動画だけは、電波のあるところで見てください</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- フッター -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12">
+            <div class="container mx-auto px-4">
+                <div class="text-center">
+                    <p class="text-gray-300 text-sm">
+                        &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        </script>
+    </div>
+
+    <script src="code-copy.js?v=20261012d"></script>
+    <script src="global-menu.js?v=20261012d"></script>
+    <script src="nav-highlight.js?v=20261012d"></script>
+    <script src="scroll-to-top.js?v=20261012d"></script>
+    <script src="page-nav.js?v=20261012d"></script>
+    <script src="ui2.js?v=16"></script>
+</body>
+</html>

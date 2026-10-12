@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b1020">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CSD講座">
+    <title>CSD 講座 - ホーム</title>
+    <link rel="icon" href="icons/icon-192.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css?v=20261012d">
+    <link rel="stylesheet" href="ui2.css?v=13">
+</head>
+<body class="bg-gray-50 ui2" data-chapter="home">
+    <!-- ナビゲーションバー -->
+    <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="ui2-brand"><button type="button" class="ui2-menu-btn" aria-label="講座メニューを開く" aria-expanded="false" aria-controls="ui2Drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span class="lbl">コース</span></button><h1 class="text-2xl font-bold">CSD講座</h1></div>
+                <div class="hidden md:flex space-x-4 text-sm items-center">
+                    <a href="home.html" class="hover:text-blue-200">ホーム</a>
+                    <a href="app.html" class="hover:text-blue-200">スマホアプリ</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-20">
+        <!-- ヒーロー -->
+        <section class="ui2-hero bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+            <div class="container mx-auto px-6 text-center">
+                <span class="ui2-eyebrow"><b>CSD</b>講座テキスト</span>
+                <h2 class="text-5xl font-bold mb-4">CSD 講座</h2>
+                <p class="text-xl mb-3">AI Coding・TDD・MobAI・CI/CD を、手を動かして学ぶ</p>
+                <p class="text-sm opacity-80">ハンズオンの手順と解説動画。講義のあとも、いつでも復習できます</p>
+            </div>
+        </section>
+
+        <!-- 講座の流れ -->
+        <section class="ui2-home py-16">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-10 text-center">講座の流れ</h2>
+                    <div class="ui2-home-grid">
+                        <div class="ui2-chap" style="--c:#4f6b8a">
+                            <a class="n" href="handson-setup-mac.html">1</a>
+                            <div class="min-w-0">
+                                <h3><a href="handson-setup-mac.html">環境構築</a><small>講義の前に</small></h3>
+                                <p>必要なツールを入れて、Laravel の画面が出るところまで。講義までに済ませてください。</p>
+                                <div class="ui2-chips"><a href="handson-setup-mac.html">Mac</a><a href="handson-setup-windows.html">Windows</a></div>
+                            </div>
+                        </div>
+                        <div class="ui2-chap" style="--c:#5b5bd6">
+                            <a class="n" href="ai-coding-antigravity.html">2</a>
+                            <div class="min-w-0">
+                                <h3><a href="ai-coding-antigravity.html">AI Coding</a><small>Antigravity CLI・ハーネス</small></h3>
+                                <p>ターミナルで動く AI（agy）の使い方と、いちばん大事な「ハーネス」の考え方。</p>
+                                <div class="ui2-chips"><a href="ai-coding-antigravity.html">AI Coding入門</a></div>
+                            </div>
+                        </div>
+                        <div class="ui2-chap" style="--c:#2f8f6b">
+                            <a class="n" href="index.html">3</a>
+                            <div class="min-w-0">
+                                <h3><a href="index.html">TDD</a><small>テスト駆動開発</small></h3>
+                                <p>Red → Green → Refactor を、Laravel で実際に回します。</p>
+                                <div class="ui2-chips"><a href="index.html">理論編</a><a href="handson-basic.html">基礎</a><a href="handson-refactor.html">改善</a><a href="handson-assertions.html">検証</a><a href="handson-advanced.html">応用</a><a href="handson-database.html">実践：DB</a></div>
+                            </div>
+                        </div>
+                        <div class="ui2-chap" style="--c:#b7791f">
+                            <a class="n" href="mob-ai.html">4</a>
+                            <div class="min-w-0">
+                                <h3><a href="mob-ai.html">MobAI</a><small>AI を活用したグループ作業</small></h3>
+                                <p>人と AI がグループになって、作り、確かめ、学びを残す。Day2 の冒頭。</p>
+                                <div class="ui2-chips"><a href="mob-ai.html">MobAI</a></div>
+                            </div>
+                        </div>
+                        <div class="ui2-chap" style="--c:#2b6cb0">
+                            <a class="n" href="cicd-index.html">5</a>
+                            <div class="min-w-0">
+                                <h3><a href="cicd-index.html">CI/CD</a><small>自動テスト・デプロイ</small></h3>
+                                <p>GitHub Actions でテストと品質チェックを自動化し、AWS へデプロイ。</p>
+                                <div class="ui2-chips"><a href="cicd-index.html">理論編</a><a href="cicd-handson-basic.html">基礎</a><a href="cicd-handson-quality.html">応用</a><a href="cicd-handson-deploy.html">実践</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- そのほか -->
+        <section class="py-14 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="ui2-home-sub">
+                        <a class="ui2-sub-card" href="app.html">
+                            <span class="ico">📱</span>
+                            <span><b>スマホアプリとして使う</b><small>ホーム画面に追加して、いつでも復習</small></span>
+                        </a>
+                        <a class="ui2-sub-card" href="csd-preview.html">
+                            <span class="ico">🎤</span>
+                            <span><b>チラ見せ説明会</b><small>2026/01/22 の説明会資料</small></span>
+                        </a>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-6">旧版：<a href="ai-coding.html" class="underline">AI Coding（Gemini CLI版）</a>　·　<a href="mob-ai-cyberdojo.html" class="underline">Mob AI（Cyber-Dojo版）</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- フッター -->
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12">
+            <div class="container mx-auto px-4">
+                <div class="text-center">
+                    <p class="text-gray-300 text-sm">
+                        &copy; <span id="currentYear"></span> アジャイル ビジネス インスティテュート株式会社
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        </script>
+    </div>
+
+    <script src="code-copy.js?v=20261012d"></script>
+    <script src="global-menu.js?v=20261012d"></script>
+    <script src="nav-highlight.js?v=20261012d"></script>
+    <script src="scroll-to-top.js?v=20261012d"></script>
+    <script src="page-nav.js?v=20261012d"></script>
+    <script src="ui2.js?v=16"></script>
+</body>
+</html>

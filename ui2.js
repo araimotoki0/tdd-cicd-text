@@ -15,6 +15,8 @@
                   ['cicd-handson-deploy.html', '実践：自動デプロイ']] }
     ];
     var EXTRAS = {
+        'home.html': { chapter: 'home', label: 'ホーム' },
+        'app.html': { chapter: 'home', label: 'スマホアプリとして使う' },
         'ai-coding.html': { chapter: 'ai', label: '【旧】Gemini CLI版' },
         'mob-ai-cyberdojo.html': { chapter: 'mobai', label: '【旧】Cyber-Dojo版' },
         'replit-tdd.html': { chapter: 'extra', home: 'mobai', label: 'Replit で TDD 練習' },
@@ -105,10 +107,12 @@
                 var cap = kind === 'next' ? '次へ →' : '← 前へ';
                 return '<a class="' + kind + '" href="' + p.file + '"><small>' + cap + '　' + esc(p.chapter.name) + '</small><b>' + esc(p.label) + '</b></a>';
             }
+            if (prev || next || idx === LINEAR.length - 1) {
             var nav = el('<section class="ui2-next"><div class="ui2-next-in">' +
                 '<div class="ui2-pn">' + card(prev, 'prev') + (idx === LINEAR.length - 1 ? '<div class="next finish"><small>ゴール</small><b>🎉 全講座おつかれさまでした！</b></div>' : card(next, 'next')) + '</div>' +
                 '<p class="ui2-keys"><kbd>←</kbd> <kbd>→</kbd> キーでも移動できます</p></div></section>');
             footer.before(nav);
+            }
             document.addEventListener('keydown', function (e) {
                 if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
                 if (document.body.classList.contains('ui2-open')) return;
@@ -144,7 +148,8 @@
                 ['cicd-index.html', 'CI/CD', '#2b6cb0', 'cicd', '5', '自動テスト・デプロイ']
             ];
             var curCh = chapter ? chapter.id : (extra ? extra.chapter : '');
-            var list = items.map(function (it, i) {
+            var homeRow = '<a class="ui2-item ui2-item-home' + (file === 'home.html' ? ' is-current' : '') + '" style="--c:#1d2433" href="home.html"><span class="no">⌂</span><span class="nm"><b>ホーム</b><small>講座の入口</small></span></a>';
+            var list = homeRow + items.map(function (it, i) {
                 var isCur = it[3] === 'setup' ? file === it[0] : it[3] === curCh;
                 return '<a class="ui2-item' + (isCur ? ' is-current' : '') + '" style="--c:' + it[2] + '" href="' + it[0] + '">' +
                     '<span class="no">' + it[4] + '</span><span class="nm"><b>' + esc(it[1]) + '</b><small>' + esc(it[5]) + '</small></span>' +
@@ -154,7 +159,7 @@
                 '<div class="ui2-dh"><div><small>CSD COURSE</small><b>講座メニュー</b></div>' +
                 '<button type="button" class="ui2-close" aria-label="閉じる"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
                 '<div class="ui2-dbody">' + list +
-                '<div class="ui2-extra"><a href="index.html#app">📱 スマホアプリとして使う</a><a class="' + (file === 'csd-preview.html' ? 'is-current' : '') + '" href="csd-preview.html">チラ見せ説明会（2026/01/22）</a></div>' +
+                '<div class="ui2-extra"><a class="' + (file === 'app.html' ? 'is-current' : '') + '" href="app.html">📱 スマホアプリとして使う</a><a class="' + (file === 'csd-preview.html' ? 'is-current' : '') + '" href="csd-preview.html">チラ見せ説明会（2026/01/22）</a><a class="' + (file === 'replit-tdd.html' ? 'is-current' : '') + '" href="replit-tdd.html">Replit で TDD 練習</a></div>' +
                 '</div><div class="ui2-dfoot"><kbd>Esc</kbd> で閉じる</div></aside>');
             var scrim = el('<div class="ui2-scrim"></div>');
             document.body.appendChild(scrim);
