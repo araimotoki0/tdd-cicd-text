@@ -238,575 +238,102 @@
                     <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">実際のAI開発を見てみよう</h2>
                     <p class="text-gray-600 text-lg mb-8 text-center">講師のデモで、上の4つのステップを1周します（約10分）</p>
 
-                    <p class="text-gray-700 mb-6 text-center">題材：スプリントで使う「<strong>KPT 振り返りボード</strong>」（HTML / CSS / JavaScript だけ・テストは <code class="bg-white px-1 rounded">node --test</code>）</p>
-                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-3">📁 仕様も、ルールも、AI エージェントも「ファイル」</h3>
-<p class="text-gray-700 mb-4">AI と一緒に開発するときに渡すものは、すべてファイルです。仕様・作業ルール・エージェント（担当者）・スキル（やり方）をファイルにしておけば、<strong>チームで共有して、育てて、使い回せます</strong>。スライドの「学習：AI に与える文脈もチームに残す」は、このことです。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">ファイル構成</p><pre class="text-white">kpt-board/
-├── docs/spec.md              仕様（何を作るか・受け入れ条件）     … 人間が書く
-├── tests/kpt.test.js         基準（受け入れ条件を確かめるテスト） … 人間が決める
-├── AGENTS.md                 AI への作業ルール                   … 人間が書く
-├── .agents/
-│   ├── agents/               AI エージェント（＝担当者）
-│   │   ├── security-reviewer.md
-│   │   ├── efficiency-reviewer.md
-│   │   └── quality-reviewer.md
-│   └── skills/               スキル（＝やり方）
-│       ├── security-review/SKILL.md
-│       ├── efficiency-review/SKILL.md
-│       └── quality-review/SKILL.md
-├── src/kpt.js, src/app.js    コード                              … AI が書く
-└── index.html, style.css</pre></div>
+                    <div class="bg-indigo-600 text-white p-6 md:p-8 rounded-2xl shadow-lg mb-6">
+                        <p class="text-sm font-bold text-indigo-200 mb-2">このデモで伝えたいこと</p>
+                        <p class="text-xl md:text-2xl font-bold leading-relaxed">AI に任せるとき、人間の仕事は「基準を決めること」と「判断すること」。<br>そのために、AI に渡す情報をファイルにして、複数の観点で確かめる。</p>
                     </div>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                        <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <p class="font-bold text-gray-800 mb-3">✅ 自分の開発でやること</p>
+                        <ol class="text-gray-700 space-y-2 list-decimal list-inside">
+                            <li>何を作るか・何を満たせば OK かを、<strong>仕様</strong>として書く</li>
+                            <li>満たす条件を、<strong>テスト</strong>にしておく（AI に作らせる前に）</li>
+                            <li>AI に守ってほしいことを、<strong>AGENTS.md</strong> に書く</li>
+                            <li>AI が作ったら、<strong>観点ごとに別々に</strong>レビューさせる</li>
+                            <li>指摘のうち、どれを直すかは<strong>人間が決める</strong></li>
+                            <li>学んだことを、<strong>スキルや AGENTS.md に書き足す</strong></li>
+                        </ol>
+                        <p class="text-sm text-gray-500 mt-4">題材は、スプリントで使う「KPT 振り返りボード」（HTML / CSS / JavaScript）。AI が作ったコードの中身は、ここでは載せません。見てほしいのは、AI への渡し方と確かめ方です。</p>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">1</span>
-                            <h3 class="text-2xl font-bold text-gray-800">基準を決める（人間）</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">基準を決める</h3>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">人間がやる</span>
                         </div>
-<p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たすべきか」を先に渡します。ここは人間が決めます。</p>
-<p class="text-gray-700 mb-4"><strong>仕様</strong>：何を作るか、受け入れ条件</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">docs/spec.md</p><pre class="text-white"># 仕様：KPT 振り返りボード
-
-## 目的
-スプリントの振り返りで、チーム全員が Keep / Problem / Try を書き出して共有できるようにする。
-
-## ユーザーストーリー
-- 開発者として、振り返りで気づいたことをカードにして追加したい。思いついたその場で書き留めるため。
-- スクラムマスターとして、Keep / Problem / Try ごとの枚数を見たい。どこに話し合いの時間を使うか決めるため。
-
-## 機能
-1. 種類（Keep / Problem / Try）を選んで、ひとことのカードを追加できる
-2. カードは種類ごとの列に表示される
-3. 各列に、その種類のカードの枚数を表示する
-4. カードはブラウザに保存され、再読み込みしても残る
-
-## 受け入れ条件
+<p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たせば OK か」を先に渡します。</p>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">docs/spec.md（仕様の一部）</p><pre class="text-white whitespace-pre-wrap break-words">## 受け入れ条件
 - カードの本文は、前後の空白を取り除いたうえで 1〜140 文字
-- 本文が空、または 140 文字を超える場合は、エラーメッセージを表示して追加しない
+- 本文が空、または 140 文字を超える場合は、エラーを表示して追加しない
 - 種類は keep / problem / try のどれか
-- 入力された本文は、そのまま文字として表示される（HTML として解釈されない）
-
-## 対象外（今回は作らない）
-- カードの編集・削除
-- 複数人でのリアルタイム共有</pre></div>
-<p class="text-gray-700 mb-4"><strong>基準</strong>：受け入れ条件を、確かめられる形（テスト）にしたもの</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js</p><pre class="text-white">// 受け入れ条件（docs/spec.md）を確かめるテスト
-import { test } from &#x27;node:test&#x27;;
-import assert from &#x27;node:assert/strict&#x27;;
-import { createCard, addCard, countByType } from &#x27;../src/kpt.js&#x27;;
-
-test(&#x27;カードを作れる&#x27;, () =&gt; {
-  const card = createCard(&#x27;ペアプロがうまくいった&#x27;, &#x27;keep&#x27;);
-  assert.equal(card.text, &#x27;ペアプロがうまくいった&#x27;);
-  assert.equal(card.type, &#x27;keep&#x27;);
-  assert.ok(card.id);
-});
-
-test(&#x27;本文の前後の空白は取り除く&#x27;, () =&gt; {
+- 入力された本文は、そのまま文字として表示される（HTML として解釈されない）</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>AI は、書かれていないことを推測で埋めます。何が「正しい」かを言葉で決めておくと、AI もレビュー役も、同じ基準で判断できます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「HTML として解釈されない」のように、<strong>安全のための条件</strong>も書いておきます。書いていないと、確かめる人がいません。</span></li></ul></div></div>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（7件のうち1件）</p><pre class="text-white whitespace-pre-wrap break-words">test(&#x27;本文の前後の空白は取り除く&#x27;, () =&gt; {
   assert.equal(createCard(&#x27;  レビューが遅い  &#x27;, &#x27;problem&#x27;).text, &#x27;レビューが遅い&#x27;);
-});
-
-test(&#x27;空の本文はエラー&#x27;, () =&gt; {
-  assert.throws(() =&gt; createCard(&#x27;&#x27;, &#x27;keep&#x27;));
-});
-
-test(&#x27;140文字を超える本文はエラー&#x27;, () =&gt; {
-  assert.throws(() =&gt; createCard(&#x27;あ&#x27;.repeat(141), &#x27;keep&#x27;));
-  assert.doesNotThrow(() =&gt; createCard(&#x27;あ&#x27;.repeat(140), &#x27;keep&#x27;));
-});
-
-test(&#x27;種類は keep / problem / try だけ&#x27;, () =&gt; {
-  assert.throws(() =&gt; createCard(&#x27;なにか&#x27;, &#x27;other&#x27;));
-});
-
-test(&#x27;追加しても元のリストは変えない&#x27;, () =&gt; {
-  const list = [];
-  const next = addCard(list, createCard(&#x27;朝会を短く&#x27;, &#x27;try&#x27;));
-  assert.equal(list.length, 0);
-  assert.equal(next.length, 1);
-});
-
-test(&#x27;種類ごとの数を数えられる&#x27;, () =&gt; {
-  let list = [];
-  list = addCard(list, createCard(&#x27;a&#x27;, &#x27;keep&#x27;));
-  list = addCard(list, createCard(&#x27;b&#x27;, &#x27;keep&#x27;));
-  list = addCard(list, createCard(&#x27;c&#x27;, &#x27;try&#x27;));
-  assert.deepEqual(countByType(list), { keep: 2, problem: 0, try: 1 });
-});</pre></div>
-<p class="text-gray-700 mb-4"><strong>AI への作業ルール</strong>：仕様の場所、コマンド、守ること。AI は作業の前にこのファイルを読みます。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md</p><pre class="text-white"># AGENTS.md
-
-このリポジトリで作業する AI エージェント向けのルールです。
-
-## プロジェクト
-スプリントの振り返りで使う、ブラウザだけで動く KPT ボード。
-**仕様は `docs/spec.md` にあります。作業の前に必ず読んでください。**
-
-## コマンド
-- テスト：`npm test`
-- 画面の確認：`python3 -m http.server 8000` → http://localhost:8000
-
-## ファイル構成
-- `src/kpt.js` … ロジック（DOM を使わない。テスト対象）
-- `src/app.js` … 画面の処理
-- `index.html` / `style.css`
-- `tests/` … テスト（受け入れ条件を確かめる）
-
-## 守ること
-- フレームワークやライブラリは使わない（HTML / CSS / JavaScript だけ）
-- テストを書き換えて通すことはしない。テストと仕様が合わない場合は、作業を止めて人間に確認する
+});</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>仕様は人が読むもの、テストは機械が毎回確かめるものです。AI が書いたコードが基準を満たしているかを、すぐに、何度でも確かめられます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>テストは AI に作らせる<strong>前に</strong>人間が決めます。実装を見ながら AI にテストを書かせると、バグまで「正解」になってしまうからです。</span></li></ul></div></div>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md（AI への作業ルールの一部）</p><pre class="text-white whitespace-pre-wrap break-words">## 守ること
+- 仕様は docs/spec.md にある。作業の前に必ず読む
+- テストを書き換えて通すことはしない。
+  テストと仕様が合わない場合は、作業を止めて人間に確認する
 - 仕様にない機能は勝手に足さない
-- 変更したら `npm test` を実行し、結果を報告する
-- 返答は日本語で
-
-## レビュー
-レビューを頼まれたら、`.agents/skills/` のスキルを使う。
-- `security-review` … セキュリティ
-- `efficiency-review` … 効率
-- `quality-review` … 品質（仕様・テスト）</pre></div>
+- 変更したら npm test を実行し、結果を報告する</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>AGENTS.md は、AI が作業の前に必ず読むファイルです。毎回、口で説明しなくて済みます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「テストを書き換えない」：AI は、テストを通すためにテストのほうを変えてしまうことがあるからです。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「仕様にない機能を足さない」：AI は気を利かせて機能を足すことがあります（このデモでも、頼んでいない「下書き保存」が足されました）。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「npm test を実行」：動くことを、毎回 AI 自身に確かめさせます。</span></li></ul></div></div>
 
                     </div>
-                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                        <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">2</span>
-                            <h3 class="text-2xl font-bold text-gray-800">生成する（AI）</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">生成する</h3>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">AIがやる</span>
                         </div>
-<p class="text-gray-700 mb-4">AI に作らせます。テストは7件すべて通り、ブラウザでも動きます。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">仕様（docs/spec.md）どおりに KPT ボードを作ってください。
-tests/ のテストがすべて通るようにして、最後に npm test を実行してください。</pre></div>
-<p class="text-gray-700 mb-4">AI が作ったコード（全ファイル）：</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/kpt.js</p><pre class="text-white">// KPT ボードのロジック（DOM を使わない）
-export const TYPES = [&#x27;keep&#x27;, &#x27;problem&#x27;, &#x27;try&#x27;];
-
-export function createCard(text, type) {
-  if (text.length === 0) {
-    throw new Error(&#x27;本文を入力してください&#x27;);
-  }
-  if (text.length &gt; 140) {
-    throw new Error(&#x27;本文は140文字以内にしてください&#x27;);
-  }
-  if (!TYPES.includes(type)) {
-    throw new Error(&#x27;種類が正しくありません&#x27;);
-  }
-  return { id: Date.now(), text: text.trim(), type };
-}
-
-export function addCard(list, card) {
-  return [...list, card];
-}
-
-export function countByType(list) {
-  const result = {};
-  for (const type of TYPES) {
-    result[type] = list.filter((card) =&gt; card.type === type).length;
-  }
-  return result;
-}</pre></div>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/app.js</p><pre class="text-white">// KPT ボードの画面処理
-import { TYPES, createCard, addCard, countByType } from &#x27;./kpt.js&#x27;;
-
-const LABELS = { keep: &#x27;Keep&#x27;, problem: &#x27;Problem&#x27;, try: &#x27;Try&#x27; };
-
-const form = document.getElementById(&#x27;cardForm&#x27;);
-const textInput = document.getElementById(&#x27;cardText&#x27;);
-const typeSelect = document.getElementById(&#x27;cardType&#x27;);
-const error = document.getElementById(&#x27;error&#x27;);
-const board = document.getElementById(&#x27;board&#x27;);
-
-let cards = JSON.parse(localStorage.getItem(&#x27;kpt-cards&#x27;)) || [];
-textInput.value = localStorage.getItem(&#x27;kpt-draft&#x27;) || &#x27;&#x27;;
-
-function save() {
-  localStorage.setItem(&#x27;kpt-cards&#x27;, JSON.stringify(cards));
-}
-
-function render() {
-  board.innerHTML = &#x27;&#x27;;
-  for (const type of TYPES) {
-    const counts = countByType(cards);
-    let html = `&lt;section class=&quot;column ${type}&quot;&gt;&lt;h2&gt;${LABELS[type]} &lt;span class=&quot;count&quot;&gt;${counts[type]}&lt;/span&gt;&lt;/h2&gt;`;
-    for (const card of cards.filter((c) =&gt; c.type === type)) {
-      html += `&lt;div class=&quot;card&quot;&gt;${card.text}&lt;/div&gt;`;
-    }
-    html += &#x27;&lt;/section&gt;&#x27;;
-    board.innerHTML += html;
-  }
-}
-
-// 入力途中の内容も残しておく
-textInput.addEventListener(&#x27;input&#x27;, () =&gt; {
-  localStorage.setItem(&#x27;kpt-draft&#x27;, textInput.value);
-  render();
-});
-
-form.addEventListener(&#x27;submit&#x27;, (event) =&gt; {
-  event.preventDefault();
-  try {
-    cards = addCard(cards, createCard(textInput.value, typeSelect.value));
-    save();
-    textInput.value = &#x27;&#x27;;
-    localStorage.removeItem(&#x27;kpt-draft&#x27;);
-    error.textContent = &#x27;&#x27;;
-    render();
-  } catch (e) {
-    error.textContent = e.message;
-  }
-});
-
-render();</pre></div>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">index.html</p><pre class="text-white">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;ja&quot;&gt;
-&lt;head&gt;
-  &lt;meta charset=&quot;UTF-8&quot;&gt;
-  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-  &lt;title&gt;KPT 振り返りボード&lt;/title&gt;
-  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;header&gt;
-    &lt;h1&gt;KPT 振り返りボード&lt;/h1&gt;
-  &lt;/header&gt;
-
-  &lt;form id=&quot;cardForm&quot;&gt;
-    &lt;select id=&quot;cardType&quot; aria-label=&quot;種類&quot;&gt;
-      &lt;option value=&quot;keep&quot;&gt;Keep&lt;/option&gt;
-      &lt;option value=&quot;problem&quot;&gt;Problem&lt;/option&gt;
-      &lt;option value=&quot;try&quot;&gt;Try&lt;/option&gt;
-    &lt;/select&gt;
-    &lt;input id=&quot;cardText&quot; type=&quot;text&quot; placeholder=&quot;ひとことを書いて Enter&quot; autocomplete=&quot;off&quot;&gt;
-    &lt;button type=&quot;submit&quot;&gt;追加&lt;/button&gt;
-  &lt;/form&gt;
-  &lt;p id=&quot;error&quot; class=&quot;error&quot; role=&quot;alert&quot;&gt;&lt;/p&gt;
-
-  &lt;main id=&quot;board&quot; class=&quot;board&quot;&gt;&lt;/main&gt;
-
-  &lt;script type=&quot;module&quot; src=&quot;src/app.js&quot;&gt;&lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre></div>
-<details class="mb-4"><summary class="cursor-pointer text-sm text-indigo-700 font-bold mb-2">style.css（クリックで開く）</summary>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">style.css</p><pre class="text-white">* { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; background: #f5f6fa; color: #1f2937; }
-header { background: linear-gradient(90deg, #2563eb, #4338ca); color: #fff; padding: 16px 24px; }
-header h1 { margin: 0; font-size: 22px; }
-
-form { display: flex; gap: 8px; padding: 16px 24px 0; flex-wrap: wrap; }
-select, input, button { font-size: 16px; padding: 10px 12px; border-radius: 8px; border: 1px solid #cbd5e1; }
-input { flex: 1; min-width: 200px; }
-button { background: #4338ca; color: #fff; border: 0; font-weight: 700; cursor: pointer; }
-.error { color: #dc2626; margin: 8px 24px 0; min-height: 1.4em; }
-
-.board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 16px 24px 32px; }
-@media (max-width: 720px) { .board { grid-template-columns: 1fr; } }
-.column { background: #fff; border-radius: 12px; padding: 12px; min-height: 240px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-.column h2 { margin: 0 0 12px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
-.count { font-size: 13px; background: #eef2ff; color: #4338ca; border-radius: 999px; padding: 2px 10px; }
-.keep h2 { color: #059669; }
-.problem h2 { color: #dc2626; }
-.try h2 { color: #2563eb; }
-.card { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; word-break: break-word; }</pre></div>
-</details>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">npm test の結果</p><pre class="text-white">✔ カードを作れる
-✔ 本文の前後の空白は取り除く
-✔ 空の本文はエラー
-✔ 140文字を超える本文はエラー
-✔ 種類は keep / problem / try だけ
-✔ 追加しても元のリストは変えない
-✔ 種類ごとの数を数えられる
-ℹ tests 7
-ℹ pass 7
-ℹ fail 0</pre></div>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">仕様（docs/spec.md）どおりに KPT ボードを作ってください。
+tests/ のテストがすべて通るようにして、最後に npm test を実行してください。</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>指示が短いのは、仕様・ルール・基準がすでにファイルにあるからです。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>AI はコードを作り、テストは7件すべて通りました。ブラウザでも動きます。……では、このまま使っていいでしょうか？</span></li></ul></div></div>
 
                     </div>
-                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                        <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">3</span>
-                            <h3 class="text-2xl font-bold text-gray-800">検証する（3人の AI エージェントが、同時に）</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">検証する（観点ごとに、同時に）</h3>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">AIがやる</span>
                         </div>
-<p class="text-gray-700 mb-4">テストは通りました。でも「動く」ことと「安心して使える」ことは別です。セキュリティ・効率・品質の<strong>3人の AI エージェントに、同時に</strong>レビューを頼みます。</p>
-<p class="text-gray-700 mb-4"><strong>エージェント（担当者）</strong>：誰が、何を任されているか。「コードは書き換えない」もここで決めています。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/agents/security-reviewer.md</p><pre class="text-white">---
-name: security-reviewer
-description: セキュリティ担当のレビュアー。脆弱性を探して報告する。コードは書き換えない。
----
-
-あなたは KPT ボードの**セキュリティ担当のレビュアー**です。
-
-- レビューの手順は `.agents/skills/security-review/SKILL.md` に書いてあります。必ず読んで、そのとおりに進めてください。
-- 仕様は `docs/spec.md`、作業ルールは `AGENTS.md` にあります。
-- **コードは書き換えません。** 見つけたことを報告するだけです。
-- 自分の担当（セキュリティ）以外の指摘は、気づいても1行だけにしてください。</pre></div>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/agents/efficiency-reviewer.md</p><pre class="text-white">---
-name: efficiency-reviewer
-description: 効率担当のレビュアー。無駄や重くなる書き方を探して報告する。コードは書き換えない。
----
-
-あなたは KPT ボードの**効率担当のレビュアー**です。
-
-- レビューの手順は `.agents/skills/efficiency-review/SKILL.md` に書いてあります。必ず読んで、そのとおりに進めてください。
-- 仕様は `docs/spec.md`、作業ルールは `AGENTS.md` にあります。
-- **コードは書き換えません。** 見つけたことを報告するだけです。
-- 自分の担当（効率）以外の指摘は、気づいても1行だけにしてください。</pre></div>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/agents/quality-reviewer.md</p><pre class="text-white">---
-name: quality-reviewer
-description: 品質担当のレビュアー。仕様との違いとテストの抜けを探して報告する。コードは書き換えない。
----
-
-あなたは KPT ボードの**品質担当のレビュアー**です。
-
-- レビューの手順は `.agents/skills/quality-review/SKILL.md` に書いてあります。必ず読んで、そのとおりに進めてください。
-- 仕様は `docs/spec.md`、作業ルールは `AGENTS.md` にあります。
-- **コードは書き換えません。** 見つけたことを報告するだけです。
-- 自分の担当（品質）以外の指摘は、気づいても1行だけにしてください。</pre></div>
-<p class="text-gray-700 mb-4"><strong>スキル（やり方）</strong>：どう確かめて、どう報告するか。チームのノウハウとして使い回せます。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/skills/security-review/SKILL.md</p><pre class="text-white">---
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">このコードを、セキュリティ・効率・品質の3つの観点で、
+それぞれ別のレビュアーとして同時にレビューしてください。
+コードは書き換えないでください。
+観点ごとに、重要なもの3件までを表にしてください。</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>1つの会話で全部を見させると、観点が混ざって見落としが出ます。<strong>別々のエージェント</strong>にすると、それぞれが1つの観点に集中できます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>同時に動くので速く、人のチームで複数の目で見るのと同じ効果があります。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>最近のハーネスは、こう頼めば<strong>自分でサブエージェントを立ち上げます</strong>。エージェント用の設定ファイルは必須ではありません（役割や権限を毎回同じにしたいときだけ作ります）。</span></li></ul></div></div>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/skills/security-review/SKILL.md（スキル）</p><pre class="text-white whitespace-pre-wrap break-words">---
 name: security-review
-description: セキュリティの観点でコードをレビューする。XSS、保存データの扱い、入力値の検証を確かめる。レビューを頼まれたときに使う。コードは書き換えない。
+description: セキュリティの観点でコードをレビューする。
+  XSS、保存データの扱い、入力値の検証を確かめる。コードは書き換えない。
 ---
-
-# セキュリティレビュー
-
-`src/` と `index.html` を読み、脆弱性を探します。**コードは書き換えません。**
-
 ## 確かめること
-1. **XSS**：ユーザーの入力を `innerHTML` などで、そのまま HTML として表示していないか
-2. **保存データ**：localStorage から読み込むとき、壊れた値や想定外の値で動かなくならないか
-3. **入力値の検証**：検証が画面側だけになっていないか（ロジック側でも確かめているか）
-
+1. XSS：ユーザーの入力を innerHTML などで、そのまま HTML として表示していないか
+2. 保存データ：localStorage から読み込むとき、壊れた値で動かなくならないか
+3. 入力値の検証：検証が画面側だけになっていないか
 ## 報告の形
-観点ごとに、重要なものから最大3件を表にする。
-
-| 重要度（高/中/低） | 場所（ファイルと行） | 何が起きるか | 直し方 |
-|---|---|---|---|
-
-最後に「一番先に直すべき1件」を1行で書く。</pre></div>
-<details class="mb-4"><summary class="cursor-pointer text-sm text-indigo-700 font-bold mb-2">.agents/skills/efficiency-review/SKILL.md（クリックで開く）</summary>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/skills/efficiency-review/SKILL.md</p><pre class="text-white">---
-name: efficiency-review
-description: 効率（パフォーマンス）の観点でコードをレビューする。無駄に繰り返される処理や、データが増えると遅くなる書き方を探す。レビューを頼まれたときに使う。コードは書き換えない。
----
-
-# 効率レビュー
-
-`src/` と `index.html` を読み、無駄を探します。**コードは書き換えません。**
-
-## 確かめること
-1. **繰り返し**：入力のたびに保存や画面全体の描き直しなど、必要以上に実行される処理はないか
-2. **データが増えたとき**：同じリストを何度もたどるなど、件数が増えると遅くなる書き方はないか
-3. **作り直し**：毎回作り直さなくてよいものを、作り直していないか
-
-## 報告の形
-重要なものから最大3件を表にする。
-
-| 影響（大/中/小） | 場所（ファイルと行） | 何が無駄か | 直し方 |
-|---|---|---|---|
-
-最後に「一番先に直すべき1件」を1行で書く。</pre></div>
-</details>
-<details class="mb-4"><summary class="cursor-pointer text-sm text-indigo-700 font-bold mb-2">.agents/skills/quality-review/SKILL.md（クリックで開く）</summary>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/skills/quality-review/SKILL.md</p><pre class="text-white">---
-name: quality-review
-description: 品質の観点でコードをレビューする。仕様（docs/spec.md）どおりに動くか、テストに抜けがないかを確かめる。レビューを頼まれたときに使う。コードは書き換えない。
----
-
-# 品質レビュー
-
-`docs/spec.md` の受け入れ条件と、`src/`・`tests/` を読み比べます。`npm test` は実行してかまいません。**コードは書き換えません。**
-
-## 確かめること
-1. **仕様との違い**：テストが通っていても、受け入れ条件を満たさないケースはないか
-2. **テストの抜け**：受け入れ条件のうち、テストで確かめていないものはないか（足すべきテストを具体的に）
-3. **読みやすさ**：まぎらわしい名前や書き方はないか
-
-## 報告の形
-重要なものから最大3件を表にする。
-
-| 重要度（高/中/低） | 場所（ファイルと行） | 何が問題か | 足すべきテスト・直し方 |
-|---|---|---|---|
-
-最後に「一番先に直すべき1件」を1行で書く。</pre></div>
-</details>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">security-reviewer、efficiency-reviewer、quality-reviewer の3つのエージェントに、
-同時にレビューを頼んでください。結果がそろったら、観点ごとに重要なもの3件までの表にまとめてください。</pre></div>
-<p class="text-gray-700 mb-4">3人が同時に動き、結果をまとめて返してきます：</p>
-<div class="overflow-x-auto mb-4"><table class="w-full text-sm text-left border">
-<thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border">観点</th><th class="p-2 border">重要度</th><th class="p-2 border">場所</th><th class="p-2 border">指摘</th><th class="p-2 border">直し方</th></tr></thead><tbody class="text-gray-700">
-<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 25行</td><td class="p-2 border">カードの本文を innerHTML でそのまま表示している。<code>&lt;img src=x onerror=...&gt;</code> を入れるとスクリプトが動く（XSS）。仕様の「HTML として解釈されない」にも反する</td><td class="p-2 border">createElement で要素を作り、本文は textContent で入れる</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 12行</td><td class="p-2 border">保存データ（localStorage）が壊れていると JSON.parse で止まり、カードを追加できなくなる</td><td class="p-2 border">try/catch で囲み、失敗したら空の一覧から始める</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 12行</td><td class="p-2 border">読み込んだデータの形を確かめていない。検証していない本文が表示処理に渡る</td><td class="p-2 border">配列かどうか、各カードの中身を確かめる</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 33〜36行</td><td class="p-2 border">1文字入力するたびに、ボード全体の描き直しと保存をしている</td><td class="p-2 border">入力のときの render() をやめる</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 20〜28行</td><td class="p-2 border">列ごとに innerHTML += でボードを作り直し、件数も3回数えている</td><td class="p-2 border">件数はループの外で1回だけ数え、まとめて1回で表示する</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">低</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 21〜26行</td><td class="p-2 border">種類ごとに filter を呼び、一覧を3回たどっている</td><td class="p-2 border">1回のループで数える</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 5〜14行</td><td class="p-2 border">空白を取り除く前に文字数を確かめているので、空白だけ（<code>"   "</code>）のカードが作れる（仕様違反）</td><td class="p-2 border">先に trim() してから確かめ、テストを足す</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 23〜28行</td><td class="p-2 border">受け入れ条件「HTML として解釈されない」を満たしておらず、確かめるテストもない</td><td class="p-2 border">textContent で表示し、確かめる手順を決める</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 13, 33〜35行</td><td class="p-2 border">仕様にない「入力途中の下書き保存」が勝手に足されている（AGENTS.md のルール違反）</td><td class="p-2 border">残すか消すかを人間が決める</td></tr>
+重要なものから最大3件を表にする（重要度・場所・何が起きるか・直し方）</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>スキルは「レビューのやり方」を書いたファイルです。何を見て、どう報告するかを、毎回書かなくて済みます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>チームの誰が頼んでも、どの AI が見ても、<strong>同じ基準</strong>でレビューされます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>見落としに気づいたら、ここに1行足すだけで、次からチーム全員の AI が確かめるようになります。</span></li></ul></div></div>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI が書いたコードの、問題の1行</p><pre class="text-white whitespace-pre-wrap break-words">html += `&lt;div class=&quot;card&quot;&gt;${card.text}&lt;/div&gt;`;</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>セキュリティ担当が見つけた行です。入力した本文を、そのまま HTML として表示しています。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>カードに <code>&lt;img src=x onerror="alert('XSS')"&gt;</code> と入れると、他の人の画面でプログラムが動いてしまいます（XSS）。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>テストは「書いた条件」しか確かめません。だから、テストとは別の観点の目が必要です。</span></li></ul></div></div>
+<div class="overflow-x-auto mb-2"><table class="w-full text-sm text-left border">
+<thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border">観点</th><th class="p-2 border">いちばん重要な指摘</th></tr></thead><tbody class="text-gray-700">
+<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border">本文をそのまま HTML として表示している（XSS）。仕様の「HTML として解釈されない」にも反する</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border">1文字入力するたびに、画面全体の描き直しと保存をしている</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border">空白だけ（<code>"   "</code>）のカードが作れてしまう。テストにこのケースがない。頼んでいない「下書き保存」が足されている</td></tr>
 </tbody></table></div>
-<p class="text-gray-700 mb-4">たとえばセキュリティの1件目。カードの本文に次の文字を入れて追加すると、他の人の画面でプログラムが動いてしまいます。テストは全部通っていたのに、です。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">カードに入力する文字</p><pre class="text-white">&lt;img src=x onerror=&quot;alert(&#x27;XSS&#x27;)&quot;&gt;</pre></div>
+<p class="text-xs text-gray-500">3つの観点のレビュー結果（各観点で一番重要なもの）</p>
 
                     </div>
-                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                        <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">4</span>
-                            <h3 class="text-2xl font-bold text-gray-800">改善する（どれを直すかは人間が判断）</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">改善する（どれを直すかを決める）</h3>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">人間がやる</span>
                         </div>
-<p class="text-gray-700 mb-4">全部を AI の言うとおりに直すのではなく、人間が選びます。今回は「XSS」と「空白だけのカード」を直し、効率の指摘は「カードが少ないので今回は見送る」と判断しました。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">次の2つを直してください。効率の指摘は、今回はカードが少ないので見送ります。
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">次の2つを直してください。効率の指摘は、今回はカードが少ないので見送ります。
 1. セキュリティ：XSS（本文を textContent で表示する）
 2. 品質：空白だけのカードを作れないようにする。
-   先にテストを足して失敗することを確認してから（Red）、直してください（Green）。</pre></div>
-<p class="text-gray-700 mb-4">まずテストを1件足すと、直す前のコードでは失敗します（Red）。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（「空白だけの本文はエラー」を追加）</p><pre class="text-white">// 受け入れ条件（docs/spec.md）を確かめるテスト
-import { test } from &#x27;node:test&#x27;;
-import assert from &#x27;node:assert/strict&#x27;;
-import { createCard, addCard, countByType } from &#x27;../src/kpt.js&#x27;;
-
-test(&#x27;カードを作れる&#x27;, () =&gt; {
-  const card = createCard(&#x27;ペアプロがうまくいった&#x27;, &#x27;keep&#x27;);
-  assert.equal(card.text, &#x27;ペアプロがうまくいった&#x27;);
-  assert.equal(card.type, &#x27;keep&#x27;);
-  assert.ok(card.id);
-});
-
-test(&#x27;本文の前後の空白は取り除く&#x27;, () =&gt; {
-  assert.equal(createCard(&#x27;  レビューが遅い  &#x27;, &#x27;problem&#x27;).text, &#x27;レビューが遅い&#x27;);
-});
-
-test(&#x27;空の本文はエラー&#x27;, () =&gt; {
-  assert.throws(() =&gt; createCard(&#x27;&#x27;, &#x27;keep&#x27;));
-});
-
-// ④ 品質の指摘を受けて追加したテスト
-test(&#x27;空白だけの本文はエラー&#x27;, () =&gt; {
+   先にテストを足して失敗することを確認してから（Red）、直してください（Green）。</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>指摘が全部正しくても、全部直すのが正解とは限りません。時間・優先度・影響を考えて決め、<strong>責任を持つのは人間</strong>です。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>品質の問題は、先にテストを足します。同じミスを二度としないように、<strong>基準として残す</strong>ためです。</span></li></ul></div></div>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（足したテスト：直す前は失敗 → 直したら成功）</p><pre class="text-white whitespace-pre-wrap break-words">test(&#x27;空白だけの本文はエラー&#x27;, () =&gt; {
   assert.throws(() =&gt; createCard(&#x27;   &#x27;, &#x27;keep&#x27;));
-});
-
-test(&#x27;140文字を超える本文はエラー&#x27;, () =&gt; {
-  assert.throws(() =&gt; createCard(&#x27;あ&#x27;.repeat(141), &#x27;keep&#x27;));
-  assert.doesNotThrow(() =&gt; createCard(&#x27;あ&#x27;.repeat(140), &#x27;keep&#x27;));
-});
-
-test(&#x27;種類は keep / problem / try だけ&#x27;, () =&gt; {
-  assert.throws(() =&gt; createCard(&#x27;なにか&#x27;, &#x27;other&#x27;));
-});
-
-test(&#x27;追加しても元のリストは変えない&#x27;, () =&gt; {
-  const list = [];
-  const next = addCard(list, createCard(&#x27;朝会を短く&#x27;, &#x27;try&#x27;));
-  assert.equal(list.length, 0);
-  assert.equal(next.length, 1);
-});
-
-test(&#x27;種類ごとの数を数えられる&#x27;, () =&gt; {
-  let list = [];
-  list = addCard(list, createCard(&#x27;a&#x27;, &#x27;keep&#x27;));
-  list = addCard(list, createCard(&#x27;b&#x27;, &#x27;keep&#x27;));
-  list = addCard(list, createCard(&#x27;c&#x27;, &#x27;try&#x27;));
-  assert.deepEqual(countByType(list), { keep: 2, problem: 0, try: 1 });
-});</pre></div>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">npm test の結果（直す前 = Red）</p><pre class="text-white">✖ 空白だけの本文はエラー
-ℹ tests 8
-ℹ pass 7
-ℹ fail 1</pre></div>
-<p class="text-gray-700 mb-4">直したあとのコード（全文）：</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/kpt.js（直したあと）</p><pre class="text-white">// KPT ボードのロジック（DOM を使わない）
-export const TYPES = [&#x27;keep&#x27;, &#x27;problem&#x27;, &#x27;try&#x27;];
-
-export function createCard(text, type) {
-  // 先に前後の空白を取り除いてから、文字数を確かめる
-  const trimmed = text.trim();
-  if (trimmed.length === 0) {
-    throw new Error(&#x27;本文を入力してください&#x27;);
-  }
-  if (trimmed.length &gt; 140) {
-    throw new Error(&#x27;本文は140文字以内にしてください&#x27;);
-  }
-  if (!TYPES.includes(type)) {
-    throw new Error(&#x27;種類が正しくありません&#x27;);
-  }
-  return { id: Date.now(), text: trimmed, type };
-}
-
-export function addCard(list, card) {
-  return [...list, card];
-}
-
-export function countByType(list) {
-  const result = {};
-  for (const type of TYPES) {
-    result[type] = list.filter((card) =&gt; card.type === type).length;
-  }
-  return result;
-}</pre></div>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/app.js（直したあと）</p><pre class="text-white">// KPT ボードの画面処理
-import { TYPES, createCard, addCard, countByType } from &#x27;./kpt.js&#x27;;
-
-const LABELS = { keep: &#x27;Keep&#x27;, problem: &#x27;Problem&#x27;, try: &#x27;Try&#x27; };
-
-const form = document.getElementById(&#x27;cardForm&#x27;);
-const textInput = document.getElementById(&#x27;cardText&#x27;);
-const typeSelect = document.getElementById(&#x27;cardType&#x27;);
-const error = document.getElementById(&#x27;error&#x27;);
-const board = document.getElementById(&#x27;board&#x27;);
-
-let cards = JSON.parse(localStorage.getItem(&#x27;kpt-cards&#x27;)) || [];
-textInput.value = localStorage.getItem(&#x27;kpt-draft&#x27;) || &#x27;&#x27;;
-
-function save() {
-  localStorage.setItem(&#x27;kpt-cards&#x27;, JSON.stringify(cards));
-}
-
-function render() {
-  board.replaceChildren();
-  for (const type of TYPES) {
-    const counts = countByType(cards);
-
-    const column = document.createElement(&#x27;section&#x27;);
-    column.className = `column ${type}`;
-
-    const heading = document.createElement(&#x27;h2&#x27;);
-    heading.textContent = `${LABELS[type]} `;
-    const count = document.createElement(&#x27;span&#x27;);
-    count.className = &#x27;count&#x27;;
-    count.textContent = counts[type];
-    heading.appendChild(count);
-    column.appendChild(heading);
-
-    for (const card of cards.filter((c) =&gt; c.type === type)) {
-      const div = document.createElement(&#x27;div&#x27;);
-      div.className = &#x27;card&#x27;;
-      div.textContent = card.text; // 文字として表示するので、タグは動かない
-      column.appendChild(div);
-    }
-    board.appendChild(column);
-  }
-}
-
-// 入力途中の内容も残しておく（効率の指摘は今回は見送り）
-textInput.addEventListener(&#x27;input&#x27;, () =&gt; {
-  localStorage.setItem(&#x27;kpt-draft&#x27;, textInput.value);
-  render();
-});
-
-form.addEventListener(&#x27;submit&#x27;, (event) =&gt; {
-  event.preventDefault();
-  try {
-    cards = addCard(cards, createCard(textInput.value, typeSelect.value));
-    save();
-    textInput.value = &#x27;&#x27;;
-    localStorage.removeItem(&#x27;kpt-draft&#x27;);
-    error.textContent = &#x27;&#x27;;
-    render();
-  } catch (e) {
-    error.textContent = e.message;
-  }
-});
-
-render();</pre></div>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">npm test の結果（直したあと = Green）</p><pre class="text-white">ℹ tests 8
-ℹ pass 8
-ℹ fail 0</pre></div>
-<p class="text-gray-700 mb-4">同じ <code class="bg-gray-100 px-1 rounded">&lt;img src=x onerror=...&gt;</code> を入れても、今度はただの文字として表示されます。</p>
+});</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>直す前に失敗することを見ておくと、このテストが本当に問題を捕まえられると確かめられます（TDD の Red）。</span></li></ul></div></div>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">SKILL.md に1行足す（学びを残す）</p><pre class="text-white whitespace-pre-wrap break-words">4. 表示：ユーザーの入力は textContent で表示しているか（innerHTML を使っていないか）</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>今回の学びをスキルに書き足すと、次の開発では、レビューで最初から確かめられます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>人の学びも、AI に渡す文脈も、ファイルとしてチームに残る。これが MobAI の「学習」です。</span></li></ul></div></div>
 
                     </div>
                     <div class="bg-yellow-50 p-6 rounded-2xl border-l-4 border-yellow-500">
