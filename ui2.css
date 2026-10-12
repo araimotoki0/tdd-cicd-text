@@ -419,3 +419,89 @@ body.ui2 .ui2-hero { box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .06); }
     body.ui2 .ui2-hero, body.ui2 .ui2-hero * { color: #111 !important; text-shadow: none !important; }
     body.ui2 .bg-gray-900 { box-shadow: none; border: 1px solid #ccc; }
 }
+
+/* =========================================================
+   v5：章の区切り（理論→実践）カード・環境構築ページにも適用
+   ========================================================= */
+body.ui2[data-chapter="setup"] { --accent: #4f6b8a; --accent-2: #7f9bb8; --accent-soft: #eef2f6; }
+body.ui2[data-chapter="setup"] #menuBtn { display: none; }
+
+.ui2-cta { background: var(--paper-2) !important; border-top: 1px solid var(--line); }
+.ui2-cta-card {
+    position: relative; overflow: hidden; max-width: 760px; margin: 0 auto; padding: 56px 32px 52px; text-align: center;
+    background: #fff; border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow);
+}
+.ui2-cta-card::before {
+    content: ''; position: absolute; inset: -60% -20% auto -20%; height: 120%; pointer-events: none;
+    background: radial-gradient(45% 55% at 50% 20%, color-mix(in srgb, var(--accent) 14%, transparent) 0, transparent 70%);
+}
+.ui2-cta-eyebrow { position: relative; display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .18em; color: var(--accent); margin-bottom: 16px; }
+.ui2-cta-title { position: relative; font: 900 40px/1.3 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif; letter-spacing: .03em; color: var(--text); margin: 0 0 10px; }
+.ui2-cta-lead { position: relative; font-size: 18px; color: var(--muted); margin: 0 0 32px; }
+.ui2-cta-btn {
+    position: relative; display: inline-flex; align-items: center; gap: 12px; padding: 16px 30px; border-radius: 999px; text-decoration: none;
+    font: 700 17px 'Noto Sans JP', sans-serif; color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 12px 28px -12px color-mix(in srgb, var(--accent) 75%, transparent); transition: transform .18s, box-shadow .18s;
+}
+.ui2-cta-btn span { transition: transform .18s; }
+.ui2-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 34px -12px color-mix(in srgb, var(--accent) 80%, transparent); }
+.ui2-cta-btn:hover span { transform: translateX(4px); }
+@media (max-width: 640px) { .ui2-cta-card { padding: 40px 22px; border-radius: 22px; } .ui2-cta-title { font-size: 30px; } }
+
+/* =========================================================
+   v6：スマホアプリ（PWA）の案内・ホーム画面アプリでの余白
+   ========================================================= */
+.ui2-app { background: var(--paper); padding: 40px 0 8px; }
+.ui2-app-card {
+    display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center;
+    background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 30px 34px; box-shadow: var(--shadow);
+}
+.ui2-app-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .16em; color: var(--accent); margin: 0 0 8px; }
+.ui2-app-title { font: 900 26px/1.35 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif; letter-spacing: .03em; margin: 0 0 10px; color: var(--text); }
+.ui2-app-lead { color: var(--muted); font-size: 15px; line-height: 1.8; margin: 0 0 16px; }
+.ui2-app-url { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 6px 6px 6px 14px; border-radius: 12px; background: var(--paper-2); border: 1px solid var(--line); }
+.ui2-app-url span { font: 600 14px 'JetBrains Mono', monospace; color: var(--text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui2-app-url button, .ui2-install { flex: none; font: 700 13px 'Noto Sans JP', sans-serif; padding: 8px 14px; border-radius: 9px; border: 0; cursor: pointer; color: #fff; background: var(--ink); transition: background .15s, transform .15s; }
+.ui2-app-url button:hover, .ui2-install:hover { background: var(--ink-2); transform: translateY(-1px); }
+.ui2-install { display: inline-block; margin-top: 12px; padding: 12px 20px; border-radius: 12px; font-size: 14px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+.ui2-standalone { margin: 12px 0 0; font-weight: 700; color: #2f8f6b; font-size: 14px; }
+.ui2-app-qr { text-align: center; }
+.ui2-app-qr img { display: block; width: 168px; height: 168px; border-radius: 16px; border: 1px solid var(--line); padding: 8px; background: #fff; }
+.ui2-app-qr small { display: block; margin-top: 8px; font-size: 12px; color: var(--muted); }
+.ui2-app-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.ui2-app-steps details { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 0 18px; transition: box-shadow .2s; }
+.ui2-app-steps details[open] { box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.ui2-app-steps summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 14px 0; font: 700 15px 'Zen Kaku Gothic New', sans-serif; color: var(--text); }
+.ui2-app-steps summary::-webkit-details-marker { display: none; }
+.ui2-app-steps summary::after { content: '＋'; margin-left: auto; color: var(--muted); font-weight: 400; }
+.ui2-app-steps details[open] summary::after { content: '－'; }
+.ui2-app-steps summary .ico { width: 22px; text-align: center; }
+.ui2-app-steps summary small { font-size: 12px; color: var(--muted); font-weight: 500; margin-left: 2px; }
+.ui2-app-steps ol { margin: 0 0 16px; padding-left: 22px; color: var(--text); font-size: 14px; line-height: 1.8; }
+.ui2-app-steps ol li + li { margin-top: 6px; }
+@media (max-width: 760px) {
+    .ui2-app-card { grid-template-columns: 1fr; padding: 22px; }
+    .ui2-app-qr { order: -1; }
+    .ui2-app-qr img { margin: 0 auto; width: 150px; height: 150px; }
+    .ui2-app-steps { grid-template-columns: 1fr; }
+    .ui2-app-url { width: 100%; box-sizing: border-box; }
+}
+
+/* ホーム画面アプリとして開いたとき：画面上端の切り欠きぶんだけ余白を足す */
+@supports (padding-top: env(safe-area-inset-top)) {
+    body.ui2 > nav { padding-top: env(safe-area-inset-top); }
+    body.ui2 .pt-20 { padding-top: calc(64px + env(safe-area-inset-top)) !important; }
+    body.ui2 .pnav-side, body.ui2 #toc { top: calc(64px + env(safe-area-inset-top)); }
+    body.ui2 .pnav-bar, body.ui2 #tocBar { top: calc(64px + env(safe-area-inset-top)); }
+    body.ui2 #mobileMenu { top: calc(64px + env(safe-area-inset-top)) !important; }
+    body.ui2 .ui2-drawer { padding-top: env(safe-area-inset-top); }
+    body.ui2 .ui2-dbody { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+    body.ui2 .scroll-to-top-button { bottom: calc(26px + env(safe-area-inset-bottom)); }
+}
+/* 細い画面で URL の箱がはみ出さないように */
+.ui2-app-card > * { min-width: 0; }
+.ui2-app-url span { flex: 1 1 0; }
+.ui2-app-url { max-width: 100%; box-sizing: border-box; }
+
+/* 長い URL のリンクが細い画面ではみ出さないように */
+body.ui2 .pt-20 a { overflow-wrap: anywhere; }

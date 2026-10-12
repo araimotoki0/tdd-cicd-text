@@ -1,0 +1,25 @@
+{
+  "name": "CSD講座 — AI Coding・TDD・MobAI・CI/CD",
+  "short_name": "CSD講座",
+  "description": "アジャイル ビジネス インスティテュートの CSD 講座テキスト。ハンズオンの手順と解説動画を、いつでも復習できます。",
+  "lang": "ja",
+  "dir": "ltr",
+  "start_url": "/index.html?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "AI Coding入門", "url": "/ai-coding-antigravity.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "TDD 基礎", "url": "/handson-basic.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "MobAI", "url": "/mob-ai.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "CI/CD", "url": "/cicd-index.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

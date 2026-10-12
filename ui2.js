@@ -40,6 +40,34 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         var body = document.body;
+        // PWA：Service Worker を登録（オフラインでも読めるように）
+        if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            navigator.serviceWorker.register('sw.js').catch(function () {});
+        }
+        var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        var ua = navigator.userAgent;
+        var os = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'ios' : /Android/.test(ua) ? 'android' : /Windows/.test(ua) ? 'win' : /Macintosh/.test(ua) ? 'mac' : 'win';
+        document.querySelectorAll('.ui2-app-steps details').forEach(function (d) { d.open = d.dataset.os === os; });
+        var sa = document.getElementById('ui2Standalone'); if (sa && standalone) sa.hidden = false;
+        var installBtn = document.getElementById('ui2InstallBtn'), deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', function (e) {
+            e.preventDefault(); deferredPrompt = e;
+            if (installBtn && !standalone) installBtn.hidden = false;
+        });
+        if (installBtn) installBtn.addEventListener('click', function () {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(function () { deferredPrompt = null; installBtn.hidden = true; });
+        });
+        window.addEventListener('appinstalled', function () { if (installBtn) installBtn.hidden = true; if (sa) sa.hidden = false; });
+        document.querySelectorAll('.ui2-copy-url').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var t = b.textContent;
+                (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.url) : Promise.reject()).then(function () { b.textContent = 'コピーしました'; }, function () { b.textContent = '長押しでコピー'; });
+                setTimeout(function () { b.textContent = t; }, 1800);
+            });
+        });
+
         // 目次の見出しを簡潔に・スキップリンク
         var th = document.querySelector('.pnav-side-head p, #toc .flex > p'); if (th) th.textContent = '目次';
         var tb = document.querySelector('.pnav-bar-title, #tocBar .text-indigo-700'); if (tb) tb.textContent = '目次';
@@ -63,9 +91,11 @@
         // 前へ・次へ・完了
         var footer = document.querySelector('footer');
         var idx = LINEAR.map(function (p) { return p.file; }).indexOf(file);
-        if (footer && (idx >= 0 || extra)) {
+        var isSetup = chapter && chapter.id === 'setup';
+        if (footer && (idx >= 0 || extra || isSetup)) {
             var prev = idx > 0 ? LINEAR[idx - 1] : null;
             var next = idx >= 0 && idx < LINEAR.length - 1 ? LINEAR[idx + 1] : null;
+            if (isSetup) next = LINEAR[0];
             if (extra && !next) {
                 var home = CHAPTERS.filter(function (c) { return c.id === (extra.home || extra.chapter); })[0];
                 if (home) next = { file: home.pages[0][0], label: home.pages[0][1], chapter: home };
@@ -124,7 +154,7 @@
                 '<div class="ui2-dh"><div><small>CSD COURSE</small><b>講座メニュー</b></div>' +
                 '<button type="button" class="ui2-close" aria-label="閉じる"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
                 '<div class="ui2-dbody">' + list +
-                '<div class="ui2-extra"><a class="' + (file === 'csd-preview.html' ? 'is-current' : '') + '" href="csd-preview.html">チラ見せ説明会（2026/01/22）</a></div>' +
+                '<div class="ui2-extra"><a href="index.html#app">📱 スマホアプリとして使う</a><a class="' + (file === 'csd-preview.html' ? 'is-current' : '') + '" href="csd-preview.html">チラ見せ説明会（2026/01/22）</a></div>' +
                 '</div><div class="ui2-dfoot"><kbd>Esc</kbd> で閉じる</div></aside>');
             var scrim = el('<div class="ui2-scrim"></div>');
             document.body.appendChild(scrim);
