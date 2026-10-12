@@ -193,36 +193,59 @@
                     <p class="text-gray-600 text-lg mb-8 text-center">講師のデモで、上の4つのステップを1周します（約10分）</p>
 
                     <p class="text-gray-700 mb-6 text-center">題材：スプリントで使う「<strong>KPT 振り返りボード</strong>」（HTML / CSS / JavaScript だけ・テストは <code class="bg-white px-1 rounded">node --test</code>）</p>
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-3">📁 仕様も、ルールも、AI エージェントも「ファイル」</h3>
+<p class="text-gray-700 mb-4">AI と一緒に開発するときに渡すものは、すべてファイルです。仕様・作業ルール・エージェント（担当者）・スキル（やり方）をファイルにしておけば、<strong>チームで共有して、育てて、使い回せます</strong>。スライドの「学習：AI に与える文脈もチームに残す」は、このことです。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">ファイル構成</p><pre class="text-white">kpt-board/
+├── docs/spec.md              仕様（何を作るか・受け入れ条件）     … 人間が書く
+├── tests/kpt.test.js         基準（受け入れ条件を確かめるテスト） … 人間が決める
+├── AGENTS.md                 AI への作業ルール                   … 人間が書く
+├── .agents/
+│   ├── agents/               AI エージェント（＝担当者）
+│   │   ├── security-reviewer.md
+│   │   ├── efficiency-reviewer.md
+│   │   └── quality-reviewer.md
+│   └── skills/               スキル（＝やり方）
+│       ├── security-review/SKILL.md
+│       ├── efficiency-review/SKILL.md
+│       └── quality-review/SKILL.md
+├── src/kpt.js, src/app.js    コード                              … AI が書く
+└── index.html, style.css</pre></div>
+                    </div>
 
                     <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
                         <div class="flex items-center gap-3 mb-4">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">1</span>
                             <h3 class="text-2xl font-bold text-gray-800">基準を決める（人間）</h3>
                         </div>
-<p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たすべきか」を先に渡します。仕様は <code class="bg-gray-100 px-1 rounded">AGENTS.md</code>、基準はテストです。ここは人間が決めます。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md</p><pre class="text-white"># KPT 振り返りボード
+<p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たすべきか」を先に渡します。ここは人間が決めます。</p>
+<p class="text-gray-700 mb-4"><strong>仕様</strong>：何を作るか、受け入れ条件</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">docs/spec.md</p><pre class="text-white"># 仕様：KPT 振り返りボード
 
-スプリントの振り返りで使う、ブラウザだけで動く KPT ボード。
+## 目的
+スプリントの振り返りで、チーム全員が Keep / Problem / Try を書き出して共有できるようにする。
 
-## 作るもの
-- Keep / Problem / Try の3列に、カード（ひとこと）を追加できる
-- 種類ごとのカード数を表示する
-- カードはブラウザ（localStorage）に保存し、再読み込みしても残る
+## ユーザーストーリー
+- 開発者として、振り返りで気づいたことをカードにして追加したい。思いついたその場で書き留めるため。
+- スクラムマスターとして、Keep / Problem / Try ごとの枚数を見たい。どこに話し合いの時間を使うか決めるため。
 
-## 満たす条件（基準）
-- `tests/kpt.test.js` のテストがすべて通ること（`npm test`）
-- カードの本文は前後の空白を取り除き、1〜140文字。空や長すぎる場合はエラー
-- 種類は `keep` / `problem` / `try` のどれか
+## 機能
+1. 種類（Keep / Problem / Try）を選んで、ひとことのカードを追加できる
+2. カードは種類ごとの列に表示される
+3. 各列に、その種類のカードの枚数を表示する
+4. カードはブラウザに保存され、再読み込みしても残る
 
-## ファイル構成
-- `src/kpt.js` … ロジック（DOM を使わない。テスト対象）
-- `src/app.js` … 画面の処理
-- `index.html` / `style.css`
+## 受け入れ条件
+- カードの本文は、前後の空白を取り除いたうえで 1〜140 文字
+- 本文が空、または 140 文字を超える場合は、エラーメッセージを表示して追加しない
+- 種類は keep / problem / try のどれか
+- 入力された本文は、そのまま文字として表示される（HTML として解釈されない）
 
-## ルール
-- フレームワークやライブラリは使わない（HTML / CSS / JavaScript だけ）
-- 返答は日本語で</pre></div>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js</p><pre class="text-white">// ① 基準を決める：AI に「何を満たすべきか」を伝えるテスト
+## 対象外（今回は作らない）
+- カードの編集・削除
+- 複数人でのリアルタイム共有</pre></div>
+<p class="text-gray-700 mb-4"><strong>基準</strong>：受け入れ条件を、確かめられる形（テスト）にしたもの</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js</p><pre class="text-white">// 受け入れ条件（docs/spec.md）を確かめるテスト
 import { test } from &#x27;node:test&#x27;;
 import assert from &#x27;node:assert/strict&#x27;;
 import { createCard, addCard, countByType } from &#x27;../src/kpt.js&#x27;;
@@ -265,6 +288,37 @@ test(&#x27;種類ごとの数を数えられる&#x27;, () =&gt; {
   list = addCard(list, createCard(&#x27;c&#x27;, &#x27;try&#x27;));
   assert.deepEqual(countByType(list), { keep: 2, problem: 0, try: 1 });
 });</pre></div>
+<p class="text-gray-700 mb-4"><strong>AI への作業ルール</strong>：仕様の場所、コマンド、守ること。AI は作業の前にこのファイルを読みます。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md</p><pre class="text-white"># AGENTS.md
+
+このリポジトリで作業する AI エージェント向けのルールです。
+
+## プロジェクト
+スプリントの振り返りで使う、ブラウザだけで動く KPT ボード。
+**仕様は `docs/spec.md` にあります。作業の前に必ず読んでください。**
+
+## コマンド
+- テスト：`npm test`
+- 画面の確認：`python3 -m http.server 8000` → http://localhost:8000
+
+## ファイル構成
+- `src/kpt.js` … ロジック（DOM を使わない。テスト対象）
+- `src/app.js` … 画面の処理
+- `index.html` / `style.css`
+- `tests/` … テスト（受け入れ条件を確かめる）
+
+## 守ること
+- フレームワークやライブラリは使わない（HTML / CSS / JavaScript だけ）
+- テストを書き換えて通すことはしない。テストと仕様が合わない場合は、作業を止めて人間に確認する
+- 仕様にない機能は勝手に足さない
+- 変更したら `npm test` を実行し、結果を報告する
+- 返答は日本語で
+
+## レビュー
+レビューを頼まれたら、`.agents/skills/` のスキルを使う。
+- `security-review` … セキュリティ
+- `efficiency-review` … 効率
+- `quality-review` … 品質（仕様・テスト）</pre></div>
 
                     </div>
                     <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
@@ -273,8 +327,8 @@ test(&#x27;種類ごとの数を数えられる&#x27;, () =&gt; {
                             <h3 class="text-2xl font-bold text-gray-800">生成する（AI）</h3>
                         </div>
 <p class="text-gray-700 mb-4">AI に作らせます。テストは7件すべて通り、ブラウザでも動きます。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">AGENTS.md の仕様で KPT ボードを作ってください。
-tests/kpt.test.js がすべて通るようにして、最後に npm test を実行してください。</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">仕様（docs/spec.md）どおりに KPT ボードを作ってください。
+tests/ のテストがすべて通るようにして、最後に npm test を実行してください。</pre></div>
 <p class="text-gray-700 mb-4">AI が作ったコード（全ファイル）：</p>
 <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/kpt.js</p><pre class="text-white">// KPT ボードのロジック（DOM を使わない）
 export const TYPES = [&#x27;keep&#x27;, &#x27;problem&#x27;, &#x27;try&#x27;];
@@ -421,27 +475,127 @@ button { background: #4338ca; color: #fff; border: 0; font-weight: 700; cursor: 
                     <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
                         <div class="flex items-center gap-3 mb-4">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">3</span>
-                            <h3 class="text-2xl font-bold text-gray-800">検証する（3つの観点で、同時に）</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">検証する（3人の AI エージェントが、同時に）</h3>
                         </div>
-<p class="text-gray-700 mb-4">テストは通りました。でも「動く」ことと「安心して使える」ことは別です。セキュリティ・効率・品質の3つの観点で、<strong>それぞれ別のレビュアーとして、同時に</strong>確かめさせます。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">このコードを、セキュリティ・効率・品質の3つの観点で、
-それぞれ別のレビュアーとして同時にレビューしてください。
-コードは書き換えないでください。
-観点ごとに、重要なもの3件までを表にしてください。</pre></div>
-<p class="text-gray-700 mb-4">レビューの結果：</p>
-<div class="overflow-x-auto mb-2"><table class="w-full text-sm text-left border">
+<p class="text-gray-700 mb-4">テストは通りました。でも「動く」ことと「安心して使える」ことは別です。セキュリティ・効率・品質の<strong>3人の AI エージェントに、同時に</strong>レビューを頼みます。</p>
+<p class="text-gray-700 mb-4"><strong>エージェント（担当者）</strong>：誰が、何を任されているか。「コードは書き換えない」もここで決めています。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/agents/security-reviewer.md</p><pre class="text-white">---
+name: security-reviewer
+description: セキュリティ担当のレビュアー。脆弱性を探して報告する。コードは書き換えない。
+---
+
+あなたは KPT ボードの**セキュリティ担当のレビュアー**です。
+
+- レビューの手順は `.agents/skills/security-review/SKILL.md` に書いてあります。必ず読んで、そのとおりに進めてください。
+- 仕様は `docs/spec.md`、作業ルールは `AGENTS.md` にあります。
+- **コードは書き換えません。** 見つけたことを報告するだけです。
+- 自分の担当（セキュリティ）以外の指摘は、気づいても1行だけにしてください。</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/agents/efficiency-reviewer.md</p><pre class="text-white">---
+name: efficiency-reviewer
+description: 効率担当のレビュアー。無駄や重くなる書き方を探して報告する。コードは書き換えない。
+---
+
+あなたは KPT ボードの**効率担当のレビュアー**です。
+
+- レビューの手順は `.agents/skills/efficiency-review/SKILL.md` に書いてあります。必ず読んで、そのとおりに進めてください。
+- 仕様は `docs/spec.md`、作業ルールは `AGENTS.md` にあります。
+- **コードは書き換えません。** 見つけたことを報告するだけです。
+- 自分の担当（効率）以外の指摘は、気づいても1行だけにしてください。</pre></div>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/agents/quality-reviewer.md</p><pre class="text-white">---
+name: quality-reviewer
+description: 品質担当のレビュアー。仕様との違いとテストの抜けを探して報告する。コードは書き換えない。
+---
+
+あなたは KPT ボードの**品質担当のレビュアー**です。
+
+- レビューの手順は `.agents/skills/quality-review/SKILL.md` に書いてあります。必ず読んで、そのとおりに進めてください。
+- 仕様は `docs/spec.md`、作業ルールは `AGENTS.md` にあります。
+- **コードは書き換えません。** 見つけたことを報告するだけです。
+- 自分の担当（品質）以外の指摘は、気づいても1行だけにしてください。</pre></div>
+<p class="text-gray-700 mb-4"><strong>スキル（やり方）</strong>：どう確かめて、どう報告するか。チームのノウハウとして使い回せます。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/skills/security-review/SKILL.md</p><pre class="text-white">---
+name: security-review
+description: セキュリティの観点でコードをレビューする。XSS、保存データの扱い、入力値の検証を確かめる。レビューを頼まれたときに使う。コードは書き換えない。
+---
+
+# セキュリティレビュー
+
+`src/` と `index.html` を読み、脆弱性を探します。**コードは書き換えません。**
+
+## 確かめること
+1. **XSS**：ユーザーの入力を `innerHTML` などで、そのまま HTML として表示していないか
+2. **保存データ**：localStorage から読み込むとき、壊れた値や想定外の値で動かなくならないか
+3. **入力値の検証**：検証が画面側だけになっていないか（ロジック側でも確かめているか）
+
+## 報告の形
+観点ごとに、重要なものから最大3件を表にする。
+
+| 重要度（高/中/低） | 場所（ファイルと行） | 何が起きるか | 直し方 |
+|---|---|---|---|
+
+最後に「一番先に直すべき1件」を1行で書く。</pre></div>
+<details class="mb-4"><summary class="cursor-pointer text-sm text-indigo-700 font-bold mb-2">.agents/skills/efficiency-review/SKILL.md（クリックで開く）</summary>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/skills/efficiency-review/SKILL.md</p><pre class="text-white">---
+name: efficiency-review
+description: 効率（パフォーマンス）の観点でコードをレビューする。無駄に繰り返される処理や、データが増えると遅くなる書き方を探す。レビューを頼まれたときに使う。コードは書き換えない。
+---
+
+# 効率レビュー
+
+`src/` と `index.html` を読み、無駄を探します。**コードは書き換えません。**
+
+## 確かめること
+1. **繰り返し**：入力のたびに保存や画面全体の描き直しなど、必要以上に実行される処理はないか
+2. **データが増えたとき**：同じリストを何度もたどるなど、件数が増えると遅くなる書き方はないか
+3. **作り直し**：毎回作り直さなくてよいものを、作り直していないか
+
+## 報告の形
+重要なものから最大3件を表にする。
+
+| 影響（大/中/小） | 場所（ファイルと行） | 何が無駄か | 直し方 |
+|---|---|---|---|
+
+最後に「一番先に直すべき1件」を1行で書く。</pre></div>
+</details>
+<details class="mb-4"><summary class="cursor-pointer text-sm text-indigo-700 font-bold mb-2">.agents/skills/quality-review/SKILL.md（クリックで開く）</summary>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.agents/skills/quality-review/SKILL.md</p><pre class="text-white">---
+name: quality-review
+description: 品質の観点でコードをレビューする。仕様（docs/spec.md）どおりに動くか、テストに抜けがないかを確かめる。レビューを頼まれたときに使う。コードは書き換えない。
+---
+
+# 品質レビュー
+
+`docs/spec.md` の受け入れ条件と、`src/`・`tests/` を読み比べます。`npm test` は実行してかまいません。**コードは書き換えません。**
+
+## 確かめること
+1. **仕様との違い**：テストが通っていても、受け入れ条件を満たさないケースはないか
+2. **テストの抜け**：受け入れ条件のうち、テストで確かめていないものはないか（足すべきテストを具体的に）
+3. **読みやすさ**：まぎらわしい名前や書き方はないか
+
+## 報告の形
+重要なものから最大3件を表にする。
+
+| 重要度（高/中/低） | 場所（ファイルと行） | 何が問題か | 足すべきテスト・直し方 |
+|---|---|---|---|
+
+最後に「一番先に直すべき1件」を1行で書く。</pre></div>
+</details>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">security-reviewer、efficiency-reviewer、quality-reviewer の3つのエージェントに、
+同時にレビューを頼んでください。結果がそろったら、観点ごとに重要なもの3件までの表にまとめてください。</pre></div>
+<p class="text-gray-700 mb-4">3人が同時に動き、結果をまとめて返してきます：</p>
+<div class="overflow-x-auto mb-4"><table class="w-full text-sm text-left border">
 <thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border">観点</th><th class="p-2 border">重要度</th><th class="p-2 border">場所</th><th class="p-2 border">指摘</th><th class="p-2 border">直し方</th></tr></thead><tbody class="text-gray-700">
-<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 25行</td><td class="p-2 border">カードの本文を innerHTML でそのまま表示している。<code>&lt;img src=x onerror=...&gt;</code> を入れるとスクリプトが動く（XSS）</td><td class="p-2 border">createElement と textContent で表示する</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 12行</td><td class="p-2 border">保存データ（localStorage）が壊れていると JSON.parse で例外になり、アプリ全体が止まる</td><td class="p-2 border">try/catch で囲み、配列かどうかを確かめる</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 5〜14行</td><td class="p-2 border">空白を取り除く前に文字数を確かめている</td><td class="p-2 border">先に trim してから確かめる</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 33〜36行</td><td class="p-2 border">1文字入力するたびに、ボード全体を描き直している</td><td class="p-2 border">入力のときの render() をやめる</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 34行</td><td class="p-2 border">1文字入力するたびに localStorage へ書き込んでいる</td><td class="p-2 border">少し待ってまとめて保存する（debounce）</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 22行</td><td class="p-2 border">件数を数える処理を、列ごとに3回やっている</td><td class="p-2 border">ループの外で1回だけ数える</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 5〜14行</td><td class="p-2 border">空白だけ（<code>"   "</code>）のカードが作れてしまう（仕様違反）。テストにもこのケースがない</td><td class="p-2 border">先に trim してから確かめ、テストを足す</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 12行</td><td class="p-2 border">保存データが壊れているとアプリが動かない</td><td class="p-2 border">読み込み処理を切り出してテストする</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">低</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 14行</td><td class="p-2 border">id に Date.now() を使っているので、同じ瞬間に作ると重複する</td><td class="p-2 border">crypto.randomUUID() を使う</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 25行</td><td class="p-2 border">カードの本文を innerHTML でそのまま表示している。<code>&lt;img src=x onerror=...&gt;</code> を入れるとスクリプトが動く（XSS）。仕様の「HTML として解釈されない」にも反する</td><td class="p-2 border">createElement で要素を作り、本文は textContent で入れる</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 12行</td><td class="p-2 border">保存データ（localStorage）が壊れていると JSON.parse で止まり、カードを追加できなくなる</td><td class="p-2 border">try/catch で囲み、失敗したら空の一覧から始める</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 12行</td><td class="p-2 border">読み込んだデータの形を確かめていない。検証していない本文が表示処理に渡る</td><td class="p-2 border">配列かどうか、各カードの中身を確かめる</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 33〜36行</td><td class="p-2 border">1文字入力するたびに、ボード全体の描き直しと保存をしている</td><td class="p-2 border">入力のときの render() をやめる</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 20〜28行</td><td class="p-2 border">列ごとに innerHTML += でボードを作り直し、件数も3回数えている</td><td class="p-2 border">件数はループの外で1回だけ数え、まとめて1回で表示する</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border whitespace-nowrap">低</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 21〜26行</td><td class="p-2 border">種類ごとに filter を呼び、一覧を3回たどっている</td><td class="p-2 border">1回のループで数える</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/kpt.js 5〜14行</td><td class="p-2 border">空白を取り除く前に文字数を確かめているので、空白だけ（<code>"   "</code>）のカードが作れる（仕様違反）</td><td class="p-2 border">先に trim() してから確かめ、テストを足す</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">高</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 23〜28行</td><td class="p-2 border">受け入れ条件「HTML として解釈されない」を満たしておらず、確かめるテストもない</td><td class="p-2 border">textContent で表示し、確かめる手順を決める</td></tr>
+<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border whitespace-nowrap">中</td><td class="p-2 border whitespace-nowrap font-mono text-xs">src/app.js 13, 33〜35行</td><td class="p-2 border">仕様にない「入力途中の下書き保存」が勝手に足されている（AGENTS.md のルール違反）</td><td class="p-2 border">残すか消すかを人間が決める</td></tr>
 </tbody></table></div>
-<p class="text-gray-700 mb-4">たとえばセキュリティの1件目。カードの本文に次の文字を入れて追加すると、他の人の画面でプログラムが動いてしまいます。</p>
+<p class="text-gray-700 mb-4">たとえばセキュリティの1件目。カードの本文に次の文字を入れて追加すると、他の人の画面でプログラムが動いてしまいます。テストは全部通っていたのに、です。</p>
 <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">カードに入力する文字</p><pre class="text-white">&lt;img src=x onerror=&quot;alert(&#x27;XSS&#x27;)&quot;&gt;</pre></div>
 
                     </div>
@@ -456,7 +610,7 @@ button { background: #4338ca; color: #fff; border: 0; font-weight: 700; cursor: 
 2. 品質：空白だけのカードを作れないようにする。
    先にテストを足して失敗することを確認してから（Red）、直してください（Green）。</pre></div>
 <p class="text-gray-700 mb-4">まずテストを1件足すと、直す前のコードでは失敗します（Red）。</p>
-<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（「空白だけの本文はエラー」を追加）</p><pre class="text-white">// ① 基準を決める：AI に「何を満たすべきか」を伝えるテスト
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（「空白だけの本文はエラー」を追加）</p><pre class="text-white">// 受け入れ条件（docs/spec.md）を確かめるテスト
 import { test } from &#x27;node:test&#x27;;
 import assert from &#x27;node:assert/strict&#x27;;
 import { createCard, addCard, countByType } from &#x27;../src/kpt.js&#x27;;
