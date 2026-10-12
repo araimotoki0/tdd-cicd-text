@@ -192,20 +192,102 @@
                     <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">実際のAI開発を見てみよう</h2>
                     <p class="text-gray-600 text-lg mb-8 text-center">講師のデモで、上の4つのステップを1周します（約10分）</p>
 
+                    <p class="text-gray-700 mb-6 text-center">題材：スプリントで使う「<strong>KPT 振り返りボード</strong>」（HTML / CSS / JavaScript だけ・テストは <code class="bg-white px-1 rounded">node --test</code>）</p>
+
                     <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                        <p class="font-bold text-gray-800 mb-4">題材：スプリントで使う「KPT 振り返りボード」（HTML / CSS / JavaScript）</p>
-                        <ol class="space-y-4 text-gray-700">
-                            <li class="flex gap-3"><span class="flex-none w-7 h-7 rounded-full bg-indigo-600 text-white grid place-items-center text-sm font-bold">1</span>
-                                <div class="min-w-0"><strong>基準を決める</strong>：仕様（AGENTS.md）とテストを先に用意する。ここは人間が決める。</div></li>
-                            <li class="flex gap-3"><span class="flex-none w-7 h-7 rounded-full bg-indigo-600 text-white grid place-items-center text-sm font-bold">2</span>
-                                <div class="min-w-0"><strong>生成する</strong>：AI がコードを作る。テストはすべて通り、画面も動く。</div></li>
-                            <li class="flex gap-3"><span class="flex-none w-7 h-7 rounded-full bg-indigo-600 text-white grid place-items-center text-sm font-bold">3</span>
-                                <div class="min-w-0"><strong>検証する</strong>：<strong>セキュリティ・効率・品質の3つの AI エージェントが、同時に</strong>レビューする。テストが通っていても問題が見つかる。</div></li>
-                            <li class="flex gap-3"><span class="flex-none w-7 h-7 rounded-full bg-indigo-600 text-white grid place-items-center text-sm font-bold">4</span>
-                                <div class="min-w-0"><strong>改善する</strong>：どの指摘を直すかは人間が判断する。直したら、テストで確かめる。</div></li>
-                        </ol>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">1</span>
+                            <h3 class="text-2xl font-bold text-gray-800">基準を決める（人間）</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たすべきか」を先に渡します。仕様は <code class="bg-gray-100 px-1 rounded">AGENTS.md</code>、基準はテストです。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md（抜粋）</p><pre class="text-white">## 満たす条件（基準）
+- tests/kpt.test.js のテストがすべて通ること（npm test）
+- カードの本文は前後の空白を取り除き、1〜140文字。空や長すぎる場合はエラー
+- 種類は keep / problem / try のどれか</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（7件のうち2件）</p><pre class="text-white">test(&#x27;本文の前後の空白は取り除く&#x27;, () =&gt; {
+  assert.equal(createCard(&#x27;  レビューが遅い  &#x27;, &#x27;problem&#x27;).text, &#x27;レビューが遅い&#x27;);
+});
+
+test(&#x27;140文字を超える本文はエラー&#x27;, () =&gt; {
+  assert.throws(() =&gt; createCard(&#x27;あ&#x27;.repeat(141), &#x27;keep&#x27;));
+  assert.doesNotThrow(() =&gt; createCard(&#x27;あ&#x27;.repeat(140), &#x27;keep&#x27;));
+});</pre></div>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">2</span>
+                            <h3 class="text-2xl font-bold text-gray-800">生成する（AI）</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">AI に作らせます。テストは7件すべて通り、ブラウザでも動きます。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">AGENTS.md の仕様で KPT ボードを作ってください。
+tests/kpt.test.js がすべて通るようにして、最後に npm test を実行してください。</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">npm test の結果</p><pre class="text-white">✔ カードを作れる
+✔ 本文の前後の空白は取り除く
+✔ 空の本文はエラー
+  …
+ℹ tests 7
+ℹ pass 7
+ℹ fail 0</pre></div>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">3</span>
+                            <h3 class="text-2xl font-bold text-gray-800">検証する（3つの AI エージェントが同時に）</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">観点ごとにレビュー担当のエージェントを用意しておき、<strong>同時に</strong>レビューさせます。レビュー担当にはコードを書き換えさせません。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.claude/agents/security-reviewer.md（効率・品質の担当も同じ形で用意）</p><pre class="text-white">---
+name: security-reviewer
+description: セキュリティ担当。コードに脆弱性がないかをレビューする。コードは書き換えない。
+tools: Read, Grep, Glob
+---
+あなたはセキュリティ担当のレビュアーです。
+見る観点: XSS / 保存データの読み込み / 入力値の検証が画面側だけになっていないか</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">security-reviewer、efficiency-reviewer、quality-reviewer の3つのサブエージェントを
+並行して動かして、このコードをレビューしてください。
+結果は観点ごとに、重要なもの3件までの表にしてください。</pre></div>
+                        <p class="text-gray-700 mb-2">テストは通っていたのに、セキュリティ担当がこの行を指摘します。本文をそのまま HTML として表示しています。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/app.js（AI が書いたコード）</p><pre class="text-white">html += `&lt;div class=&quot;card&quot;&gt;${card.text}&lt;/div&gt;`;</pre></div>
+                        <p class="text-gray-700 mb-2">カードの本文に次を入れると、他の人の画面でプログラムが動いてしまいます（XSS）。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">カードに入力する文字</p><pre class="text-white">&lt;img src=x onerror=&quot;alert(&#x27;XSS&#x27;)&quot;&gt;</pre></div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left border">
+                                <thead class="bg-indigo-100 text-indigo-900">
+                                    <tr><th class="p-3 border">観点</th><th class="p-3 border">一番重要な指摘</th></tr>
+                                </thead>
+                                <tbody class="text-gray-700">
+                                    <tr><td class="p-3 border font-bold">🛡️ セキュリティ</td><td class="p-3 border">本文を <code>innerHTML</code> でそのまま表示している（XSS）</td></tr>
+                                    <tr><td class="p-3 border font-bold">⚡ 効率</td><td class="p-3 border">1文字入力するたびに、保存とボード全体の描き直しをしている</td></tr>
+                                    <tr><td class="p-3 border font-bold">✅ 品質</td><td class="p-3 border">空白だけ（<code>"   "</code>）のカードが作れてしまう。テストにこのケースがない</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">4</span>
+                            <h3 class="text-2xl font-bold text-gray-800">改善する（どれを直すかは人間が判断）</h3>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">全部を AI の言うとおりに直すのではなく、人間が選びます。今回は効率の指摘を「カードが少ないので見送り」と判断しました。</p>
+<div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white">次の2つを直してください。効率の指摘は、今回はカードが少ないので見送ります。
+1. セキュリティ：XSS（本文を textContent で表示する）
+2. 品質：空白だけのカードを作れないようにする。
+   先にテストを足して失敗することを確認してから（Red）、直してください（Green）。</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">src/app.js（直したあとの例）</p><pre class="text-white">const div = document.createElement(&#x27;div&#x27;);
+div.className = &#x27;card&#x27;;
+div.textContent = card.text;   // 文字として表示するので、タグは動かない
+column.appendChild(div);</pre></div><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（足したテスト：最初は失敗 → 直して成功）</p><pre class="text-white">test(&#x27;空白だけの本文はエラー&#x27;, () =&gt; {
+  assert.throws(() =&gt; createCard(&#x27;   &#x27;, &#x27;keep&#x27;));
+});</pre></div>
                     </div>
 
+                    <div class="bg-green-50 p-6 rounded-2xl border-l-4 border-green-500 mb-6">
+                        <p class="font-bold text-green-800 mb-2">🧑‍💻 Antigravity CLI（agy）でも同じことができます</p>
+                        <p class="text-gray-700 text-sm">
+                            デモは Claude Code で行いますが、考え方は同じです。agy でも「セキュリティの観点だけでレビューして。コードは書き換えないで」のように観点を分けて頼めば、
+                            同じように確かめられます。チームのメンバーが観点を1つずつ担当して、結果を持ち寄るのも MobAI のやり方の1つです。
+                        </p>
+                    </div>
                     <div class="bg-yellow-50 p-6 rounded-2xl border-l-4 border-yellow-500">
                         <p class="font-bold text-yellow-800 mb-2">👀 デモで注目してほしいところ</p>
                         <p class="text-gray-700">
