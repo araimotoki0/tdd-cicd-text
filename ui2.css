@@ -549,3 +549,23 @@ body.ui2 .pt-20 .flex.items-center.justify-center:not(.flex-wrap) { flex-wrap: w
 .ui2-cred-row button:hover { background: var(--ink-2); }
 .ui2-cred-note { margin: 12px 0 0; font-size: 12px; color: var(--muted); }
 @media (max-width: 480px) { .ui2-cred-row { grid-template-columns: 1fr auto; } .ui2-cred-row .k { grid-column: 1 / -1; } }
+
+/* SCRUM QUEST のカード（ホーム） */
+.ui2-questsec { background: var(--paper); }
+.ui2-quest {
+    display: grid; grid-template-columns: 5fr 6fr; gap: 0; overflow: hidden; text-decoration: none; color: var(--text);
+    background: #fff; border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow); transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.ui2-quest:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: #3b82f6; }
+.ui2-quest-img { position: relative; min-height: 220px; background: #1d4ed8; }
+.ui2-quest-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ui2-quest-body { padding: 28px 30px; display: flex; flex-direction: column; align-items: flex-start; }
+.ui2-quest-eyebrow { margin: 0 0 6px; font-size: 12px; font-weight: 700; letter-spacing: .16em; color: #2563eb; }
+.ui2-quest-title { margin: 0 0 8px; font: 900 30px/1.2 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif; letter-spacing: .04em; color: #1e3a8a; }
+.ui2-quest-lead { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+.ui2-quest-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; font: 700 14px 'Noto Sans JP', sans-serif; color: #fff; background: linear-gradient(135deg, #2563eb, #60a5fa); box-shadow: 0 10px 22px -10px rgba(37, 99, 235, .7); transition: transform .15s; }
+.ui2-quest:hover .ui2-quest-btn { transform: translateY(-1px); }
+.ui2-quest-btn span { transition: transform .15s; }
+.ui2-quest:hover .ui2-quest-btn span { transform: translate(2px, -2px); }
+.ui2-quest-url { margin-top: 12px; font: 500 12px 'JetBrains Mono', monospace; color: var(--muted); }
+@media (max-width: 720px) { .ui2-quest { grid-template-columns: 1fr; } .ui2-quest-img { min-height: 180px; } .ui2-quest-body { padding: 22px; } }
