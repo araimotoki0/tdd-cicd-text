@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a href="handson-setup-windows.html" class="global-menu-item">Windows環境構築</a>
                     <a href="handson-setup-mac.html" class="global-menu-item">Mac環境構築</a>
                     <a href="ai-coding-antigravity.html" class="global-menu-item">AI Coding</a>
-                    <a href="mob-ai.html" class="global-menu-item">Mob AI</a>
                     <a href="index.html" class="global-menu-item">TDD講座</a>
+                    <a href="mob-ai.html" class="global-menu-item">Mob AI</a>
                     <a href="cicd-index.html" class="global-menu-item">CI/CD講座</a>
                     <hr class="global-menu-divider" style="border: none; border-top: 1px solid #ddd; margin: 12px 0;">
                     <a href="csd-preview.html" class="global-menu-item" style="margin-top: 8px;">
