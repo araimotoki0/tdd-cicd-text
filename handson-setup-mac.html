@@ -966,6 +966,26 @@ php artisan migrate</pre>
                                 </p>
                             </div>
                         </div>
+                        <!-- トラブル5 -->
+                        <div class="bg-red-50 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                            <h3 class="text-xl font-bold text-red-800 mb-3">トラブル5: Laravel の権限エラー（Permission denied）</h3>
+                            <p class="text-gray-700 mb-3"><strong>症状:</strong> ブラウザで開くと <code class="bg-gray-200 px-1 rounded">The stream or file "/data/storage/logs/laravel.log" could not be opened ... Permission denied</code> や 403 / 500 エラーが出る</p>
+                            <p class="text-gray-700 mb-3"><strong>原因:</strong> コンテナの中の Laravel（ユーザー <code class="bg-gray-200 px-1 rounded">appuser</code>）が、<code class="bg-gray-200 px-1 rounded">storage</code> や <code class="bg-gray-200 px-1 rounded">bootstrap/cache</code> にファイルを書き込めない</p>
+                            <p class="text-gray-700 mb-4"><strong>解決策:</strong> リポジトリのフォルダ（docker-compose.yml がある場所）で、持ち主と書き込み権限を直します。</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+                                <pre>docker compose exec -u root app chown -R appuser:appuser /data
+docker compose exec -u root app chmod -R 775 /data/storage /data/bootstrap/cache</pre>
+                            </div>
+                            <p class="text-gray-700 mb-2">それでもファイルが読めないエラーや 403 が出るときは、ファイルに読み取り権限を付けます。</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+                                <pre>chmod -R 755 src</pre>
+                            </div>
+                            <div class="bg-yellow-100 p-4 rounded-lg">
+                                <p class="text-sm text-yellow-800">
+                                    <strong>⚠️ 注意:</strong> <code>chmod -R 777</code> は誰でも書き換えられる状態になるので使わないでください。
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
