@@ -254,7 +254,7 @@
                         <p class="font-bold text-gray-800 mb-3">✅ 自分の開発でやること</p>
                         <ol class="text-gray-700 space-y-2 list-decimal list-inside">
                             <li>何を作るか・何を満たせば OK かを、<strong>仕様</strong>として書く</li>
-                            <li>満たす条件を、<strong>テスト</strong>にしておく（AI に作らせる前に）</li>
+                            <li>受け入れ条件から、AI に<strong>先にテスト</strong>を書かせる（人間は中身を確認するだけ）</li>
                             <li>AI に守ってほしいことを、<strong>AGENTS.md</strong> に書く</li>
                             <li>AI が作ったら、<strong>観点ごとに別々に</strong>レビューさせる</li>
                             <li>指摘のうち、どれを直すかは<strong>人間が決める</strong></li>
@@ -269,15 +269,12 @@
                             <h3 class="text-2xl font-bold text-gray-800">基準を決める</h3>
                             <span class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">人間がやる</span>
                         </div>
-<p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たせば OK か」を先に渡します。</p>
+<p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たせば OK か」を先に渡します。<strong>人間が書くのは、この受け入れ条件の数行だけ</strong>。テストは書きません（次のステップで AI に書かせます）。</p>
 <div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">docs/spec.md（仕様の一部）</p><pre class="text-white whitespace-pre-wrap break-words">## 受け入れ条件
 - カードの本文は、前後の空白を取り除いたうえで 1〜140 文字
 - 本文が空、または 140 文字を超える場合は、エラーを表示して追加しない
 - 種類は keep / problem / try のどれか
 - 入力された本文は、そのまま文字として表示される（HTML として解釈されない）</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>AI は、書かれていないことを推測で埋めます。何が「正しい」かを言葉で決めておくと、AI もレビュー役も、同じ基準で判断できます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「HTML として解釈されない」のように、<strong>安全のための条件</strong>も書いておきます。書いていないと、確かめる人がいません。</span></li></ul></div></div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（7件のうち1件）</p><pre class="text-white whitespace-pre-wrap break-words">test(&#x27;本文の前後の空白は取り除く&#x27;, () =&gt; {
-  assert.equal(createCard(&#x27;  レビューが遅い  &#x27;, &#x27;problem&#x27;).text, &#x27;レビューが遅い&#x27;);
-});</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>仕様は人が読むもの、テストは機械が毎回確かめるものです。AI が書いたコードが基準を満たしているかを、すぐに、何度でも確かめられます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>テストは AI に作らせる<strong>前に</strong>人間が決めます。実装を見ながら AI にテストを書かせると、バグまで「正解」になってしまうからです。</span></li></ul></div></div>
 <div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md（AI への作業ルールの一部）</p><pre class="text-white whitespace-pre-wrap break-words">## 守ること
 - 仕様は docs/spec.md にある。作業の前に必ず読む
 - テストを書き換えて通すことはしない。
@@ -292,8 +289,9 @@
                             <h3 class="text-2xl font-bold text-gray-800">生成する</h3>
                             <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">AIがやる</span>
                         </div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">仕様（docs/spec.md）どおりに KPT ボードを作ってください。
-tests/ のテストがすべて通るようにして、最後に npm test を実行してください。</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>指示が短いのは、仕様・ルール・基準がすでにファイルにあるからです。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>AI はコードを作り、テストは7件すべて通りました。ブラウザでも動きます。……では、このまま使っていいでしょうか？</span></li></ul></div></div>
+<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">docs/spec.md の受け入れ条件から、先にテストを tests/ に書いてください。
+テストが失敗することを npm test で確認してから実装して、
+最後に npm test で全部通してください。</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>テストを書くのは AI の仕事です。人間が手で書くと遅くなります。人間がやるのは、AI が書いたテストに<strong>受け入れ条件が全部入っているか</strong>を見ることだけ（30秒）。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span><strong>実装より先に</strong>テストを書かせるのがポイントです。実装を見ながら書かせると、バグまで「正解」としてテストにしてしまうからです（TDD の Red → Green）。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>試したときは、約1分で AI がテストを17件書き、全部通しました。「空白だけの本文はエラー」のような、見落としやすいケースも入っていました。……では、このまま使っていいでしょうか？</span></li></ul></div></div>
 
                     </div>
                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
