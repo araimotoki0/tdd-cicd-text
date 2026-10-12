@@ -239,7 +239,7 @@
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold">🤖 Mob AI</h1>
                 <div class="hidden md:flex space-x-4 text-sm items-center">
-                    <a href="ai-coding.html" class="hover:text-blue-200">AI Coding</a>
+                    <a href="ai-coding-antigravity.html" class="hover:text-blue-200">AI Coding</a>
                     <span class="text-blue-200">|</span>
                     <a href="mob-ai.html" class="hover:text-blue-200">Mob AI</a>
                     <span class="text-blue-200">|</span>
@@ -257,7 +257,7 @@
     <!-- モバイルメニュー -->
     <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
         <div class="container mx-auto px-6 py-4 space-y-3">
-            <a href="ai-coding.html" class="block hover:text-blue-200">AI Coding</a>
+            <a href="ai-coding-antigravity.html" class="block hover:text-blue-200">AI Coding</a>
             <a href="mob-ai.html" class="block hover:text-blue-200">Mob AI</a>
             <a href="index.html" class="block hover:text-blue-200">TDD講座</a>
         </div>
@@ -596,20 +596,7 @@
 
                             <div class="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-gray-400">
                                 <p class="font-bold text-gray-800 mb-4">🚀 準備:</p>
-                                <div class="space-y-3 text-gray-700">
-                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
-                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">1</span>
-                                        <p>チームで1人がセッションを作成（ensemble）</p>
-                                    </div>
-                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
-                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">2</span>
-                                        <p>IDをチーム全員に共有</p>
-                                    </div>
-                                    <div class="bg-white p-4 rounded flex items-start hover:bg-blue-50 transition-colors">
-                                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold mr-3">3</span>
-                                        <p>全員が自分のPCでそのIDに入っておく</p>
-                                    </div>
-                                </div>
+                                <p class="text-gray-700">手順1・2のとおり、全員が自分のPCで同じセッション（ensemble）に入っておきます。</p>
                             </div>
 
                             <div class="bg-indigo-50 p-6 rounded-lg mb-6 border-l-4 border-indigo-500">
@@ -633,7 +620,7 @@
                                         <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">🤖</span>
                                         <div>
                                             <p class="font-bold text-purple-800">モブAI</p>
-                                            <p class="text-sm">AIツールで先に調べて、または講師の模範解答を見て、ナビゲーターが詰まったらヒントを出す</p>
+                                            <p class="text-sm">AIツール（講座では <a href="ai-coding-antigravity.html" class="text-purple-700 underline">Antigravity CLI（<code>agy</code>）</a>）で先に調べて、または講師の模範解答を見て、ナビゲーターが詰まったらヒントを出す</p>
                                             <p class="text-xs text-purple-600 mt-1">例：「余りを求める演算子を調べてみて」「PHPの条件分岐の書き方は？」</p>
                                         </div>
                                     </div>
@@ -1541,5 +1528,6 @@ class HikerTest extends TestCase
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
 </body>
 </html>

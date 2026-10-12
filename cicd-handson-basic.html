@@ -39,6 +39,7 @@
             <a href="cicd-handson-basic.html" class="block hover:text-blue-200">基礎：自動テスト</a>
             <a href="cicd-handson-quality.html" class="block hover:text-blue-200">応用：品質チェック</a>
             <a href="cicd-handson-deploy.html" class="block hover:text-blue-200">実践：自動デプロイ</a>
+            <a href="index.html" class="block hover:text-blue-200">TDD</a>
         </div>
     </div>
 
@@ -91,54 +92,40 @@
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
                     <div class="text-center mb-12">
-                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ1：GitHubリポジトリ作成</h2>
+                        <h2 class="text-4xl font-bold text-gray-800 mb-4">ステップ1：リポジトリの準備</h2>
                         <p class="text-xl text-gray-600">コードをGitHubにアップロードする</p>
                     </div>
 
                     <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📁 新しいリポジトリを作成</h3>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">📁 自分のリポジトリを確認</h3>
 
                         <ol class="space-y-6">
                             <li class="border-l-4 border-green-500 pl-6">
-                                <h4 class="font-bold text-gray-800 mb-2">1. GitHubで新規リポジトリ作成</h4>
+                                <h4 class="font-bold text-gray-800 mb-2">1. リポジトリは環境構築で作成済み</h4>
                                 <p class="text-gray-700 mb-3">
-                                    GitHub (<a href="https://github.com" target="_blank" class="text-blue-600 hover:underline">https://github.com</a>) にアクセスし、右上の「+」→「New repository」をクリック
-                                </p>
-                                <div class="bg-gray-100 p-4 rounded">
-                                    <p class="text-sm text-gray-700"><strong>リポジトリ名:</strong> laravel-tdd-cicd（または任意の名前）</p>
-                                    <p class="text-sm text-gray-700"><strong>公開設定:</strong> Public（無料プランでActions使用可能）</p>
-                                    <p class="text-sm text-gray-700"><strong>README:</strong> チェックなし（既存プロジェクトなので）</p>
-                                </div>
-                            </li>
-
-                            <li class="border-l-4 border-blue-500 pl-6">
-                                <h4 class="font-bold text-gray-800 mb-2">2. ローカルリポジトリと連携</h4>
-                                <p class="text-gray-700 mb-3">
-                                    Laravelプロジェクトのディレクトリで以下のコマンドを実行:
+                                    環境構築で、テンプレートの「Use this template」から<strong>自分のリポジトリ（Public）</strong>を作り、<code class="bg-gray-100 px-1 rounded">git clone</code> しています。
+                                    新しくリポジトリを作る必要はありません。
                                 </p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
-<pre class="text-white"><span class="text-gray-500"># まだGit管理していない場合</span>
-git init
+<pre class="text-white"><span class="text-gray-500"># クローンしたディレクトリで実行し、自分のリポジトリのURLが出ればOK</span>
+git remote -v
 
-<span class="text-gray-500"># リモートリポジトリを追加（URLは自分のものに置き換える）</span>
-git remote add origin https://github.com/YOUR_USERNAME/laravel-tdd-cicd.git
-
-<span class="text-gray-500"># 現在のブランチ名をmainに変更</span>
-git branch -M main</pre>
+<span class="text-gray-500"># 今いるブランチを確認（テンプレートから作った場合は master）</span>
+git branch</pre>
                                 </div>
                             </li>
 
                             <li class="border-l-4 border-yellow-500 pl-6">
-                                <h4 class="font-bold text-gray-800 mb-2">3. 最初のコミット&プッシュ</h4>
+                                <h4 class="font-bold text-gray-800 mb-2">2. TDDで作ったコードをコミット&プッシュ</h4>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
 <pre class="text-white"><span class="text-gray-500"># 全てのファイルをステージング</span>
 git add .
 
 <span class="text-gray-500"># コミット</span>
-git commit -m "Initial commit with TDD Todo app"
+git commit -m "Add TDD Todo app"
 
 <span class="text-gray-500"># GitHubにプッシュ</span>
-git push -u origin main</pre>
+git push</pre>
                                 </div>
                             </li>
                         </ol>
@@ -175,7 +162,7 @@ git push -u origin main</pre>
 ├── .github/        ← ここを作る
 │   └── workflows/
 │       └── test.yml  ← これを作る
-├── src/            ← Laravelのソースコード（プロジェクトによる）
+├── src/            ← Laravelのソースコード
 │   ├── app/
 │   ├── tests/
 │   └── ...
@@ -212,7 +199,7 @@ git push -u origin main</pre>
     <span class="text-yellow-300">steps:</span>
     <span class="text-gray-500"># 1. コードをチェックアウト</span>
     - <span class="text-yellow-300">name:</span> <span class="text-green-300">Checkout code</span>
-      <span class="text-yellow-300">uses:</span> actions/checkout@v3
+      <span class="text-yellow-300">uses:</span> actions/checkout@v7
 
     <span class="text-gray-500"># 2. PHPをセットアップ</span>
     - <span class="text-yellow-300">name:</span> <span class="text-green-300">Setup PHP</span>
@@ -303,7 +290,7 @@ git push -u origin main</pre>
 
       <span class="text-gray-500"># 4階層目：個々のステップ</span>
       - <span class="text-yellow-300">name:</span> Checkout code
-        <span class="text-yellow-300">uses:</span> actions/checkout@v3
+        <span class="text-yellow-300">uses:</span> actions/checkout@v7
 
       - <span class="text-yellow-300">name:</span> Run tests
         <span class="text-yellow-300">run:</span> php artisan test</pre>
@@ -415,17 +402,18 @@ branches:
 
                             <!-- バージョン指定 -->
                             <div>
-                                <p class="font-bold text-gray-800 mb-3 border-b pb-2">バージョン指定（@v3 など）</p>
+                                <p class="font-bold text-gray-800 mb-3 border-b pb-2">バージョン指定（@v7 など）</p>
                                 <div class="text-gray-700 text-sm">
                                     <p class="mb-2">
-                                        <code class="bg-white px-2 py-1 rounded">uses: actions/checkout@v3</code> の <code class="bg-white px-1 rounded">@v3</code> はバージョン指定です。
+                                        <code class="bg-white px-2 py-1 rounded">uses: actions/checkout@v7</code> の <code class="bg-white px-1 rounded">@v7</code> はバージョン指定です。
                                     </p>
                                     <div class="bg-white p-3 rounded">
                                         <ul class="text-xs space-y-1">
-                                            <li><code class="bg-gray-100 px-1 rounded">@v3</code> - メジャーバージョン3の最新（推奨）</li>
-                                            <li><code class="bg-gray-100 px-1 rounded">@v3.1.0</code> - 特定のバージョンを固定</li>
+                                            <li><code class="bg-gray-100 px-1 rounded">@v7</code> - メジャーバージョン7の最新（推奨）</li>
+                                            <li><code class="bg-gray-100 px-1 rounded">@v7.0.1</code> - 特定のバージョンを固定</li>
                                             <li><code class="bg-gray-100 px-1 rounded">@main</code> - ブランチを指定（非推奨）</li>
                                         </ul>
+                                        <p class="text-xs text-gray-600 mt-2">※ ネットの古い記事には <code class="bg-gray-100 px-1 rounded">@v3</code> などの古い版が載っています。使う前にアクションのページで最新のメジャーバージョンを確認しましょう。</p>
                                     </div>
                                 </div>
                             </div>
@@ -435,7 +423,7 @@ branches:
                             <p class="font-bold text-green-800 mb-4">📖 使用しているアクションの解説:</p>
                             <div class="space-y-3 text-gray-700 text-sm">
                                 <div>
-                                    <p class="font-bold"><code class="bg-white px-2 py-1 rounded">actions/checkout@v3</code></p>
+                                    <p class="font-bold"><code class="bg-white px-2 py-1 rounded">actions/checkout@v7</code></p>
                                     <p>GitHub公式アクション。リポジトリのコードをダウンロードします。ほぼ全てのワークフローで最初に使います。</p>
                                 </div>
                                 <div>
@@ -528,7 +516,7 @@ branches:
                         <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
                             <p class="font-bold text-blue-800 mb-3">💡 実務でのおすすめ：AIツールで作成</p>
                             <p class="text-gray-700 text-sm mb-3">
-                                実際の開発現場では、<strong>プロジェクトディレクトリでCLIのAIツール</strong>（Claude Code、GitHub Copilot CLIなど）を開いて、やりたいことをプロンプトで伝えて作成させる方が早く、ほとんど間違えません。
+                                実際の開発現場では、<strong>プロジェクトディレクトリでCLIのAIツール</strong>（この講座で使う <a href="ai-coding-antigravity.html" class="text-blue-600 hover:underline">Antigravity CLI（<code>agy</code>）</a> など）を開いて、やりたいことをプロンプトで伝えて作成させる方が早く、ほとんど間違えません。
                             </p>
                             <div class="bg-white p-3 rounded text-sm">
                                 <p class="font-bold text-gray-800 mb-2">プロンプト例：</p>
@@ -542,8 +530,8 @@ branches:
                         <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
                             <p class="text-sm text-gray-800">
                                 <strong>💡 プロジェクト構造について:</strong><br>
-                                上記の例は、Laravelプロジェクトが<code class="bg-gray-100 px-1 rounded">src</code>ディレクトリ内にある構造を想定しています。
-                                もしLaravelプロジェクトがリポジトリのルートに直接ある場合（<code class="bg-gray-100 px-1 rounded">composer.json</code>がルートにある場合）は、
+                                上記の例は、テンプレートと同じくLaravelが<code class="bg-gray-100 px-1 rounded">src</code>ディレクトリ内にある構造です。
+                                自分で作った別のプロジェクトでLaravelがリポジトリのルートに直接ある場合（<code class="bg-gray-100 px-1 rounded">composer.json</code>がルートにある場合）は、
                                 <code class="bg-gray-100 px-1 rounded">working-directory: src</code>の行を削除してください。
                             </p>
                         </div>
@@ -559,7 +547,7 @@ branches:
 <pre class="text-red-400">FAIL  Tests\Feature\ExampleTest
 ⨯ the application returns a successful response
 
-PDOException: SQLSTATE[HY000]: General error: 1 no such table: todos</pre>
+Illuminate\Database\QueryException: SQLSTATE[HY000]: General error: 1 no such table: todos</pre>
                             </div>
                         </div>
 
@@ -635,15 +623,17 @@ Todoモデル
                     <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">📝 phpunit.xml の設定確認</h3>
                         <p class="text-gray-700 mb-4">
-                            CI環境ではMySQLが使えないため、<code class="bg-gray-100 px-2 py-1 rounded">phpunit.xml</code>でSQLiteを使うよう設定します。<br>
-                            以下の設定が有効になっていることを確認してください。
+                            CIでMySQLを用意しなくて済むよう、テストはSQLite（メモリ上）で動かします。<br>
+                            テンプレートの<code class="bg-gray-100 px-2 py-1 rounded">src/phpunit.xml</code>には最初から以下が設定されています。消していないか確認してください。
                         </p>
 
                         <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
 <pre class="text-white"><span class="text-gray-500">&lt;!-- phpunit.xml --&gt;</span>
 <span class="text-purple-400">&lt;php&gt;</span>
-    <span class="text-blue-300">&lt;env</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"DB_CONNECTION"</span> <span class="text-yellow-300">value=</span><span class="text-green-300">"sqlite"</span> <span class="text-yellow-300">force=</span><span class="text-green-300">"true"</span><span class="text-blue-300">/&gt;</span>
-    <span class="text-blue-300">&lt;env</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"DB_DATABASE"</span> <span class="text-yellow-300">value=</span><span class="text-green-300">":memory:"</span> <span class="text-yellow-300">force=</span><span class="text-green-300">"true"</span><span class="text-blue-300">/&gt;</span>
+    <span class="text-gray-500">...</span>
+    <span class="text-blue-300">&lt;env</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"DB_CONNECTION"</span> <span class="text-yellow-300">value=</span><span class="text-green-300">"sqlite"</span><span class="text-blue-300">/&gt;</span>
+    <span class="text-blue-300">&lt;env</span> <span class="text-yellow-300">name=</span><span class="text-green-300">"DB_DATABASE"</span> <span class="text-yellow-300">value=</span><span class="text-green-300">":memory:"</span><span class="text-blue-300">/&gt;</span>
+    <span class="text-gray-500">...</span>
 <span class="text-purple-400">&lt;/php&gt;</span></pre>
                         </div>
 
@@ -652,7 +642,7 @@ Todoモデル
                             <ul class="space-y-2 text-gray-700 text-sm">
                                 <li><strong>DB_CONNECTION="sqlite"</strong> - SQLiteを使用（CI環境で利用可能）</li>
                                 <li><strong>DB_DATABASE=":memory:"</strong> - メモリ上にDBを作成（高速・テスト後に自動削除）</li>
-                                <li><strong>force="true"</strong> - .envの設定を上書きしてこの値を使用</li>
+                                <li>ここで指定した値は <code class="bg-white px-1 rounded">.env</code>（MySQL設定）より優先されます</li>
                             </ul>
                         </div>
                     </div>
@@ -757,13 +747,14 @@ git push</pre>
                         </div>
 
                         <p class="text-gray-700 mb-4">
-                            <code class="bg-gray-100 px-2 py-1 rounded">README.md</code> の先頭に以下を追加:
+                            テンプレートの <code class="bg-gray-100 px-2 py-1 rounded">README.md</code> の先頭には、すでにバッジの行が入っています。
+                            その行を以下の形に書き換えます（無い場合は先頭に追加）:
                         </p>
 
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
 <pre class="text-white"><span class="text-gray-500"># Laravel TDD CICD</span>
 
-![Run Tests](https://github.com/YOUR_USERNAME/YOUR_REPO/workflows/Run%20Tests/badge.svg)
+![Run Tests](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/test.yml/badge.svg)
 
 <span class="text-gray-500">## 概要</span>
 TDDで開発したTodoアプリです。
@@ -772,7 +763,8 @@ CI/CDでテストを自動化しています。</pre>
 
                         <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
                             <p class="text-sm text-gray-700">
-                                <strong>💡 ポイント:</strong> <code>YOUR_USERNAME</code>と<code>YOUR_REPO</code>を自分のものに置き換えてください。
+                                <strong>💡 ポイント:</strong> <code>YOUR_USERNAME</code>と<code>YOUR_REPO</code>を自分のものに置き換えてください。<code>test.yml</code> はワークフローのファイル名です。<br>
+                                Actionsタブでワークフローを開き、右上の「…」→「Create status badge」からコピーすることもできます。
                             </p>
                         </div>
                     </div>
@@ -852,16 +844,16 @@ CI/CDでテストを自動化しています。</pre>
                                 <div class="bg-gray-50 p-4 rounded">
                                     <ol class="space-y-2 text-gray-700 text-sm list-decimal list-inside">
                                         <li>GitHubのリポジトリページで「Settings」タブをクリック</li>
-                                        <li>左メニューから「Code and automation」→「Rules」→「Rulesets」を選択</li>
-                                        <li>「Add branch ruleset」ボタンをクリック（緑色のボタン）</li>
+                                        <li>左メニューの「Code and automation」にある「Rules」→「Rulesets」を選択</li>
+                                        <li>「New ruleset」→「New branch ruleset」をクリック</li>
                                         <li>「Ruleset Name」に任意の名前（例：<code class="bg-gray-100 px-2 py-1 rounded">Protect production branches</code>）を入力</li>
                                         <li>「Enforcement status」を<strong>Active</strong>に設定</li>
-                                        <li>「Target branches」で「Add target」をクリックし、「Include by pattern」を選択</li>
-                                        <li>ブランチ名に<code class="bg-gray-100 px-2 py-1 rounded">main</code>と入力して追加
+                                        <li>「Target branches」で「Add target」をクリックし、「Include default branch」を選択
                                             <div class="bg-blue-50 p-3 rounded mt-2 border-l-2 border-blue-400">
                                                 <p class="text-xs text-gray-800">
-                                                    <strong>💡 ヒント:</strong> プロジェクトによって本番ブランチ名（<code class="bg-gray-100 px-1 rounded">main</code>、<code class="bg-gray-100 px-1 rounded">master</code>、<code class="bg-gray-100 px-1 rounded">production</code>など）が異なります。<br>
-                                                    自分のプロジェクトのブランチ名を確認してください。
+                                                    <strong>💡 ヒント:</strong> デフォルトブランチ（テンプレートから作った場合は <code class="bg-gray-100 px-1 rounded">master</code>）が対象になります。
+                                                    プロジェクトによって本番ブランチ名（<code class="bg-gray-100 px-1 rounded">main</code>、<code class="bg-gray-100 px-1 rounded">master</code>、<code class="bg-gray-100 px-1 rounded">production</code>など）は異なります。
+                                                    以下の説明の「main」は、自分の本番ブランチ名に読み替えてください。
                                                 </p>
                                             </div>
                                         </li>
@@ -1125,6 +1117,9 @@ git push origin feature/new-feature
                                     <p class="text-sm text-gray-700">
                                         pushした後、GitHub ActionsのUIで<strong>2つのジョブ</strong>（PHP 8.3 と 8.4）が並列で実行されることを確認してください。
                                     </p>
+                                    <p class="text-sm text-gray-600 mt-2">
+                                        💡 チェック名が <code class="bg-white px-1 rounded">test (8.3)</code>、<code class="bg-white px-1 rounded">test (8.4)</code> に変わるため、ブランチ保護ルールの「Add checks」も更新が必要です。
+                                    </p>
                                 </div>
 
                                 <details class="bg-gray-50 rounded-lg">
@@ -1155,15 +1150,16 @@ git push origin feature/new-feature
                                 </p>
 
                                 <div class="bg-red-50 p-4 rounded-lg mb-4">
-                                    <p class="font-bold text-red-800 mb-2">📍 変更箇所：<code class="bg-gray-100 px-1 rounded">Install dependencies</code> の直前に追加</p>
+                                    <p class="font-bold text-red-800 mb-2">📍 変更箇所：<code class="bg-gray-100 px-1 rounded">Setup PHP</code> と <code class="bg-gray-100 px-1 rounded">Install dependencies</code> の間に追加</p>
                                     <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-<pre class="text-white">    - name: Set directory permissions
-      working-directory: src
-      run: chmod -R 777 storage bootstrap/cache
+<pre class="text-white">    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        ...
 
 <span class="text-yellow-300 bg-yellow-900 px-1">    # ↓↓↓ ここから追加 ↓↓↓
     - name: Cache Composer dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v6
       with:
         path: src/vendor
         key: ${{ runner.os }}-composer-${{ hashFiles('src/composer.lock') }}
@@ -1181,7 +1177,7 @@ git push origin feature/new-feature
                                     <p class="font-bold text-green-800 mb-2">✅ 確認方法</p>
                                     <div class="text-sm text-gray-700 space-y-3">
                                         <p>
-                                            1回目の実行ログで「Cache not found」、2回目以降で「Cache restored successfully」と表示されれば成功です。
+                                            1回目の実行ログで「Cache not found」、2回目以降で「Cache restored from key」と表示されれば成功です。
                                         </p>
                                         <div class="bg-white p-3 rounded border">
                                             <p class="font-bold text-gray-800 mb-2">節約効果の確認：</p>
@@ -1209,15 +1205,11 @@ git push origin feature/new-feature
                                     </summary>
                                     <div class="p-4 pt-0 text-sm text-gray-700">
                                         <p class="mb-2"><strong>よく使うケース：</strong></p>
-                                        <ul class="list-disc list-inside space-y-1 mb-3">
+                                        <ul class="list-disc list-inside space-y-1">
                                             <li>依存関係が多いプロジェクト（composer installに時間がかかる）</li>
                                             <li>CIの実行時間を短縮したい場合</li>
                                             <li>GitHub Actionsの無料枠を節約したい場合</li>
                                         </ul>
-                                        <p class="mb-2"><strong>補足：</strong></p>
-                                        <p class="text-gray-600">
-                                            最近の <code class="bg-gray-200 px-1 rounded">shivammathur/setup-php</code> にはキャッシュ機能が内蔵されているため、手動設定が不要な場合もあります。
-                                        </p>
                                     </div>
                                 </details>
                             </div>
@@ -1231,7 +1223,7 @@ git push origin feature/new-feature
                         <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border-l-4 border-blue-500">
                             <h4 class="text-xl font-bold text-blue-800 mb-3">🤖 演習4：AIでワークフローをレビューする</h4>
                             <p class="text-gray-700 mb-4">
-                                プロジェクトのディレクトリでCLIのAIツール（Claude Codeなど）を開いて、今のワークフローに課題がないか確認してもらいましょう。
+                                プロジェクトのディレクトリでCLIのAIツール（Antigravity CLI <code class="bg-gray-100 px-1 rounded">agy</code> など）を開いて、今のワークフローに課題がないか確認してもらいましょう。
                             </p>
                             <div class="bg-white p-4 rounded-lg mb-4">
                                 <p class="font-bold text-gray-800 mb-2">プロンプト例：</p>
@@ -1354,7 +1346,7 @@ git push origin feature/new-feature
                             <div class="bg-green-50 p-6 rounded-lg">
                                 <h4 class="text-xl font-bold text-green-600 mb-4">✓ 実現できたこと</h4>
                                 <ul class="space-y-2 text-gray-700">
-                                    <li>• GitHubリポジトリの作成</li>
+                                    <li>• GitHubへのプッシュ</li>
                                     <li>• GitHub Actionsのワークフロー作成</li>
                                     <li>• プッシュ時の自動テスト実行</li>
                                     <li>• テスト結果の確認</li>
@@ -1406,10 +1398,10 @@ git push origin feature/new-feature
         </script>
     </div>
 
-    <script src="script.js"></script>
     <script src="code-copy.js"></script>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
 </body>
 </html>

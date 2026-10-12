@@ -22,9 +22,25 @@
                     <span class="text-blue-200">|</span>
                     <a href="index.html" class="hover:text-blue-200">TDD</a>
                 </div>
+                <button id="menuBtn" class="md:hidden" aria-label="メニュー">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="cicd-index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="cicd-handson-basic.html" class="block hover:text-blue-200">基礎：自動テスト</a>
+            <a href="cicd-handson-quality.html" class="block hover:text-blue-200">応用：品質チェック</a>
+            <a href="cicd-handson-deploy.html" class="block hover:text-blue-200">実践：自動デプロイ</a>
+            <a href="index.html" class="block hover:text-blue-200">TDD</a>
+        </div>
+    </div>
 
     <!-- メインコンテンツ -->
     <div class="pt-20">
@@ -69,6 +85,7 @@
                             <p class="text-sm">コーディングスタイルを自動修正・チェックするツール。</p>
                         </div>
                     </div>
+                    <p class="text-sm text-gray-600 mb-6">※ Laravelには PHP CS Fixer をベースにした <strong>Laravel Pint</strong> も最初から入っています。この講座では仕組みを学ぶため PHP CS Fixer を使います。</p>
                 </div>
             </section>
 
@@ -101,15 +118,7 @@ composer require --dev larastan/larastan</code></pre>
                     </div>
 
                     <h3 class="text-xl font-bold mb-3 mt-6">2. 設定ファイルの作成</h3>
-                    <p class="mb-4">Laravelプロジェクトのルート（<code>composer.json</code>がある場所）に <code>phpstan.neon</code> を作成します。</p>
-
-                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-4">
-                        <p class="text-sm text-gray-800">
-                            <strong>⚠️ 注意:</strong> プロジェクト構造によって配置場所が異なります。<br>
-                            • Laravelプロジェクトがリポジトリルートにある場合 → ルートに作成<br>
-                            • Laravelプロジェクトが<code>src</code>ディレクトリ内にある場合 → <code>src/phpstan.neon</code>として作成
-                        </p>
-                    </div>
+                    <p class="mb-4">Laravelプロジェクトのルート（<code>composer.json</code>がある場所）に <code>phpstan.neon</code> を作成します。テンプレートの構成では <code>src/phpstan.neon</code> です。</p>
 
                     <div class="code-block-wrapper relative mb-6">
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>includes:
@@ -119,37 +128,19 @@ parameters:
     level: 1
     paths:
         - app
-        - tests
-    excludePaths:
-        - app/Console/Kernel.php (?)</code></pre>
+        - tests</code></pre>
                     </div>
 
                     <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6">
                         <h4 class="font-bold mb-2">💡 設定の解説</h4>
                         <ul class="list-disc ml-6 text-sm space-y-1">
                             <li><strong>includes:</strong> Larastanの拡張機能を読み込み（Laravel専用のルール）</li>
-                            <li><strong>level: 1:</strong> 入門向けの緩やかなチェックレベル（レベル0-9まであり、数字が大きいほど厳格。慣れてきたら徐々に上げていきましょう）</li>
-                            <li><strong>excludePaths:</strong> <code>(?)</code>を付けることで、ファイルが存在しない場合もエラーにならない（Laravel 11以降では<code>Kernel.php</code>が廃止されているため）</li>
+                            <li><strong>level: 1:</strong> 入門向けの緩やかなチェックレベル（レベル0〜10まであり、数字が大きいほど厳格。慣れてきたら徐々に上げていきましょう）</li>
+                            <li><strong>paths:</strong> チェック対象のディレクトリ</li>
                         </ul>
                     </div>
 
-                    <h3 class="text-xl font-bold mb-3 mt-6">3. Laravel IDE Helperのインストールと生成</h3>
-                    <p class="mb-4">LarastanがEloquentモデルを正しく認識するために、IDE Helperパッケージをインストールし、ヘルパーファイルを生成します。</p>
-
-                    <div class="code-block-wrapper relative mb-6">
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Docker環境の場合はコンテナ内で実行
-
-# IDE Helperパッケージをインストール
-composer require --dev barryvdh/laravel-ide-helper
-
-# ヘルパーファイルを生成
-php artisan ide-helper:generate
-php artisan ide-helper:models --nowrite</code></pre>
-                    </div>
-
-                    <p class="text-sm text-gray-600 mb-6">これにより、<code>_ide_helper.php</code>と<code>_ide_helper_models.php</code>が生成されます。</p>
-
-                    <h3 class="text-xl font-bold mb-3 mt-6">4. ローカルで実行</h3>
+                    <h3 class="text-xl font-bold mb-3 mt-6">3. ローカルで実行</h3>
 
                     <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-4">
                         <p class="text-sm text-gray-800">
@@ -158,12 +149,11 @@ php artisan ide-helper:models --nowrite</code></pre>
                     </div>
 
                     <div class="code-block-wrapper relative mb-6">
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Laravelプロジェクトのルートディレクトリで実行
-# (srcディレクトリ構成の場合は cd src してから実行)
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># コンテナ内（/data = src/）で実行
 ./vendor/bin/phpstan analyse --memory-limit=512M</code></pre>
                     </div>
 
-                    <p class="text-sm text-gray-600">エラーがなければ「No errors」と表示されます。型エラーなどが検出された場合は、修正してから再実行します。</p>
+                    <p class="text-sm text-gray-600">エラーがなければ「[OK] No errors」と表示されます。型エラーなどが検出された場合は、修正してから再実行します。</p>
                 </div>
             </section>
 
@@ -189,13 +179,7 @@ composer require --dev friendsofphp/php-cs-fixer</code></pre>
                     </div>
 
                     <h3 class="text-xl font-bold mb-3 mt-6">2. 設定ファイルの作成</h3>
-                    <p class="mb-4">Laravelプロジェクトのルート（<code>composer.json</code>がある場所）に <code>.php-cs-fixer.php</code> を作成します。</p>
-
-                    <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-4">
-                        <p class="text-sm text-gray-800">
-                            <strong>⚠️ 注意:</strong> <code>src</code>ディレクトリ構成の場合は、<code>src/.php-cs-fixer.php</code>として作成してください。
-                        </p>
-                    </div>
+                    <p class="mb-4">Laravelプロジェクトのルート（<code>composer.json</code>がある場所）に <code>.php-cs-fixer.php</code> を作成します。テンプレートの構成では <code>src/.php-cs-fixer.php</code> です。</p>
 
                     <div class="code-block-wrapper relative mb-6">
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>&lt;?php
@@ -240,8 +224,7 @@ return (new PhpCsFixer\Config())
 
                     <h4 class="font-bold mb-2">チェックのみ（修正しない）</h4>
                     <div class="code-block-wrapper relative mb-4">
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># Laravelプロジェクトのルートで実行
-# (srcディレクトリ構成の場合は cd src してから実行)
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># コンテナ内（/data = src/）で実行
 ./vendor/bin/php-cs-fixer fix --dry-run --diff</code></pre>
                     </div>
 
@@ -302,33 +285,33 @@ jobs:
     steps:
     # 1. コードをチェックアウト
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
 
     # 2. PHPをセットアップ
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.4'
-        extensions: mbstring, xml, ctype, json, bcmath
+        extensions: mbstring, pdo, pdo_sqlite
         coverage: none
 
-    # 3. .envファイルをコピー
-    - name: Copy .env
-      working-directory: src
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-
-    # 4. Composerの依存関係をインストール
+    # 3. Composerの依存関係をインストール
     - name: Install dependencies
       working-directory: src
-      run: composer install --prefer-dist --no-progress --no-suggest
+      run: composer install --prefer-dist --no-progress
+
+    # 4. .envファイルをコピー
+    - name: Copy .env
+      working-directory: src
+      run: cp .env.example .env
 
     # 5. アプリケーションキーを生成
-    - name: Generate key
+    - name: Generate app key
       working-directory: src
       run: php artisan key:generate
 
     # 6. ディレクトリ権限を設定
-    - name: Directory Permissions
+    - name: Set directory permissions
       working-directory: src
       run: chmod -R 777 storage bootstrap/cache
 
@@ -389,12 +372,10 @@ jobs:
                     </div>
 
                     <h3 class="text-xl font-bold mb-4 mt-8">2. .gitignoreの設定</h3>
-                    <p class="mb-4">IDE Helperやキャッシュファイルはローカルで生成するものなので、<code>src/.gitignore</code>に追加して除外します。</p>
+                    <p class="mb-4">PHP CS Fixerのキャッシュファイルはローカルで生成されるものなので、<code>src/.gitignore</code>に追加して除外します。</p>
 
                     <div class="code-block-wrapper relative mb-6">
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># src/.gitignore に以下を追加
-_ide_helper.php
-_ide_helper_models.php
 .php-cs-fixer.cache</code></pre>
                     </div>
 
@@ -402,7 +383,7 @@ _ide_helper_models.php
                     <div class="code-block-wrapper relative mb-6">
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>git add .
 git commit -m "Add PHPStan and PHP CS Fixer to CI/CD"
-git push origin main</code></pre>
+git push</code></pre>
                     </div>
 
                     <h3 class="text-xl font-bold mb-4 mt-8">4. GitHub Actionsで確認</h3>
@@ -414,6 +395,7 @@ git push origin main</code></pre>
                                 <li>Checkout code</li>
                                 <li>Setup PHP</li>
                                 <li>Install dependencies</li>
+                                <li>Copy .env / Generate app key / Set directory permissions</li>
                                 <li><strong>Run PHPStan</strong> ← 追加された</li>
                                 <li><strong>Run PHP CS Fixer</strong> ← 追加された</li>
                                 <li>Run tests</li>
@@ -515,7 +497,7 @@ git push origin main</code></pre>
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
                         <h3 class="text-xl font-bold text-blue-800 mb-3">議論1：PHPStanのチェックレベルをどうする？</h3>
                         <p class="text-gray-700 mb-4">
-                            PHPStanにはレベル0〜9があり、数字が大きいほど厳格にチェックします。
+                            PHPStanにはレベル0〜10があり、数字が大きいほど厳格にチェックします。
                             厳しすぎると開発速度が落ち、緩すぎるとバグを見逃します。
                         </p>
                         <div class="bg-white rounded p-4">
@@ -547,7 +529,7 @@ git push origin main</code></pre>
 
                     <!-- 議論3: DoDへの組み込み -->
                     <div class="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-bold text-purple-800 mb-3">議論3：品質チェックをDone of Definitionに入れる？</h3>
+                        <h3 class="text-xl font-bold text-purple-800 mb-3">議論3：品質チェックを完成の定義（DoD）に入れる？</h3>
                         <p class="text-gray-700 mb-4">
                             スクラムの「完成の定義（DoD）」に品質チェックを含めると、品質が保証されます。
                             例：「PHPStanエラー0、CS Fixer警告0でないとDoneにならない」
@@ -566,7 +548,7 @@ git push origin main</code></pre>
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
                         <h3 class="text-xl font-bold text-yellow-800 mb-3">演習：AIにワークフローをレビューしてもらおう</h3>
                         <p class="text-gray-700 mb-4">
-                            作成した<code>.github/workflows/test.yml</code>をAIツール（ChatGPT、Claude等）に見せて、
+                            プロジェクトのディレクトリでAIツール（<a href="ai-coding-antigravity.html" class="text-blue-600 hover:underline">Antigravity CLI <code>agy</code></a> など）を開き、<code>.github/workflows/test.yml</code>を読ませて、
                             改善点がないか聞いてみましょう。
                         </p>
                         <div class="bg-white rounded p-4">
@@ -645,10 +627,10 @@ git push origin main</code></pre>
         </svg>
     </button>
 
-    <script src="script.js"></script>
     <script src="code-copy.js"></script>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
 </body>
 </html>

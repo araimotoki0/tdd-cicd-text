@@ -371,7 +371,7 @@
                     <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500 mb-8">
                         <p class="font-bold text-green-800 mb-3">✅ 前提条件</p>
                         <p class="text-gray-700">
-                            ターミナル（Mac はターミナル.app、Windows は PowerShell など）が使えること。<br>
+                            ターミナルが使えること（Mac はターミナル.app、Windows は<a href="handson-setup-windows.html" class="text-indigo-600 underline">環境構築</a>で用意した WSL2 の Ubuntu）。<br>
                             次のどちらかを用意してください。
                         </p>
                         <ul class="text-gray-700 mt-2 space-y-1">
@@ -407,8 +407,8 @@
                             <div class="flex flex-wrap items-center gap-3 mb-6">
                                 <span class="text-sm text-gray-500">あなたのPC：</span>
                                 <div class="os-switch" role="tablist">
-                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac / Linux</button>
-                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows</button>
+                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac</button>
+                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows（WSL2）</button>
                                 </div>
                             </div>
                             <div class="bg-indigo-50 p-6 rounded-lg mb-6" data-os-only="mac">
@@ -422,16 +422,14 @@
                             </div>
 
                             <div class="bg-indigo-50 p-6 rounded-lg mb-6" data-os-only="win">
-                                <p class="font-bold text-indigo-800 mb-3">🪟 Windows（PowerShell）:</p>
+                                <p class="font-bold text-indigo-800 mb-3">🪟 Windows（WSL2 の Ubuntu）:</p>
+                                <p class="text-sm text-gray-700 mb-3">環境構築で用意した <strong>WSL2 の Ubuntu ターミナル</strong>で実行します（PowerShell ではありません）。</p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-<pre class="text-white">irm https://antigravity.google/cli/install.ps1 | iex</pre>
-                                </div>
-                                <p class="font-bold text-indigo-800 mt-4 mb-3">🪟 Windows（コマンドプロンプト）:</p>
-                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-<pre class="text-white">curl -fsSL https://antigravity.google/cli/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</pre>
+<pre class="text-white">curl -fsSL https://antigravity.google/cli/install.sh | bash</pre>
                                 </div>
                                 <p class="text-sm text-gray-600 mt-2">
-                                    <code class="bg-gray-200 px-1 rounded">C:\Users\&lt;ユーザー名&gt;\AppData\Local\agy\bin</code> にインストールされます。
+                                    Ubuntu の中の <code class="bg-gray-200 px-1 rounded">~/.local/bin/agy</code> にインストールされます。
+                                    公式には PowerShell 用のインストーラーもありますが、この講座では使いません。
                                 </p>
                             </div>
 
@@ -462,8 +460,8 @@
                             <div class="flex flex-wrap items-center gap-3 mb-6">
                                 <span class="text-sm text-gray-500">あなたのPC：</span>
                                 <div class="os-switch" role="tablist">
-                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac / Linux</button>
-                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows</button>
+                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac</button>
+                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows（WSL2）</button>
                                 </div>
                             </div>
                             <div class="bg-indigo-50 p-6 rounded-lg mb-6">
@@ -473,7 +471,8 @@
 agy</pre>
                                 </div>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm" data-os-only="win">
-<pre class="text-white">mkdir ~/agy-handson; cd ~/agy-handson
+<pre class="text-white"># Ubuntu（WSL2）のターミナルで
+mkdir -p ~/agy-handson &amp;&amp; cd ~/agy-handson
 agy</pre>
                                 </div>
                             </div>
@@ -568,8 +567,8 @@ Select login method:
                             <div class="flex flex-wrap items-center gap-3 mb-6">
                                 <span class="text-sm text-gray-500">あなたのPC：</span>
                                 <div class="os-switch" role="tablist">
-                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac / Linux</button>
-                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows</button>
+                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac</button>
+                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows（WSL2）</button>
                                 </div>
                             </div>
                             <!-- Mac -->
@@ -607,22 +606,23 @@ agy</pre>
 
                             <!-- Windows -->
                             <div class="bg-indigo-50 p-6 rounded-lg mb-6" data-os-only="win">
-                                <p class="font-bold text-indigo-800 mb-4">🪟 Windows（PowerShell）の手順</p>
+                                <p class="font-bold text-indigo-800 mb-4">🪟 Windows（WSL2 の Ubuntu）の手順</p>
+                                <p class="text-sm text-gray-700 mb-3">環境構築で用意した <strong>WSL2 の Ubuntu ターミナル</strong>で実行します（PowerShell ではありません）。</p>
                                 <p class="font-bold text-gray-800 mb-2">① 設定ファイルを開く</p>
-                                <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-3 overflow-x-auto">
-<pre class="text-white">notepad $HOME\.gemini\antigravity-cli\settings.json</pre>
+                                <p class="text-sm text-gray-700 mb-2">ファイルの場所：Ubuntu の中の <code class="bg-gray-200 px-1 rounded">~/.gemini/antigravity-cli/settings.json</code>（一度 agy を起動すると作られます）</p>
+                                <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-3">
+<pre class="text-white">code ~/.gemini/antigravity-cli/settings.json</pre>
                                 </div>
-                                <p class="text-sm text-gray-700 mb-6">ファイルの場所：<code class="bg-gray-200 px-1 rounded">C:\Users\&lt;ユーザー名&gt;\.gemini\antigravity-cli\settings.json</code><br>
-                                <code class="bg-gray-200 px-1 rounded">"modelProvider": "gemini"</code> の1行を追加して保存します（<strong>前の行の最後にカンマ（,）</strong>を付ける）。</p>
+                                <p class="text-sm text-gray-700 mb-6"><code class="bg-gray-200 px-1 rounded">"modelProvider": "gemini"</code> の1行を追加して保存します（<strong>前の行の最後にカンマ（,）</strong>を付ける）。</p>
 
                                 <p class="font-bold text-gray-800 mb-2">② キーを環境変数に入れて起動</p>
                                 <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-<pre class="text-white">$env:GEMINI_API_KEY = "講師から受け取ったキー"
+<pre class="text-white">export GEMINI_API_KEY="講師から受け取ったキー"
 agy</pre>
                                 </div>
                                 <p class="text-sm text-gray-700 mt-3">
-                                    <strong>agy を起動するのと同じ PowerShell ウィンドウで</strong>実行してください。
-                                    うまく入ったかは <code class="bg-gray-200 px-1 rounded">echo $env:GEMINI_API_KEY</code> で確認できます。
+                                    <strong>agy を起動するのと同じ Ubuntu のターミナルで</strong>実行してください。
+                                    うまく入ったかは <code class="bg-gray-200 px-1 rounded">echo $GEMINI_API_KEY</code> で確認できます。
                                 </p>
                             </div>
 
@@ -1473,6 +1473,7 @@ php artisan make:model Todo -m</pre>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
     <script>
     // 目次（スクロール連動）・読了率・OS 切り替え
     (function () {

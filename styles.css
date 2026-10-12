@@ -247,3 +247,80 @@ nav a.nav-active {
         display: none;
     }
 }
+
+/* =========================================================
+   ページ内ナビゲーション（page-nav.js）と全ページ共通の調整
+   ========================================================= */
+html { scroll-behavior: smooth; }
+[id] { scroll-margin-top: 96px; }
+@media (max-width: 1279px) { [id] { scroll-margin-top: 140px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* コードは枠の中で横スクロール */
+pre { overflow-x: auto; max-width: 100%; }
+/* 横並びの中の長いコードや表で、ページ全体が横に広がらないように */
+.flex-1 { min-width: 0; }
+table { max-width: 100%; }
+.grid > * { min-width: 0; }
+:not(pre) > code { overflow-wrap: anywhere; }
+
+/* 左上の丸いメニューボタンとタイトルが重ならないように */
+@media (max-width: 1399px) { nav .container > .flex > :first-child { padding-left: 56px; } }
+
+/* 読了プログレスバー */
+.pnav-progress {
+    position: absolute; left: 0; bottom: 0; height: 4px; width: 0;
+    background: linear-gradient(90deg, #fcd34d, #f472b6, #e879f9);
+    transition: width .1s linear;
+}
+
+/* PC: 左に固定の目次 */
+.pnav-side { display: none; }
+@media (min-width: 1280px) {
+    body.pnav-on .pt-20 { padding-left: 18rem; }
+    .pnav-side {
+        display: block; position: fixed; left: 0; top: 64px; bottom: 0; width: 18rem;
+        padding: 24px 20px 40px; overflow-y: auto; z-index: 30;
+        background: rgba(255, 255, 255, .95); backdrop-filter: blur(8px);
+        border-right: 1px solid #e5e7eb; scrollbar-width: thin;
+    }
+    .pnav-bar { display: none; }
+}
+.pnav-side-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.pnav-side-head p { font-weight: 700; color: #111827; margin: 0; }
+.pnav-badge { font-size: 12px; font-weight: 700; color: #4f46e5; background: #eef2ff; padding: 2px 8px; border-radius: 9999px; white-space: nowrap; }
+.pnav-track { height: 6px; background: #f3f4f6; border-radius: 9999px; overflow: hidden; margin-bottom: 14px; }
+.pnav-track-thin { height: 2px; border-radius: 0; margin: 0; }
+.pnav-fill { height: 100%; width: 0; background: linear-gradient(90deg, #6366f1, #d946ef); border-radius: 9999px; }
+
+.pnav-link {
+    display: flex; align-items: flex-start; gap: 10px; padding: 7px 10px; border-radius: 8px;
+    font-size: 14px; line-height: 1.45; color: #374151; text-decoration: none;
+    transition: background .15s, color .15s;
+}
+.pnav-link:hover { background: #eef2ff; color: #4338ca; }
+.pnav-dot {
+    flex: none; width: 22px; height: 22px; margin-top: -1px; border-radius: 9999px;
+    display: grid; place-items: center; font-size: 11px; font-weight: 700;
+    background: #e5e7eb; color: #4b5563; transition: all .2s;
+}
+.pnav-link.is-done .pnav-dot { background: #d1fae5; color: #047857; }
+.pnav-link.is-done .pnav-num { display: none; }
+.pnav-link.is-done .pnav-dot::after { content: "✓"; }
+.pnav-link.is-active { background: #4f46e5; color: #fff; font-weight: 700; box-shadow: 0 4px 12px rgba(79, 70, 229, .3); }
+.pnav-link.is-active .pnav-dot { background: #fff; color: #4f46e5; }
+
+/* スマホ・タブレット: 上部に追従する目次バー */
+.pnav-bar {
+    position: sticky; top: 64px; z-index: 30;
+    background: rgba(255, 255, 255, .96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+.pnav-toggle { width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-align: left; background: none; border: 0; cursor: pointer; }
+.pnav-bar-title { font-size: 14px; font-weight: 700; color: #4338ca; white-space: nowrap; }
+.pnav-sep { color: #d1d5db; }
+.pnav-current { flex: 1; min-width: 0; font-size: 14px; color: #374151; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pnav-chev { flex: none; color: #6b7280; transition: transform .2s; }
+.pnav-bar.is-open .pnav-chev { transform: rotate(180deg); }
+.pnav-panel { max-height: 70vh; overflow-y: auto; padding: 4px 16px 16px; }
+.pnav-panel .pnav-link { font-size: 15px; }

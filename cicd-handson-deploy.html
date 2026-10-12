@@ -22,9 +22,25 @@
                     <span class="text-blue-200">|</span>
                     <a href="index.html" class="hover:text-blue-200">TDD</a>
                 </div>
+                <button id="menuBtn" class="md:hidden" aria-label="メニュー">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </nav>
+
+    <!-- モバイルメニュー -->
+    <div id="mobileMenu" class="hidden bg-blue-600 text-white fixed w-full top-16 z-40 md:hidden shadow-lg">
+        <div class="container mx-auto px-6 py-4 space-y-3">
+            <a href="cicd-index.html" class="block hover:text-blue-200">理論編</a>
+            <a href="cicd-handson-basic.html" class="block hover:text-blue-200">基礎：自動テスト</a>
+            <a href="cicd-handson-quality.html" class="block hover:text-blue-200">応用：品質チェック</a>
+            <a href="cicd-handson-deploy.html" class="block hover:text-blue-200">実践：自動デプロイ</a>
+            <a href="index.html" class="block hover:text-blue-200">TDD</a>
+        </div>
+    </div>
 
     <!-- メインコンテンツ -->
     <div class="pt-20">
@@ -54,7 +70,7 @@
                             <li>開発者がコードをGitHubにプッシュ</li>
                             <li>GitHub Actionsが自動的に起動</li>
                             <li>テストと品質チェックを実行</li>
-                            <li>すべて成功したらEC2にSSH接続</li>
+                            <li>すべて成功したら、AWS Systems Manager（SSM）経由でEC2にコマンドを送信</li>
                             <li>EC2上でコードを更新して再起動</li>
                         </ol>
                     </div>
@@ -64,8 +80,8 @@
                         <p class="text-sm mb-2">この演習を進めるには、以下が必要です：</p>
                         <ul class="list-disc ml-6 text-sm space-y-1">
                             <li>稼働中のEC2インスタンス（Amazon Linux 2023推奨）</li>
-                            <li>EC2にDocker、Docker Compose、Gitがインストール済み</li>
-                            <li>EC2のセキュリティグループでポート80/443が開放済み</li>
+                            <li>EC2にDocker、Docker Compose、Gitがインストール済み（<code>ec2-user</code> が <code>docker</code> グループに所属）</li>
+                            <li>EC2のセキュリティグループでポート80が開放済み（SSHのポート22はデプロイには不要）</li>
                             <li>IAMユーザーのアクセスキーID・シークレットキー</li>
                         </ul>
                         <p class="text-sm mt-2">※ EC2のセットアップ手順は省略します</p>
@@ -217,7 +233,7 @@ echo "✅ Deployment completed successfully!"</code></pre>
                     </div>
 
                     <h3 class="text-xl font-bold mb-3 mt-6">2. スクリプトをEC2に配置</h3>
-                    <p class="mb-4">EC2上のプロジェクトディレクトリに配置し、実行権限を付与します。</p>
+                    <p class="mb-4"><code>deploy.sh</code> をコミット＆プッシュし、EC2上のプロジェクトで <code>git pull</code> すると配置されます（EC2へのクローンがまだなら、先にStep 4の「初期配置」を行ってください）。実行権限を付与し、手動で動作確認します。</p>
 
                     <div class="code-block-wrapper relative mb-6">
                         <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># EC2にSSH接続後
@@ -265,13 +281,14 @@ jobs:
         working-directory: src
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.4'
-        extensions: mbstring, xml, ctype, json, bcmath
+        extensions: mbstring, pdo, pdo_sqlite
+        coverage: none
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
@@ -299,7 +316,7 @@ jobs:
     steps:
     # AWS認証情報を設定
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v6
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -324,12 +341,12 @@ jobs:
         echo "Command ID: $COMMAND_ID"
         echo "command_id=$COMMAND_ID" >> $GITHUB_OUTPUT
 
-        # コマンド完了を待機(最大5分)
+        # コマンド完了を待機(5秒ごとに確認、最大約100秒)
+        # 失敗時もここで止めず、下で結果とエラー内容を表示する
         echo "⏳ Waiting for deployment to complete..."
         aws ssm wait command-executed \
           --command-id "$COMMAND_ID" \
-          --instance-id ${{ secrets.EC2_INSTANCE_ID }} \
-          --cli-read-timeout 300
+          --instance-id ${{ secrets.EC2_INSTANCE_ID }} || true
 
         # コマンド結果を取得
         STATUS=$(aws ssm get-command-invocation \
@@ -392,10 +409,11 @@ jobs:
                     <div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6">
                         <h4 class="font-bold mb-2">✨ セキュリティのベストプラクティス</h4>
                         <ul class="list-disc ml-6 text-sm space-y-1">
-                            <li>秘密鍵は絶対にGitHubにコミットしない</li>
+                            <li>アクセスキーは絶対にGitHubにコミットしない</li>
                             <li>GitHub Secretsを使って機密情報を管理</li>
-                            <li>デプロイ専用のSSHキーを使用（EC2ログイン用と分ける）</li>
-                            <li>mainブランチのみデプロイ対象にする</li>
+                            <li>デプロイ用IAMユーザーには必要最小限の権限（今回はSSMのみ）だけを付ける</li>
+                            <li>実務では、アクセスキーを使わない <strong>OIDC</strong>（<code>role-to-assume</code>）での認証がおすすめ</li>
+                            <li>本番ブランチ（今回は <code>master</code>）のみデプロイ対象にする</li>
                         </ul>
                     </div>
                 </div>
@@ -410,22 +428,29 @@ jobs:
 
                     <h4 class="font-bold mb-2 mt-4">EC2にアプリケーションを初期配置</h4>
                     <div class="code-block-wrapper relative mb-6">
-                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># EC2上で実行
-cd /var/www
-sudo git clone https://github.com/your-username/your-repo.git your-app
-cd your-app
-cp .env.example .env
-php artisan key:generate
+                        <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto"><code># EC2上で ec2-user として実行
+cd /home/ec2-user
+git clone https://github.com/your-username/your-repo.git your-project
+cd your-project
 
-# データベース設定を編集
+# Docker用の環境変数（DBのパスワードは本番用に変更する）
+cp .env.example .env
+echo "WEB_PORT=80" &gt;&gt; .env   # 本番はポート80で公開
 nano .env
 
-# マイグレーション実行
-php artisan migrate
+# コンテナを起動
+docker compose up -d
 
-# パーミッション設定
-sudo chown -R www-data:www-data storage bootstrap/cache
-sudo chmod -R 775 storage bootstrap/cache</code></pre>
+# Laravelの初回セットアップ（コンテナ内で実行）
+docker compose exec app composer install --no-dev --optimize-autoloader
+docker compose exec app cp .env.example .env
+docker compose exec app php artisan key:generate
+
+# src/.env を本番向けに変更（APP_ENV=production、APP_DEBUG=false）
+nano src/.env
+
+# マイグレーション実行
+docker compose exec app php artisan migrate --force</code></pre>
                     </div>
 
                     <h3 class="text-xl font-bold mb-3 mt-6">2. ワークフローファイルをプッシュ</h3>
@@ -443,7 +468,7 @@ git push origin master</code></pre>
                         <ul class="list-disc ml-6 text-sm space-y-1">
                             <li>✅ testジョブがすべて成功しているか</li>
                             <li>✅ deployジョブが実行されたか</li>
-                            <li>✅ SSH接続が成功したか</li>
+                            <li>✅ SSMのコマンドが成功したか（ログに「Deployment output」が出ているか）</li>
                             <li>✅ デプロイスクリプトがエラーなく完了したか</li>
                         </ul>
                     </div>
@@ -480,8 +505,9 @@ git push origin master</code></pre>
                         <p class="text-sm mb-2"><strong>対処法：</strong></p>
                         <ul class="list-disc ml-6 text-sm space-y-1">
                             <li><code>deploy.sh</code> に実行権限があるか確認：<code>chmod +x deploy.sh</code></li>
-                            <li>EC2にPHP、Composer、Gitがインストールされているか確認</li>
-                            <li>スクリプト内のパス（<code>/var/www/your-app</code>）が正しいか確認</li>
+                            <li>EC2にDocker、Docker Compose、Gitがインストールされているか確認</li>
+                            <li><code>ec2-user</code> が <code>docker</code> グループに入っているか確認</li>
+                            <li>スクリプト内のパス（<code>/home/ec2-user/your-project</code>）が正しいか確認</li>
                         </ul>
                     </div>
 
@@ -503,10 +529,11 @@ sudo swapon /swapfile</code></pre>
                         <p class="text-sm mb-2">EC2上でログを確認：</p>
                         <div class="code-block-wrapper relative mt-2">
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># Laravelログ
-tail -f /var/www/your-app/storage/logs/laravel.log
+tail -f /home/ec2-user/your-project/src/storage/logs/laravel.log
 
-# Nginxエラーログ
-sudo tail -f /var/log/nginx/error.log</code></pre>
+# コンテナのログ（nginx は web、PHP は app）
+cd /home/ec2-user/your-project
+docker compose logs -f web app</code></pre>
                         </div>
                     </div>
                 </div>
@@ -526,12 +553,13 @@ sudo tail -f /var/log/nginx/error.log</code></pre>
                         <h3 class="font-bold text-lg mb-2">2. ロールバック機能</h3>
                         <p class="text-sm">デプロイに失敗した場合、自動的に前のバージョンに戻す仕組みを追加できます。</p>
                         <div class="code-block-wrapper relative mt-2">
-                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># deploy.shに追加
+                            <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs"><code># 例：deploy.sh を呼び出す別スクリプト（deploy-with-rollback.sh）
+PREV=$(git rev-parse HEAD)   # デプロイ前のコミットを記録
 if ! ./deploy.sh; then
   echo "Deployment failed, rolling back..."
-  git reset --hard HEAD@{1}
-  composer install
-  php artisan up
+  git reset --hard "$PREV"
+  docker compose exec -T app composer install --no-dev --optimize-autoloader
+  docker compose exec -T app php artisan up
 fi</code></pre>
                         </div>
                     </div>
@@ -545,11 +573,6 @@ fi</code></pre>
                         <h3 class="font-bold text-lg mb-2">4. ステージング環境</h3>
                         <p class="text-sm">本番デプロイ前にステージング環境で動作確認する環境を追加できます。</p>
                     </div>
-
-                    <div class="border-l-4 border-blue-600 pl-4">
-                        <h3 class="font-bold text-lg mb-2">5. Docker化</h3>
-                        <p class="text-sm">アプリケーションをDockerコンテナ化することで、環境の再現性が向上します。</p>
-                    </div>
                 </div>
             </section>
 
@@ -562,7 +585,7 @@ fi</code></pre>
                             <h3 class="text-xl font-bold text-gray-800 mb-4">学んだこと</h3>
                             <ul class="space-y-2 text-gray-700">
                                 <li>✅ GitHub ActionsからEC2への安全なデプロイ</li>
-                                <li>✅ SSHキーとGitHub Secretsの活用</li>
+                                <li>✅ IAM・Systems Manager と GitHub Secrets の活用</li>
                                 <li>✅ デプロイスクリプトの作成</li>
                                 <li>✅ 自動デプロイパイプラインの構築</li>
                             </ul>
@@ -623,10 +646,10 @@ fi</code></pre>
         </svg>
     </button>
 
-    <script src="script.js"></script>
     <script src="code-copy.js"></script>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
 </body>
 </html>

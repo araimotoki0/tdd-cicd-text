@@ -43,6 +43,7 @@
             <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
             <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
             <a href="handson-database.html" class="block hover:text-blue-200">実践：DB版Todo</a>
+            <a href="cicd-index.html" class="block hover:text-blue-200">CI/CD</a>
         </div>
     </div>
 
@@ -73,9 +74,11 @@
                                 <li>• Todoを完了にする</li>
                                 <li>• 全Todoを取得する</li>
                                 <li>• 未完了のTodoだけを取得する</li>
-                                <li>• 完了したTodoだけを取得する</li>
                                 <li>• Todoを削除する</li>
                             </ul>
+                            <p class="text-sm text-gray-600 mt-3">
+                                「完了したTodoだけを取得する」などは、最後の追加課題で自分で実装します。
+                            </p>
                         </div>
                     </div>
 
@@ -113,9 +116,12 @@
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono mb-6">
 <pre class="text-white">php artisan make:test TodoListTest --unit</pre>
                         </div>
+                        <p class="text-sm text-gray-600 mb-6">
+                            <strong>ヒント:</strong> <code>php artisan</code> コマンドは <code>docker compose exec app bash</code> でコンテナに入ってから実行します。
+                        </p>
 
                         <p class="text-gray-700 mb-6 text-lg">
-                            <code>tests/Unit/TodoListTest.php</code>を開いて、最初のテストを書きます。
+                            <code>src/tests/Unit/TodoListTest.php</code>を開いて、最初のテストを書きます。
                         </p>
 
                         <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm mb-6">
@@ -446,7 +452,7 @@
                         <h3 class="text-2xl font-bold text-indigo-800 mb-6">改善・検証・応用編をハンズオンしよう！</h3>
                         <p class="text-gray-700 text-lg">
                             チームで改善編・検証編・応用編を進めてみましょう。<br>
-                            Geminiでアレンジしてもいいです。
+                            <a href="ai-coding-antigravity.html" class="text-blue-600 hover:underline">Antigravity CLI（<code>agy</code>）</a>を使ってアレンジしてもかまいません。
                         </p>
                     </div>
                 </div>
@@ -531,7 +537,7 @@
                     <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8 rounded-lg shadow-lg mb-8">
                         <h3 class="text-3xl font-bold mb-6 text-center">おめでとうございます！</h3>
                         <p class="text-xl text-center mb-6">
-                            TDDの基礎から応用まで、全てのハンズオンを完了しました。
+                            TDDの基礎から応用までのハンズオンを完了しました。
                         </p>
                     </div>
 
@@ -620,10 +626,10 @@
         </script>
     </div>
 
-    <script src="script.js"></script>
     <script src="code-copy.js"></script>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
 </body>
 </html>

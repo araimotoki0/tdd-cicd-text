@@ -39,6 +39,7 @@
             <a href="cicd-handson-basic.html" class="block hover:text-blue-200">基礎：自動テスト</a>
             <a href="cicd-handson-quality.html" class="block hover:text-blue-200">応用：品質チェック</a>
             <a href="cicd-handson-deploy.html" class="block hover:text-blue-200">実践：自動デプロイ</a>
+            <a href="index.html" class="block hover:text-blue-200">TDD</a>
         </div>
     </div>
 
@@ -81,7 +82,7 @@
                                 <h4 class="font-bold text-blue-800 mb-3">🔄 CI: Continuous Integration</h4>
                                 <p class="text-gray-700 text-sm mb-3"><strong>継続的インテグレーション</strong></p>
                                 <ul class="space-y-2 text-gray-700 text-sm">
-                                    <li>• デイリーで開発チームのコードを統合</li>
+                                    <li>• 開発者のコードを毎日統合</li>
                                     <li>• 自動テストでインクリメントの品質を確認</li>
                                     <li>• スプリント中の統合リスクを削減</li>
                                     <li>• デイリースクラムで進捗を透明化</li>
@@ -191,7 +192,7 @@
                         <div class="mt-6 bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
                             <p class="text-gray-700 text-sm">
                                 <strong>💡 スクラムでのポイント:</strong> これら全てが<strong>自動的に</strong>実行されるため、
-                                開発チームは価値提供に集中でき、プロダクトオーナーは透明性のあるインクリメントを常に確認できます。
+                                開発者は価値提供に集中でき、プロダクトオーナーは透明性のあるインクリメントを常に確認できます。
                             </p>
                         </div>
                     </div>
@@ -246,7 +247,7 @@
   <span class="text-yellow-300">test:</span>
     <span class="text-yellow-300">runs-on:</span> ubuntu-latest
     <span class="text-yellow-300">steps:</span>
-      - <span class="text-yellow-300">uses:</span> actions/checkout@v3
+      - <span class="text-yellow-300">uses:</span> actions/checkout@v7
       - <span class="text-yellow-300">name:</span> Setup PHP
         <span class="text-yellow-300">uses:</span> shivammathur/setup-php@v2
         <span class="text-yellow-300">with:</span>
@@ -295,7 +296,7 @@
                                 <h4 class="text-xl font-bold text-purple-800 mb-2">Action（アクション）</h4>
                                 <p class="text-gray-700">
                                     再利用可能な部品。コミュニティが作成したものを利用できます。<br>
-                                    例：<code>actions/checkout@v3</code>、<code>shivammathur/setup-php@v2</code>
+                                    例：<code>actions/checkout@v7</code>、<code>shivammathur/setup-php@v2</code>
                                 </p>
                             </div>
                         </div>
@@ -430,10 +431,10 @@
         </script>
     </div>
 
-    <script src="script.js"></script>
     <script src="code-copy.js"></script>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
 </body>
 </html>

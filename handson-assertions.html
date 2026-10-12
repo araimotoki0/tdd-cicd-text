@@ -43,6 +43,7 @@
             <a href="handson-assertions.html" class="block hover:text-blue-200">検証：Assertions</a>
             <a href="handson-advanced.html" class="block hover:text-blue-200">応用：Todo機能</a>
             <a href="handson-database.html" class="block hover:text-blue-200">実践：DB版Todo</a>
+            <a href="cicd-index.html" class="block hover:text-blue-200">CI/CD</a>
         </div>
     </div>
 
@@ -84,6 +85,10 @@
                         <p class="text-gray-700">
                             Calculatorクラスに引き算・掛け算・割り算を追加しながら、<br>
                             それぞれに適したアサーションメソッドを1つずつ学んでいきます。
+                        </p>
+                        <p class="text-sm text-gray-600 mt-3">
+                            ※ 基礎編の演習で <code>subtract</code> / <code>multiply</code> / <code>divide</code> をすでに追加している場合は、
+                            そのメソッドとテストを削除してから始めてください（同名メソッドが重複するとエラーになります）。
                         </p>
                     </div>
                 </div>
@@ -394,7 +399,7 @@
  */</span>
 <span class="text-purple-400">public function</span> <span class="text-yellow-300">divide</span>(<span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$a</span>, <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span> <span class="text-blue-300">$b</span>): <span class="text-purple-400">int</span>|<span class="text-purple-400">float</span>
 {
-    <span class="text-purple-400">if</span> (<span class="text-blue-300">$b</span> === 0) {
+    <span class="text-purple-400">if</span> (<span class="text-blue-300">$b</span> == 0) {
         <span class="text-purple-400">throw new</span> \InvalidArgumentException(<span class="text-green-300">'0で割ることはできません'</span>);
     }
 
@@ -464,7 +469,7 @@
                         <div class="bg-blue-50 p-6 rounded-lg shadow">
                             <h3 class="text-xl font-bold text-blue-800 mb-4">文字列関連</h3>
                             <div class="space-y-2 text-sm text-gray-700">
-                                <p><code>assertStringContains($needle, $haystack)</code></p>
+                                <p><code>assertStringContainsString($needle, $haystack)</code></p>
                                 <p><code>assertStringStartsWith($prefix, $string)</code></p>
                                 <p><code>assertStringEndsWith($suffix, $string)</code></p>
                             </div>
@@ -545,10 +550,10 @@
         </script>
     </div>
 
-    <script src="script.js"></script>
     <script src="code-copy.js"></script>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
 </body>
 </html>

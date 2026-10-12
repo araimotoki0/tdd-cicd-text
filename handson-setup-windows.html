@@ -533,7 +533,8 @@ docker compose version</pre>
                             <h4 class="font-bold text-green-800 mb-2">✅ 無料で利用可能！</h4>
                             <p class="text-gray-700 mb-2">個人のGoogleアカウント（@gmail.com）があれば、クレジットカード登録なしで無料で使えます。</p>
                             <p class="text-sm text-gray-600">
-                                <strong>本講座で Antigravity CLI を推奨している理由は、無料だからです。</strong>
+                                <strong>本講座で Antigravity CLI を推奨している理由は、無料だからです。</strong><br>
+                                ※ Gemini CLI は2026年6月18日に無料版・Google AI Pro／Ultra 向けの提供を終了しました。本講座では後継の Antigravity CLI を使います。
                             </p>
                         </div>
 
@@ -545,12 +546,77 @@ docker compose version</pre>
                             </p>
                         </div>
 
+                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                            <p class="font-bold text-blue-800">公式サイト・ドキュメント</p>
+                            <a href="https://antigravity.google/" target="_blank"
+                                class="text-blue-600 hover:underline block">https://antigravity.google/</a>
+                            <a href="https://antigravity.google/docs/cli/install" target="_blank"
+                                class="text-blue-600 hover:underline block">https://antigravity.google/docs/cli/install（インストール手順）</a>
+                        </div>
+
+                        <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
+                            <h4 class="font-bold text-red-800 mb-2">⚠️ 必ず WSL2（Ubuntu）内にインストールしてください</h4>
+                            <p class="text-gray-700 mb-2">
+                                Laravelのプロジェクトは WSL2 側に置くため、AIにコードを読ませるには
+                                CLIも WSL2 側にある必要があります。
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                公式には Windows（PowerShell／コマンドプロンプト）用のインストーラーもありますが、<strong>本研修では使いません。</strong>
+                                Windows側に入れるとWSL2内のファイルを扱いづらくなります。
+                            </p>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
+                        <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                            <pre>curl -fsSL https://antigravity.google/cli/install.sh | bash</pre>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">
+                            Node.js や npm は不要です。単体の実行ファイルとして
+                            <code class="bg-gray-200 px-1 rounded">~/.local/bin/agy</code> に配置されます。
+                            コマンド名は <code class="bg-gray-200 px-1 rounded">agy</code> です。
+                        </p>
+                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
+                            <p class="text-sm text-gray-700">
+                                <strong>⚠️ PATHが通っていない場合:</strong>
+                                <code class="bg-gray-200 px-1 rounded">~/.local/bin</code> がPATHに含まれていないと、
+                                インストーラーが「シェル設定ファイルに追記する1行」を表示します。その行を
+                                <code class="bg-gray-200 px-1 rounded">~/.bashrc</code> に追記し、
+                                <code class="bg-gray-200 px-1 rounded">source ~/.bashrc</code> を実行するか、ターミナルを開き直してください。
+                            </p>
+                        </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3">インストール確認</h4>
+                        <p class="text-sm text-gray-700 mb-2"><strong>ターミナルを一度閉じて開き直してから</strong>実行してください。</p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                            <pre>agy --version</pre>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-6">
+                            <code class="bg-gray-200 px-1 rounded">1.3.3</code> のようにバージョンが表示されれば成功です（2026年10月時点は 1.3 系）。<br>
+                            すでにインストール済みの人は <code class="bg-gray-200 px-1 rounded">agy update</code> で最新版にしておきましょう。
+                        </p>
+
+                        <h4 class="font-bold text-gray-800 mb-3">初回起動とログイン</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
+                            <pre>agy</pre>
+                        </div>
+                        <ol class="space-y-2 text-gray-700 mb-4">
+                            <li>1. ログイン方法の選択画面で <strong>「1. Google OAuth」</strong>を選んで Enter
+                                <span class="text-sm text-gray-500">（「2. Use a Google Cloud project」は会社のGCP向けで、本講座では使いません）</span></li>
+                            <li>2. ブラウザが開くので、個人のGoogleアカウントでログイン（認証コードが表示されたら、ターミナルに貼り付けて Enter）。
+                                <span class="text-sm text-gray-500">WSL2からブラウザが自動で開かない場合は、表示された認証用URLを Windows 側のブラウザで開きます</span></li>
+                            <li>3. 色テーマの選択・利用規約への同意・フォルダの信頼（Trust）を済ませ、入力欄が表示されれば成功</li>
+                        </ol>
+                        <p class="text-sm text-gray-600 mb-6">
+                            ※ ログイン情報は保存され、次回からは自動でログインされます。<br>
+                            ※ 終了は <code class="bg-gray-200 px-1 rounded">/exit</code>、ログアウトは <code class="bg-gray-200 px-1 rounded">/logout</code> です。
+                        </p>
+
                         <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
                             <h4 class="font-bold text-red-800 mb-2">⚠️ 重要: 個人アカウントでログイン</h4>
                             <p class="text-gray-700 mb-4">
                                 必ず個人のGoogleアカウント（@gmail.com）でログインしてください。
-                                <strong>Google Workspace（会社）アカウントは現在サポート対象外</strong>で、
-                                「account not eligible」というエラーになります。
+                                会社（Google Workspace）のアカウントは、会社の設定によってはログインできないことがあります。
                             </p>
 
                             <div class="bg-white p-5 rounded-lg">
@@ -560,7 +626,6 @@ docker compose version</pre>
                                 <p class="text-sm text-gray-700 mb-3">
                                     認証時に開くブラウザが<strong>会社のアカウントでログインしたままになっている</strong>と、
                                     アカウント選択の画面が出ずに、そのまま会社のアカウントで進んでしまうことがあります。
-                                    その場合はエラーになり、先に進めません。
                                 </p>
 
                                 <p class="font-bold text-gray-800 mb-2 text-sm">確実に切り替える方法</p>
@@ -579,161 +644,73 @@ docker compose version</pre>
                             </div>
                         </div>
 
+                        <!-- APIキー -->
+                        <div class="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500 mb-6">
+                            <h4 class="font-bold text-orange-800 mb-2">🔑 Googleログインできない人は APIキーで（研修当日に講師が貸し出します）</h4>
+                            <p class="text-sm text-gray-700 mb-3">
+                                APIキーで使うには、次の<strong>2つの設定が両方とも</strong>必要です（片方だけでは動きません）。
+                            </p>
+                            <ol class="space-y-2 text-sm text-gray-700 mb-3">
+                                <li>① <code class="bg-gray-200 px-1 rounded">~/.gemini/antigravity-cli/settings.json</code> に
+                                    <code class="bg-gray-200 px-1 rounded">"modelProvider": "gemini"</code> を追加する</li>
+                                <li>② 環境変数 <code class="bg-gray-200 px-1 rounded">GEMINI_API_KEY</code> にキーを入れて、同じターミナルで <code class="bg-gray-200 px-1 rounded">agy</code> を起動する</li>
+                            </ol>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                                <pre>export GEMINI_API_KEY="講師から受け取ったキー"
+agy</pre>
+                            </div>
+                            <p class="text-xs text-gray-600">
+                                ※ <code class="bg-gray-200 px-1 rounded">GOOGLE_API_KEY</code> や <code class="bg-gray-200 px-1 rounded">.env</code> ファイルは読まれません。<br>
+                                ※ 詳しい手順は研修中に「Antigravity CLI」のページで説明します。
+                            </p>
+                        </div>
+
                         <!-- 無料枠 -->
                         <div class="bg-indigo-50 p-6 rounded-lg border-l-4 border-indigo-500 mb-6">
                             <h4 class="font-bold text-indigo-800 mb-3">📊 無料枠はどのくらい？</h4>
-                            <p class="text-gray-700 mb-4 text-sm">
-                                Googleは無料枠の正確なリクエスト数を公開していません。公式ドキュメントでは
-                                「Google AI Pro／Ultra 以外のユーザーには、<strong>週次で回復する相応のクォータ</strong>が割り当てられる」
-                                とだけ書かれています。
-                            </p>
-
                             <div class="bg-white p-4 rounded mb-4">
-                                <p class="font-bold text-gray-800 mb-2 text-sm">プラン別のクォータ（公式）</p>
                                 <ul class="space-y-2 text-sm text-gray-700">
-                                    <li>• <strong>無料（その他のユーザー）</strong> - 相応のクォータ。<strong>週次</strong>で回復</li>
-                                    <li>• <strong>Google AI Pro</strong> - 潤沢なクォータ。<strong>5時間ごと</strong>に回復（週次上限に達するまで）</li>
-                                    <li>• <strong>Google AI Ultra</strong> - 最大のクォータ。5時間ごとに回復＋週次上限が最も高い。サードパーティモデルも利用可</li>
+                                    <li>• <strong>無料（Pro／Ultra 以外）</strong> - 一定量が<strong>1週間ごと</strong>に回復</li>
+                                    <li>• <strong>Google AI Pro／Ultra</strong> - 多めの量が<strong>5時間ごと</strong>に回復（週の上限まで）</li>
                                 </ul>
                                 <p class="text-xs text-gray-500 mt-3">
-                                    ※ 全プランで Gemini モデルとCLIを含む全機能が使えます。Tab補完は全プラン無制限。
-                                </p>
-                            </div>
-
-                            <div class="bg-white p-4 rounded mb-4">
-                                <p class="font-bold text-gray-800 mb-2 text-sm">実際の目安（非公式・コミュニティ報告）</p>
-                                <ul class="space-y-2 text-sm text-gray-700">
-                                    <li>• Gemini Flash で <strong>1日あたり約20リクエスト</strong>、5時間ごとのローリング回復</li>
-                                    <li>• モデルごとに<strong>別々のクォータ枠</strong>（Flashを使い切ってもPro側は残る）</li>
-                                    <li>• 週次上限に達すると、リセットまで<strong>最大7日間ロック</strong>されることがある</li>
-                                </ul>
-                                <p class="text-xs text-gray-500 mt-3">
-                                    ※ 2026年4月時点の第三者調査による数値です。提供開始時（2025年11月）は約250リクエスト/日でしたが大幅に縮小されました。
-                                    公式の数値ではないため、今後も変動する可能性があります。
+                                    ※ 具体的な回数は公開されておらず、予告なく変わることがあります。
                                 </p>
                             </div>
 
                             <div class="bg-yellow-50 p-4 rounded border-l-4 border-yellow-500">
                                 <p class="text-sm text-gray-700 mb-2">
                                     <strong>⚠️ 消費が想像より早い点に注意</strong><br>
-                                    Antigravity のクォータはトークン数ではなく「エージェントがこなした作業量」で計算されます。
                                     1回の指示で裏側の複数エージェントが動くため、体感より早く消費します。
-                                    研修中は <strong>Gemini 3.6 Flash</strong> を使うことをおすすめします（下記参照）。
+                                    無料枠は週単位でしか回復しないので、<strong>研修の前に使い切らないよう</strong>注意してください。
                                 </p>
                                 <p class="text-sm text-gray-700">
-                                    残量はCLI内で <code class="bg-gray-200 px-1 rounded">/usage</code>（別名 <code
-                                        class="bg-gray-200 px-1 rounded">/quota</code>）を実行すると、モデルごとに確認できます。
+                                    残量はCLI内で <code class="bg-gray-200 px-1 rounded">/usage</code> を実行すると確認できます。
                                 </p>
                             </div>
                         </div>
-
 
                         <!-- モデル選択 -->
                         <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 mb-6">
                             <h4 class="font-bold text-blue-800 mb-3">🎯 どのモデルを使えばいい？</h4>
                             <p class="text-gray-700 mb-4 text-sm">
-                                研修では <strong>Gemini 3.6 Flash</strong> をおすすめします。
-                                2026年7月21日にリリースされた新しいモデルで、
-                                <strong>ひとつ前の 3.5 Flash より出力トークンを17%削減</strong>できます。
-                                マルチステップの作業でも推論ステップとツール呼び出しが少なく済むため、
-                                無料枠の消費を抑えられます。
+                                研修では <strong>Gemini 3.8 Flash</strong> を使います。モデルはCLI内の
+                                <code class="bg-gray-200 px-1 rounded">/model</code> で切り替えられます。
                             </p>
 
-                            <div class="bg-white p-4 rounded mb-4">
-                                <p class="font-bold text-gray-800 mb-2 text-sm">Antigravity で使える主なモデル</p>
+                            <div class="bg-white p-4 rounded">
                                 <ul class="space-y-2 text-sm text-gray-700">
-                                    <li>• <strong>Gemini 3.6 Flash</strong> - 高速。コード生成向けのバランス型。<span
+                                    <li>• <strong>Gemini 3.8 Flash</strong> - 最新の標準モデル。速くて賢い。<span
                                             class="text-green-700 font-bold">研修ではこれ</span></li>
-                                    <li>• <strong>Gemini 3.5 Flash</strong> - ひとつ前の高速モデル</li>
-                                    <li>• <strong>Gemini 3.1 Pro</strong> - 複雑な推論向け。応答は遅め、消費も大きい</li>
+                                    <li>• <strong>Gemini 3.1 Pro</strong> - 難しい設計・推論向け。応答は遅め、消費も大きい</li>
+                                    <li>• <strong>Gemini 3.7 / 3.6 / 3.5 Flash</strong> - ひとつ前の世代。特に理由がなければ選ばなくてOK</li>
                                 </ul>
                                 <p class="text-xs text-gray-500 mt-3">
-                                    ※ Flash系には Low / Medium / High の強度指定があります。迷ったら既定のままで構いません。<br>
-                                    ※ 利用できるモデルはプランによって異なります。一覧に出ていない場合は
-                                    Gemini 3.5 Flash を選んでください。
-                                </p>
-                            </div>
-
-                            <div class="bg-gray-100 p-4 rounded">
-                                <p class="text-sm text-gray-700 mb-2">
-                                    <strong>💡 「Flash-Lite」を探さないでください</strong>
-                                </p>
-                                <p class="text-sm text-gray-700">
-                                    より軽い <code class="bg-gray-200 px-1 rounded">Gemini 3.5 Flash-Lite</code>
-                                    というモデルも存在しますが、これは大量データの処理・抽出向けで、
-                                    <strong>Antigravity では提供されていません。</strong>
-                                    コーディング用途では 3.6 Flash のほうが適しています。
+                                    ※ モデル名の後ろの High / Medium / Low は「どれだけ深く考えるか」です。既定は Medium で、迷ったらそのままで構いません。
+                                    <code class="bg-gray-200 px-1 rounded">/effort</code> で変更できます。
                                 </p>
                             </div>
                         </div>
-
-                        <div class="bg-blue-50 p-4 rounded-lg mb-6">
-                            <p class="font-bold text-blue-800">公式サイト・ドキュメント</p>
-                            <a href="https://antigravity.google/" target="_blank"
-                                class="text-blue-600 hover:underline block">https://antigravity.google/</a>
-                            <a href="https://antigravity.google/docs/cli/install" target="_blank"
-                                class="text-blue-600 hover:underline block">https://antigravity.google/docs/cli/install（インストール手順）</a>
-                        </div>
-
-                        <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500 mb-6">
-                            <h4 class="font-bold text-red-800 mb-2">⚠️ 必ず WSL2（Ubuntu）内にインストールしてください</h4>
-                            <p class="text-gray-700 mb-2">
-                                Laravelのプロジェクトは WSL2 側に置くため、AIにコードを読ませるには
-                                CLIも WSL2 側にある必要があります。
-                            </p>
-                            <p class="text-sm text-gray-600">
-                                公式には Windows（PowerShell）用のインストーラー
-                                <code class="bg-gray-200 px-1 rounded">irm https://antigravity.google/cli/install.ps1 | iex</code>
-                                もありますが、<strong>本研修では使いません。</strong>
-                                Windows側に入れるとWSL2内のファイルを扱いづらくなります。
-                            </p>
-                        </div>
-
-                        <h4 class="font-bold text-gray-800 mb-3">インストールコマンド</h4>
-                        <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
-                            <pre>curl -fsSL https://antigravity.google/cli/install.sh | bash</pre>
-                        </div>
-                        <p class="text-sm text-gray-600 mb-6">
-                            Node.js や Python のランタイムは不要で、単体の実行ファイルとして
-                            <code class="bg-gray-200 px-1 rounded">~/.local/bin/agy</code> に配置されます。
-                            コマンド名は <code class="bg-gray-200 px-1 rounded">agy</code> です。
-                        </p>
-
-                        <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
-                            <p class="text-sm text-gray-700">
-                                <strong>⚠️ PATHが通っていない場合:</strong>
-                                <code class="bg-gray-200 px-1 rounded">~/.local/bin</code> がPATHに含まれていないと、
-                                インストーラーが「シェル設定ファイルに追記する1行」を表示します。その行を
-                                <code class="bg-gray-200 px-1 rounded">~/.bashrc</code> に追記し、
-                                <code class="bg-gray-200 px-1 rounded">source ~/.bashrc</code> を実行してください。
-                            </p>
-                        </div>
-
-                        <h4 class="font-bold text-gray-800 mb-3">インストール確認</h4>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
-                            <pre>agy --version</pre>
-                        </div>
-                        <p class="text-sm text-gray-600 mb-6">
-                            バージョンが表示されれば成功です。<br>
-                            ※ <code class="bg-gray-200 px-1 rounded">agy version</code>（ハイフンなし）は対話モードで動くため、
-                            確認には <code class="bg-gray-200 px-1 rounded">agy --version</code> を使ってください。
-                        </p>
-
-                        <h4 class="font-bold text-gray-800 mb-3">初回セットアップ</h4>
-                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-4">
-                            <pre>agy</pre>
-                        </div>
-                        <ol class="space-y-2 text-gray-700 mb-4">
-                            <li>1. OSのキーチェーンに保存済みの認証情報があれば、自動でログインされます</li>
-                            <li>2. 初回はブラウザが自動で開くので、個人のGoogleアカウントでログイン</li>
-                            <li>3. 「許可」をクリックするとターミナルに戻り、プロンプトが表示されれば成功</li>
-                        </ol>
-                        <p class="text-sm text-gray-600 mb-6">
-                            ※ WSL2からブラウザが自動で開かない場合は、認証用URLが表示されるので、
-                            Windows側のブラウザで開いて、表示されたコードをターミナルに貼り付けます。<br>
-                            ※ ログアウトしたいときは、CLI内で <code class="bg-gray-200 px-1 rounded">/logout</code> を実行します。
-                        </p>
 
                         <h4 class="font-bold text-gray-800 mb-3">よく使うコマンド</h4>
                         <div class="bg-gray-100 p-6 rounded-lg mb-6">
@@ -743,20 +720,17 @@ docker compose version</pre>
                                 <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy --version</code> - バージョン確認</li>
                                 <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy update</code> - 最新版に更新</li>
                                 <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy changelog</code> - 更新履歴を表示</li>
-                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">agy help</code> - ヘルプを表示</li>
                             </ul>
 
                             <p class="font-bold text-gray-800 mb-2 text-sm">CLI起動中に使うスラッシュコマンド</p>
                             <ul class="space-y-2 text-sm text-gray-700">
-                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/usage</code>（<code
-                                        class="bg-gray-200 px-2 py-1 rounded">/quota</code>） - モデルごとのクォータ残量を確認</li>
-                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/credits</code> - AIクレジットの使用状況を確認</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/help</code> - ヘルプ・コマンド一覧</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/model</code> ／ <code class="bg-gray-200 px-2 py-1 rounded">/effort</code> - モデル・考える深さの切り替え</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/usage</code> - 残りの使用量（クォータ）を確認</li>
                                 <li>• <code class="bg-gray-200 px-2 py-1 rounded">/diff</code> - 変更差分を表示</li>
-                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/codesearch</code> - コードベースを検索</li>
-                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/agents</code> - エージェントの管理</li>
-                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/permissions</code> - 権限設定</li>
-                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/resume</code> - 前回のセッションを再開</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/resume</code> - 前の会話を再開</li>
                                 <li>• <code class="bg-gray-200 px-2 py-1 rounded">/logout</code> - ログアウト</li>
+                                <li>• <code class="bg-gray-200 px-2 py-1 rounded">/exit</code> - 終了</li>
                             </ul>
                         </div>
 
@@ -829,7 +803,8 @@ docker compose version</pre>
 
                             <p class="text-gray-700 mb-3"><strong>方法2: WSLから起動</strong></p>
                             <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                                <pre>cd ~/Documents
+                                <pre>mkdir -p ~/Documents   # Ubuntu には最初はないので作成（あればそのまま）
+cd ~/Documents
 code .</pre>
                             </div>
                         </div>
@@ -984,7 +959,8 @@ agy --version</pre>
                         <h4 class="font-bold text-gray-800 mb-3">クローンコマンド</h4>
                         <p class="text-gray-700 mb-3">WSL2（Ubuntu）内で実行:</p>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
-                            <pre>cd ~/Documents
+                            <pre>mkdir -p ~/Documents   # Ubuntu には最初はないので作成（あればそのまま）
+cd ~/Documents
 git clone https://github.com/あなたのユーザー名/リポジトリ名.git
 cd リポジトリ名</pre>
                         </div>
@@ -1175,14 +1151,14 @@ wsl --set-default-version 2</pre>
                         <div class="bg-red-50 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
                             <h3 class="text-xl font-bold text-red-800 mb-3">トラブル2: ポート番号被り</h3>
                             <p class="text-gray-700 mb-3"><strong>エラー:</strong> "address already in use"</p>
-                            <p class="text-gray-700 mb-4"><strong>解決策:</strong> docker-compose.ymlのポート番号左側を変更します。</p>
+                            <p class="text-gray-700 mb-4"><strong>解決策:</strong> 他のアプリと番号がぶつかっています。docker-compose.yml の <code class="bg-gray-200 px-1 rounded">ports</code> の左側（パソコン側）の番号を変えて、<code class="bg-gray-200 px-1 rounded">docker compose up -d</code> し直します。</p>
                             <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
                                 <pre>ports:
-  - 8080:80    # Webサーバー
-  - 3307:3306  # MySQL</pre>
+  - ${WEB_PORT:-8086}:80       # Webサーバー（8086 → 8087 などに）
+  - 127.0.0.1:3386:3306        # MySQL（3386 → 3387 などに）</pre>
                             </div>
-                            <p class="text-sm text-gray-700">アクセスURL: <code
-                                    class="bg-gray-200 px-2 py-1 rounded">http://localhost:8080</code></p>
+                            <p class="text-sm text-gray-700">Web を 8087 に変えた場合のアクセスURL: <code
+                                    class="bg-gray-200 px-2 py-1 rounded">http://localhost:8087</code></p>
                         </div>
 
                         <!-- トラブル3 -->
@@ -1231,8 +1207,7 @@ php artisan migrate</pre>
                             <ol class="text-sm text-gray-700 space-y-2">
                                 <li>1. WSL拡張機能が正しくインストールされているか確認</li>
                                 <li>2. VSCodeを再起動</li>
-                                <li>3. WSL2（Ubuntu）を再起動</li>
-                                <li>4. それでもダメなら、VSCodeの設定から「Remote.WSL: Ubuntu」を検索して有効化</li>
+                                <li>3. PowerShell で <code class="bg-gray-200 px-1 rounded">wsl --shutdown</code> を実行してから、WSL2（Ubuntu）を起動し直す</li>
                             </ol>
                         </div>
                     </div>
@@ -1306,17 +1281,11 @@ php artisan migrate</pre>
         </script>
     </div>
 
-    <script>
-        // モバイルメニュートグル
-        document.getElementById('menuBtn')?.addEventListener('click', function () {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu?.classList.toggle('hidden');
-        });
-    </script>
     <script src="code-copy.js"></script>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script src="page-nav.js"></script>
 </body>
 
 </html>
