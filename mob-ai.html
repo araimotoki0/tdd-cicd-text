@@ -277,6 +277,7 @@
 - 入力された本文は、そのまま文字として表示される（HTML として解釈されない）</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>AI は、書かれていないことを推測で埋めます。何が「正しい」かを言葉で決めておくと、AI もレビュー役も、同じ基準で判断できます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「HTML として解釈されない」のように、<strong>安全のための条件</strong>も書いておきます。書いていないと、確かめる人がいません。</span></li></ul></div></div>
 <div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md（AI への作業ルールの一部）</p><pre class="text-white whitespace-pre-wrap break-words">## 守ること
 - 仕様は docs/spec.md にある。作業の前に必ず読む
+- テストは Node.js に最初から入っている node --test を使う
 - テストを書き換えて通すことはしない。
   テストと仕様が合わない場合は、作業を止めて人間に確認する
 - 仕様にない機能は勝手に足さない
