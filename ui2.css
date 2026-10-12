@@ -537,3 +537,15 @@ body.ui2[data-chapter="home"] { --accent: #3f5f85; --accent-2: #7f9bb8; --accent
 
 /* 横並びの流れ図は細い画面で折り返す */
 body.ui2 .pt-20 .flex.items-center.justify-center:not(.flex-wrap) { flex-wrap: wrap; }
+
+/* ログイン情報の表示 */
+.ui2-cred { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; box-shadow: var(--shadow); }
+.ui2-cred-head { font: 700 15px 'Zen Kaku Gothic New', sans-serif; margin: 0 0 12px; color: var(--text); }
+.ui2-cred-grid { display: grid; gap: 8px; }
+.ui2-cred-row { display: grid; grid-template-columns: 92px 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--paper-2); border: 1px solid var(--line); }
+.ui2-cred-row .k { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .06em; }
+.ui2-cred-row .v { font: 600 16px 'JetBrains Mono', monospace; color: var(--text); background: none; border: 0; padding: 0; user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.ui2-cred-row button { font: 700 12px 'Noto Sans JP', sans-serif; padding: 7px 12px; border-radius: 8px; border: 0; cursor: pointer; color: #fff; background: var(--ink); }
+.ui2-cred-row button:hover { background: var(--ink-2); }
+.ui2-cred-note { margin: 12px 0 0; font-size: 12px; color: var(--muted); }
+@media (max-width: 480px) { .ui2-cred-row { grid-template-columns: 1fr auto; } .ui2-cred-row .k { grid-column: 1 / -1; } }
