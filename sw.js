@@ -1,9 +1,9 @@
 /* CSD講座 Service Worker
    - ページ（HTML）：ネットワーク優先。つながらなければキャッシュ、なければオフライン用ページ
-   - CSS / JS / 画像 / フォント：キャッシュを返しつつ裏で更新（stale-while-revalidate）
+   - CSS / JS / 画像 / フォント：キャッシュを返しつつ裏で更新（stale-while-revalidate）。?v= を含めて完全一致
    - 動画：キャッシュしない（容量が大きく、途中からの読み込みがあるため）
    更新するときは VERSION を変える */
-var VERSION = 'csd-2026-10-13d';
+var VERSION = 'csd-2026-10-13e';
 var CACHE = 'csd-' + VERSION;
 
 var PAGES = [
@@ -61,7 +61,8 @@ self.addEventListener('fetch', function (e) {
   // 同じサイトの CSS/JS/画像、フォント、CDN：キャッシュを返しつつ裏で更新
   if (url.origin === location.origin || isFont(url) || isCdn(url)) {
     e.respondWith(caches.open(CACHE).then(function (c) {
-      return c.match(req, { ignoreSearch: url.origin === location.origin }).then(function (hit) {
+      // ?v=... を含めて完全一致で探す（?v を無視すると、古い CSS/JS を返し続けてしまう）
+      return c.match(req).then(function (hit) {
         var refresh = fetch(req).then(function (res) {
           if (res && (res.ok || res.type === 'opaque')) c.put(req, res.clone());
           return res;
