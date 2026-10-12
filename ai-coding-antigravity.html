@@ -7,10 +7,51 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        html { scroll-behavior: smooth; }
+        [id] { scroll-margin-top: 96px; }
+        @media (max-width: 1279px) { [id] { scroll-margin-top: 140px; } }
+
+        /* コードは枠の中で横スクロール */
+        pre { overflow-x: auto; max-width: 100%; }
+
+        /* 読了プログレスバー */
+        #readProgress { width: 0; transition: width .1s linear; }
+
+        /* サイドバー目次 */
+        #toc { scrollbar-width: thin; }
+        .toc-group { font-size: 11px; letter-spacing: .08em; font-weight: 700; color: #6b7280; text-transform: uppercase; margin: 20px 0 8px; }
+        .toc-link { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 8px; font-size: 14px; color: #374151; transition: background .15s, color .15s; }
+        .toc-link:hover { background: #eef2ff; color: #4338ca; }
+        .toc-dot { flex: none; width: 22px; height: 22px; border-radius: 9999px; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: #e5e7eb; color: #4b5563; transition: all .2s; }
+        .toc-link.is-done .toc-dot { background: #d1fae5; color: #047857; }
+        .toc-link.is-done .toc-dot .num { display: none; }
+        .toc-link.is-done .toc-dot::after { content: "✓"; }
+        .toc-link.is-active { background: #4f46e5; color: #fff; font-weight: 700; box-shadow: 0 4px 12px rgba(79,70,229,.3); }
+        .toc-link.is-active .toc-dot { background: #fff; color: #4f46e5; }
+        .toc-link.is-active .toc-dot .num { display: inline; }
+        .toc-link.is-active .toc-dot::after { content: none; }
+
+        /* スマホ用目次パネル */
+        #tocPanel .toc-link { font-size: 15px; }
+
+        /* OS 切り替え */
+        .os-switch { display: inline-flex; padding: 4px; border-radius: 9999px; background: #eef2ff; gap: 4px; }
+        .os-switch button { padding: 6px 16px; border-radius: 9999px; font-size: 14px; font-weight: 700; color: #4338ca; transition: all .15s; }
+        .os-switch button[aria-selected="true"] { background: #4f46e5; color: #fff; box-shadow: 0 2px 8px rgba(79,70,229,.35); }
+        html[data-os="mac"] [data-os-only="win"],
+        html[data-os="win"] [data-os-only="mac"] { display: none; }
+
+        /* ヒーローのターミナル */
+        .term-line { opacity: 0; transform: translateY(4px); animation: termIn .4s ease forwards; }
+        @keyframes termIn { to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .term-line { animation: none; opacity: 1; transform: none; } html { scroll-behavior: auto; } }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- ナビゲーション -->
     <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
+        <div id="readProgress" class="absolute left-0 bottom-0 h-1 bg-gradient-to-r from-amber-300 via-pink-400 to-fuchsia-400" aria-hidden="true"></div>
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold">AI Coding入門</h1>
@@ -40,38 +81,116 @@
         </div>
     </div>
 
-    <div class="pt-20">
-        <!-- ヒーローセクション -->
-        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
-            <div class="container mx-auto px-6 text-center">
-                <span class="inline-block bg-white text-blue-700 font-bold px-4 py-1 rounded-full text-sm mb-4">2026年10月 改訂版</span>
-                <h2 class="text-5xl font-bold mb-6">AI Coding入門：Antigravity CLI</h2>
-                <p class="text-2xl mb-4">ターミナルから「複数のAIエージェント」でコーディングを効率化</p>
-                <p class="text-blue-200 mb-2">Google Antigravity が提供するターミナルAI（コマンド名：<code class="bg-blue-900/50 px-2 py-1 rounded">agy</code>）</p>
-                <p class="text-blue-200 text-sm">対象：agy 1.3 系 ／ 推奨モデル：Gemini 3.8 Flash</p>
-            </div>
-        </section>
 
-        <!-- 目次 -->
-        <section class="py-10 bg-white border-b">
-            <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto">
-                    <p class="font-bold text-gray-800 mb-3">📑 このページの流れ</p>
-                    <ol class="grid md:grid-cols-2 gap-x-8 gap-y-1 text-sm text-indigo-700 list-decimal list-inside">
-                        <li><a href="#why" class="hover:underline">なぜ Antigravity CLI なのか</a></li>
-                        <li><a href="#about" class="hover:underline">Antigravity CLI とは／料金プラン</a></li>
-                        <li><a href="#step-install" class="hover:underline">インストール</a></li>
-                        <li><a href="#step-login" class="hover:underline">初回起動と Google ログイン</a></li>
-                        <li><a href="#step-apikey" class="hover:underline">APIキーで使う（講師からキーを借りる人）</a></li>
-                        <li><a href="#step-model" class="hover:underline">モデルの選び方</a></li>
-                        <li><a href="#step-rules" class="hover:underline">日本語設定（AGENTS.md）</a></li>
-                        <li><a href="#step-basic" class="hover:underline">基本的な使い方・スラッシュコマンド</a></li>
-                        <li><a href="#trouble" class="hover:underline">困ったときは</a></li>
-                        <li><a href="#team" class="hover:underline">チームでハンズオン</a></li>
-                    </ol>
+    <!-- サイドバー目次（PC） -->
+    <aside id="toc" class="hidden xl:block fixed left-0 top-16 bottom-0 w-72 bg-white/95 backdrop-blur border-r border-gray-200 overflow-y-auto z-30 px-5 pt-6 pb-10" aria-label="目次">
+        <div class="flex items-center justify-between mb-1">
+            <p class="font-bold text-gray-900">📑 このページの目次</p>
+            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full"><span class="js-progress-num">0</span>%</span>
+        </div>
+        <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="js-progress-bar h-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 rounded-full" style="width:0"></div></div>
+        <nav>
+<p class="toc-group">はじめに</p>
+<a href="#why" class="toc-link" data-toc="why" data-label="なぜ Antigravity CLI？"><span class="toc-dot"><span class="num">•</span></span><span>なぜ Antigravity CLI？</span></a>
+<a href="#about" class="toc-link" data-toc="about" data-label="Antigravity CLI とは"><span class="toc-dot"><span class="num">•</span></span><span>Antigravity CLI とは</span></a>
+<a href="#plans" class="toc-link" data-toc="plans" data-label="料金プランと使える量"><span class="toc-dot"><span class="num">•</span></span><span>料金プランと使える量</span></a>
+<p class="toc-group">ハンズオン</p>
+<a href="#step-install" class="toc-link" data-toc="step-install" data-label="インストール"><span class="toc-dot"><span class="num">0</span></span><span>インストール</span></a>
+<a href="#step-login" class="toc-link" data-toc="step-login" data-label="初回起動とログイン"><span class="toc-dot"><span class="num">1</span></span><span>初回起動とログイン</span></a>
+<a href="#step-apikey" class="toc-link" data-toc="step-apikey" data-label="APIキーで使う"><span class="toc-dot"><span class="num">2</span></span><span>APIキーで使う</span></a>
+<a href="#step-model" class="toc-link" data-toc="step-model" data-label="モデルの選び方"><span class="toc-dot"><span class="num">3</span></span><span>モデルの選び方</span></a>
+<a href="#step-rules" class="toc-link" data-toc="step-rules" data-label="日本語設定（AGENTS.md）"><span class="toc-dot"><span class="num">4</span></span><span>日本語設定（AGENTS.md）</span></a>
+<a href="#step-basic" class="toc-link" data-toc="step-basic" data-label="基本的な使い方"><span class="toc-dot"><span class="num">5</span></span><span>基本的な使い方</span></a>
+<a href="#trouble" class="toc-link" data-toc="trouble" data-label="困ったときは"><span class="toc-dot"><span class="num">?</span></span><span>困ったときは</span></a>
+<p class="toc-group">実践</p>
+<a href="#summary" class="toc-link" data-toc="summary" data-label="まとめ"><span class="toc-dot"><span class="num">•</span></span><span>まとめ</span></a>
+<a href="#laravel" class="toc-link" data-toc="laravel" data-label="Laravel の基礎"><span class="toc-dot"><span class="num">•</span></span><span>Laravel の基礎</span></a>
+<a href="#team" class="toc-link" data-toc="team" data-label="チームでハンズオン"><span class="toc-dot"><span class="num">•</span></span><span>チームでハンズオン</span></a>
+<a href="#next" class="toc-link" data-toc="next" data-label="次のステップ"><span class="toc-dot"><span class="num">•</span></span><span>次のステップ</span></a>
+        </nav>
+        <a href="#step-apikey" class="mt-6 block rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 ring-1 ring-orange-200 p-4 hover:ring-orange-400 transition">
+            <p class="text-sm font-bold text-orange-800 mb-1">🔑 APIキーを借りる人へ</p>
+            <p class="text-xs text-gray-600">設定は「modelProvider」と「GEMINI_API_KEY」の2つセット。手順2へ →</p>
+        </a>
+    </aside>
+
+    <div class="pt-20 xl:pl-72">
+        <!-- ヒーローセクション -->
+        <section class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 text-white">
+            <div class="absolute -top-24 -left-24 w-96 h-96 bg-sky-400/30 rounded-full blur-3xl" aria-hidden="true"></div>
+            <div class="absolute -bottom-32 right-0 w-[28rem] h-[28rem] bg-fuchsia-500/30 rounded-full blur-3xl" aria-hidden="true"></div>
+            <div class="relative container mx-auto px-6 py-16 lg:py-20">
+                <div class="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+                    <div>
+                        <span class="inline-flex items-center gap-2 bg-white/15 ring-1 ring-white/30 backdrop-blur px-4 py-1.5 rounded-full text-sm font-bold mb-6">
+                            <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>2026年10月 改訂版
+                        </span>
+                        <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">AI Coding入門<br><span class="bg-gradient-to-r from-amber-200 via-pink-200 to-white bg-clip-text text-transparent">Antigravity CLI</span></h2>
+                        <p class="text-xl text-blue-100 mb-6">ターミナルから「複数のAIエージェント」でコーディングを効率化</p>
+                        <div class="flex flex-wrap gap-2 mb-8 text-sm">
+                            <span class="bg-white/10 ring-1 ring-white/25 px-3 py-1 rounded-full">コマンド名 <code class="font-bold">agy</code></span>
+                            <span class="bg-white/10 ring-1 ring-white/25 px-3 py-1 rounded-full">agy 1.3 系</span>
+                            <span class="bg-white/10 ring-1 ring-white/25 px-3 py-1 rounded-full">推奨 Gemini 3.8 Flash</span>
+                            <span class="bg-white/10 ring-1 ring-white/25 px-3 py-1 rounded-full">Mac / Windows</span>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="#step-install" class="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition">はじめる →</a>
+                            <a href="#step-apikey" class="bg-white/10 ring-1 ring-white/40 font-bold px-6 py-3 rounded-xl hover:bg-white/20 transition">🔑 APIキーで使う</a>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="rounded-2xl bg-gray-950/90 ring-1 ring-white/15 shadow-2xl overflow-hidden">
+                            <div class="flex items-center gap-2 px-4 py-3 bg-white/5 border-b border-white/10">
+                                <span class="w-3 h-3 rounded-full bg-red-400"></span><span class="w-3 h-3 rounded-full bg-yellow-400"></span><span class="w-3 h-3 rounded-full bg-green-400"></span>
+                                <span class="ml-3 text-xs text-gray-400 font-mono">~/agy-handson — agy</span>
+                            </div>
+                            <div class="p-5 font-mono text-sm leading-7 text-gray-200">
+                                <p class="term-line" style="animation-delay:.1s"><span class="text-emerald-400">$</span> agy</p>
+                                <p class="term-line text-gray-400" style="animation-delay:.5s">Gemini 3.8 Flash (Medium) · ~/agy-handson</p>
+                                <p class="term-line" style="animation-delay:.9s"><span class="text-indigo-300">❯</span> /plan JSとHTMLとCSSでTodoアプリを作って</p>
+                                <p class="term-line text-amber-300" style="animation-delay:1.5s">● 計画を作成しました（3ファイル）— 承認しますか？</p>
+                                <p class="term-line text-emerald-300" style="animation-delay:2.1s">✓ index.html を作成</p>
+                                <p class="term-line text-emerald-300" style="animation-delay:2.4s">✓ style.css を作成</p>
+                                <p class="term-line text-emerald-300" style="animation-delay:2.7s">✓ app.js を作成</p>
+                                <p class="term-line" style="animation-delay:3.1s"><span class="text-indigo-300">❯</span> <span class="inline-block w-2 h-4 bg-gray-300 align-middle animate-pulse"></span></p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-blue-200 mt-3 text-right">※ 画面はイメージです</p>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- 目次バー（スマホ・タブレット） -->
+        <div id="tocBar" class="xl:hidden sticky top-16 z-30 bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
+            <button id="tocToggle" class="w-full flex items-center gap-3 px-5 py-3 text-left" aria-expanded="false" aria-controls="tocPanel">
+                <span class="text-sm font-bold text-indigo-700 whitespace-nowrap">📑 目次</span>
+                <span class="text-gray-300">|</span>
+                <span id="tocCurrent" class="flex-1 truncate text-sm text-gray-700">はじめに</span>
+                <span class="text-xs font-bold text-indigo-600"><span class="js-progress-num">0</span>%</span>
+                <svg class="w-4 h-4 text-gray-500 transition-transform" id="tocChevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="h-0.5 bg-gray-100"><div class="js-progress-bar h-full bg-gradient-to-r from-indigo-500 to-fuchsia-500" style="width:0"></div></div>
+            <nav id="tocPanel" class="hidden max-h-[70vh] overflow-y-auto px-4 pb-4">
+<p class="toc-group">はじめに</p>
+<a href="#why" class="toc-link" data-toc="why" data-label="なぜ Antigravity CLI？"><span class="toc-dot"><span class="num">•</span></span><span>なぜ Antigravity CLI？</span></a>
+<a href="#about" class="toc-link" data-toc="about" data-label="Antigravity CLI とは"><span class="toc-dot"><span class="num">•</span></span><span>Antigravity CLI とは</span></a>
+<a href="#plans" class="toc-link" data-toc="plans" data-label="料金プランと使える量"><span class="toc-dot"><span class="num">•</span></span><span>料金プランと使える量</span></a>
+<p class="toc-group">ハンズオン</p>
+<a href="#step-install" class="toc-link" data-toc="step-install" data-label="インストール"><span class="toc-dot"><span class="num">0</span></span><span>インストール</span></a>
+<a href="#step-login" class="toc-link" data-toc="step-login" data-label="初回起動とログイン"><span class="toc-dot"><span class="num">1</span></span><span>初回起動とログイン</span></a>
+<a href="#step-apikey" class="toc-link" data-toc="step-apikey" data-label="APIキーで使う"><span class="toc-dot"><span class="num">2</span></span><span>APIキーで使う</span></a>
+<a href="#step-model" class="toc-link" data-toc="step-model" data-label="モデルの選び方"><span class="toc-dot"><span class="num">3</span></span><span>モデルの選び方</span></a>
+<a href="#step-rules" class="toc-link" data-toc="step-rules" data-label="日本語設定（AGENTS.md）"><span class="toc-dot"><span class="num">4</span></span><span>日本語設定（AGENTS.md）</span></a>
+<a href="#step-basic" class="toc-link" data-toc="step-basic" data-label="基本的な使い方"><span class="toc-dot"><span class="num">5</span></span><span>基本的な使い方</span></a>
+<a href="#trouble" class="toc-link" data-toc="trouble" data-label="困ったときは"><span class="toc-dot"><span class="num">?</span></span><span>困ったときは</span></a>
+<p class="toc-group">実践</p>
+<a href="#summary" class="toc-link" data-toc="summary" data-label="まとめ"><span class="toc-dot"><span class="num">•</span></span><span>まとめ</span></a>
+<a href="#laravel" class="toc-link" data-toc="laravel" data-label="Laravel の基礎"><span class="toc-dot"><span class="num">•</span></span><span>Laravel の基礎</span></a>
+<a href="#team" class="toc-link" data-toc="team" data-label="チームでハンズオン"><span class="toc-dot"><span class="num">•</span></span><span>チームでハンズオン</span></a>
+<a href="#next" class="toc-link" data-toc="next" data-label="次のステップ"><span class="toc-dot"><span class="num">•</span></span><span>次のステップ</span></a>
+            </nav>
+        </div>
 
         <!-- なぜAntigravity CLIなのか（経緯） -->
         <section id="why" class="py-16 bg-white">
@@ -93,7 +212,7 @@
                         </p>
                     </div>
 
-                    <div class="bg-indigo-50 p-8 rounded-lg shadow-lg mb-8">
+                    <div class="bg-indigo-50 p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-8">
                         <h3 class="text-2xl font-bold text-indigo-800 mb-4">🕒 これまでの流れ</h3>
                         <div class="space-y-4">
                             <div class="bg-white p-5 rounded-lg border-l-4 border-indigo-400">
@@ -136,7 +255,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-green-50 p-8 rounded-lg shadow-lg mb-8">
+                    <div class="bg-green-50 p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-8">
                         <h3 class="text-2xl font-bold text-green-800 mb-4">💡 移行の理由</h3>
                         <p class="text-gray-700 mb-4">
                             Google の公式アナウンスでは、移行の背景がこう説明されています。
@@ -180,7 +299,7 @@
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Antigravity CLIとは？</h2>
 
-                    <div class="bg-indigo-50 p-8 rounded-lg shadow-lg mb-8">
+                    <div class="bg-indigo-50 p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-8">
                         <h3 class="text-2xl font-bold text-indigo-800 mb-4">🚀 概要</h3>
                         <p class="text-gray-700 text-lg mb-4">
                             <strong>Antigravity CLI</strong> は、Googleが提供する<br>
@@ -204,7 +323,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                    <div id="plans" class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-8">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">💳 料金プランと使える量</h3>
                         <p class="text-gray-700 mb-4">
                             無料の Google アカウントでも、CLI を含むすべての機能と Gemini 3.8 Flash／Gemini 3.1 Pro が使えます。
@@ -279,7 +398,7 @@
 
                     <div class="space-y-8">
                         <!-- 手順0: インストール -->
-                        <div id="step-install" class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
+                        <div id="step-install" class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
                                 <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">0</span>
                                 <h3 class="text-3xl font-bold text-gray-800">インストール</h3>
@@ -289,7 +408,14 @@
                                 公式インストーラを実行します。環境を自動判別し、<code class="bg-gray-100 px-1 rounded">agy</code> を配置します。
                             </p>
 
-                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                            <div class="flex flex-wrap items-center gap-3 mb-6">
+                                <span class="text-sm text-gray-500">あなたのPC：</span>
+                                <div class="os-switch" role="tablist">
+                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac / Linux</button>
+                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows</button>
+                                </div>
+                            </div>
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6" data-os-only="mac">
                                 <p class="font-bold text-indigo-800 mb-3">🍎 macOS / Linux:</p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
 <pre class="text-white">curl -fsSL https://antigravity.google/cli/install.sh | bash</pre>
@@ -299,7 +425,7 @@
                                 </p>
                             </div>
 
-                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6" data-os-only="win">
                                 <p class="font-bold text-indigo-800 mb-3">🪟 Windows（PowerShell）:</p>
                                 <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
 <pre class="text-white">irm https://antigravity.google/cli/install.ps1 | iex</pre>
@@ -327,7 +453,7 @@
                         </div>
 
                         <!-- 手順1: 初回起動と認証 -->
-                        <div id="step-login" class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
+                        <div id="step-login" class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
                                 <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">1</span>
                                 <h3 class="text-3xl font-bold text-gray-800">初回起動と Google ログイン</h3>
@@ -337,10 +463,21 @@
                                 作業用のフォルダに移動してから、Antigravity CLI を起動します。
                             </p>
 
+                            <div class="flex flex-wrap items-center gap-3 mb-6">
+                                <span class="text-sm text-gray-500">あなたのPC：</span>
+                                <div class="os-switch" role="tablist">
+                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac / Linux</button>
+                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows</button>
+                                </div>
+                            </div>
                             <div class="bg-indigo-50 p-6 rounded-lg mb-6">
                                 <p class="font-bold text-indigo-800 mb-3">📝 実行するコマンド:</p>
-                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm" data-os-only="mac">
 <pre class="text-white">mkdir -p ~/agy-handson &amp;&amp; cd ~/agy-handson
+agy</pre>
+                                </div>
+                                <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm" data-os-only="win">
+<pre class="text-white">mkdir ~/agy-handson; cd ~/agy-handson
 agy</pre>
                                 </div>
                             </div>
@@ -403,7 +540,7 @@ Select login method:
                         </div>
 
                         <!-- 手順2: APIキー -->
-                        <div id="step-apikey" class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-orange-500">
+                        <div id="step-apikey" class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-orange-500">
                             <div class="flex items-center mb-6">
                                 <span class="bg-orange-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">2</span>
                                 <h3 class="text-3xl font-bold text-gray-800">APIキーで使う（必要な人だけ）</h3>
@@ -432,8 +569,15 @@ Select login method:
                                 </p>
                             </div>
 
+                            <div class="flex flex-wrap items-center gap-3 mb-6">
+                                <span class="text-sm text-gray-500">あなたのPC：</span>
+                                <div class="os-switch" role="tablist">
+                                    <button type="button" role="tab" data-os-btn="mac" aria-selected="true">🍎 Mac / Linux</button>
+                                    <button type="button" role="tab" data-os-btn="win" aria-selected="false">🪟 Windows</button>
+                                </div>
+                            </div>
                             <!-- Mac -->
-                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6" data-os-only="mac">
                                 <p class="font-bold text-indigo-800 mb-4">🍎 macOS / Linux の手順</p>
 
                                 <p class="font-bold text-gray-800 mb-2">① 設定ファイルを開く</p>
@@ -466,19 +610,24 @@ agy</pre>
                             </div>
 
                             <!-- Windows -->
-                            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                            <div class="bg-indigo-50 p-6 rounded-lg mb-6" data-os-only="win">
                                 <p class="font-bold text-indigo-800 mb-4">🪟 Windows（PowerShell）の手順</p>
                                 <p class="font-bold text-gray-800 mb-2">① 設定ファイルを開く</p>
                                 <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm mb-3 overflow-x-auto">
 <pre class="text-white">notepad $HOME\.gemini\antigravity-cli\settings.json</pre>
                                 </div>
-                                <p class="text-sm text-gray-700 mb-6">Mac と同じく <code class="bg-gray-200 px-1 rounded">"modelProvider": "gemini"</code> を追加して保存します。</p>
+                                <p class="text-sm text-gray-700 mb-6">ファイルの場所：<code class="bg-gray-200 px-1 rounded">C:\Users\&lt;ユーザー名&gt;\.gemini\antigravity-cli\settings.json</code><br>
+                                <code class="bg-gray-200 px-1 rounded">"modelProvider": "gemini"</code> の1行を追加して保存します（<strong>前の行の最後にカンマ（,）</strong>を付ける）。</p>
 
                                 <p class="font-bold text-gray-800 mb-2">② キーを環境変数に入れて起動</p>
                                 <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto">
 <pre class="text-white">$env:GEMINI_API_KEY = "講師から受け取ったキー"
 agy</pre>
                                 </div>
+                                <p class="text-sm text-gray-700 mt-3">
+                                    <strong>agy を起動するのと同じ PowerShell ウィンドウで</strong>実行してください。
+                                    うまく入ったかは <code class="bg-gray-200 px-1 rounded">echo $env:GEMINI_API_KEY</code> で確認できます。
+                                </p>
                             </div>
 
                             <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600 mb-6">
@@ -522,7 +671,7 @@ agy</pre>
                         </div>
 
                         <!-- 手順3: モデル -->
-                        <div id="step-model" class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
+                        <div id="step-model" class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
                                 <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">3</span>
                                 <h3 class="text-3xl font-bold text-gray-800">モデルの選び方</h3>
@@ -574,7 +723,7 @@ agy</pre>
                         </div>
 
                         <!-- 手順4: 日本語設定 -->
-                        <div id="step-rules" class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
+                        <div id="step-rules" class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
                                 <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">4</span>
                                 <h3 class="text-3xl font-bold text-gray-800">日本語設定（AGENTS.md）</h3>
@@ -640,7 +789,7 @@ agy</pre>
                         </div>
 
                         <!-- 手順5: 基本的な使い方 -->
-                        <div id="step-basic" class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
+                        <div id="step-basic" class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-indigo-500">
                             <div class="flex items-center mb-6">
                                 <span class="bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">5</span>
                                 <h3 class="text-3xl font-bold text-gray-800">基本的な使い方</h3>
@@ -748,7 +897,7 @@ agy</pre>
                         </div>
 
                         <!-- 困ったときは -->
-                        <div id="trouble" class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-red-500">
+                        <div id="trouble" class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-red-500">
                             <div class="flex items-center mb-6">
                                 <span class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl mr-4">?</span>
                                 <h3 class="text-3xl font-bold text-gray-800">困ったときは</h3>
@@ -790,7 +939,7 @@ agy</pre>
                         </div>
 
                         <!-- 完了 -->
-                        <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5">
                             <div class="bg-green-50 p-6 rounded-lg border-2 border-green-600">
                                 <div class="flex items-start">
                                     <span class="text-3xl mr-4">🎉</span>
@@ -837,12 +986,12 @@ agy</pre>
         </section>
 
         <!-- まとめ -->
-        <section class="py-16 bg-white">
+        <section id="summary" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">まとめ</h2>
 
-                    <div class="bg-indigo-50 p-8 rounded-lg shadow-lg mb-8">
+                    <div class="bg-indigo-50 p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-8">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6">AI Codingで学んだこと</h3>
 
                         <div class="space-y-4">
@@ -874,7 +1023,7 @@ agy</pre>
         </section>
 
         <!-- Laravel基礎知識 -->
-        <section class="py-16 bg-gray-100">
+        <section id="laravel" class="py-16 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="max-w-5xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">Laravelでアプリを作る前に</h2>
@@ -901,7 +1050,7 @@ php artisan make:model Todo -m</pre>
                     </div>
 
                     <!-- MVCの説明 -->
-                    <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-8">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                             <span class="text-3xl mr-3">🏗️</span>
                             MVCアーキテクチャとは？
@@ -979,7 +1128,7 @@ php artisan make:model Todo -m</pre>
                     </div>
 
                     <!-- DBの作り方 -->
-                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5">
                         <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                             <span class="text-3xl mr-3">🗄️</span>
                             LaravelでDBを作る流れ
@@ -989,7 +1138,7 @@ php artisan make:model Todo -m</pre>
                             <!-- Step 1 -->
                             <div class="flex items-start">
                                 <span class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">1</span>
-                                <div class="flex-1">
+                                <div class="flex-1 min-w-0">
                                     <h4 class="font-bold text-gray-800 mb-2">Model と Migration を作成</h4>
                                     <p class="text-sm text-gray-600 mb-2">1つのコマンドでModelとテーブル定義を同時に作れます</p>
                                     <div class="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
@@ -1004,7 +1153,7 @@ php artisan make:model Todo -m</pre>
                             <!-- Step 2 -->
                             <div class="flex items-start">
                                 <span class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">2</span>
-                                <div class="flex-1">
+                                <div class="flex-1 min-w-0">
                                     <h4 class="font-bold text-gray-800 mb-2">Migration ファイルを編集</h4>
                                     <p class="text-sm text-gray-600 mb-2">テーブルのカラム（列）を定義します</p>
                                     <div class="bg-gray-900 p-3 rounded-lg font-mono text-sm overflow-x-auto">
@@ -1025,7 +1174,7 @@ php artisan make:model Todo -m</pre>
                             <!-- Step 3 -->
                             <div class="flex items-start">
                                 <span class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">3</span>
-                                <div class="flex-1">
+                                <div class="flex-1 min-w-0">
                                     <h4 class="font-bold text-gray-800 mb-2">Migration を実行</h4>
                                     <p class="text-sm text-gray-600 mb-2">定義したテーブルを実際にDBに作成します</p>
                                     <div class="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
@@ -1037,7 +1186,7 @@ php artisan make:model Todo -m</pre>
                             <!-- Step 4 -->
                             <div class="flex items-start">
                                 <span class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">4</span>
-                                <div class="flex-1">
+                                <div class="flex-1 min-w-0">
                                     <h4 class="font-bold text-gray-800 mb-2">Controller を作成</h4>
                                     <p class="text-sm text-gray-600 mb-2">CRUD操作を行うControllerを作成します</p>
                                     <div class="bg-gray-900 text-green-400 p-3 rounded-lg font-mono text-sm">
@@ -1086,7 +1235,7 @@ php artisan make:model Todo -m</pre>
 
                     <div class="grid md:grid-cols-2 gap-6 mb-12">
                         <!-- 1. Todoアプリ -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-green-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
                                 <span class="text-2xl">📝</span>
@@ -1100,7 +1249,7 @@ php artisan make:model Todo -m</pre>
                         </div>
 
                         <!-- 2. 電卓 -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-green-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
                                 <span class="text-2xl">🔢</span>
@@ -1114,7 +1263,7 @@ php artisan make:model Todo -m</pre>
                         </div>
 
                         <!-- 3. じゃんけんゲーム -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-green-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold mr-3">初級</span>
                                 <span class="text-2xl">✊</span>
@@ -1128,7 +1277,7 @@ php artisan make:model Todo -m</pre>
                         </div>
 
                         <!-- 4. ポモドーロタイマー -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-yellow-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-yellow-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-bold mr-3">中級</span>
                                 <span class="text-2xl">⏱️</span>
@@ -1154,7 +1303,7 @@ php artisan make:model Todo -m</pre>
 
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- DB 1. Todo永続化 -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-purple-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">DB初級</span>
                                 <span class="text-2xl">📝</span>
@@ -1168,7 +1317,7 @@ php artisan make:model Todo -m</pre>
                         </div>
 
                         <!-- DB 2. シンプル掲示板 -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-purple-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">DB初級</span>
                                 <span class="text-2xl">💬</span>
@@ -1182,7 +1331,7 @@ php artisan make:model Todo -m</pre>
                         </div>
 
                         <!-- DB 3. ブックマーク管理 -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-purple-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">DB中級</span>
                                 <span class="text-2xl">🔖</span>
@@ -1196,7 +1345,7 @@ php artisan make:model Todo -m</pre>
                         </div>
 
                         <!-- DB 4. 日報管理 -->
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-purple-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-purple-500">
                             <div class="flex items-center mb-3">
                                 <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-bold mr-3">DB中級</span>
                                 <span class="text-2xl">📋</span>
@@ -1233,39 +1382,39 @@ php artisan make:model Todo -m</pre>
                     </div>
 
                     <div class="grid md:grid-cols-3 gap-6 mb-8">
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-pink-500">
                             <div class="text-2xl mb-2">📄</div>
                             <h4 class="text-lg font-bold text-gray-800 mb-2">コミットメッセージ作成</h4>
                             <p class="text-gray-600 text-sm">変更内容を読んで、規約に沿ったコミットメッセージを自動で考えてくれるスキル</p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-pink-500">
                             <div class="text-2xl mb-2">🧪</div>
                             <h4 class="text-lg font-bold text-gray-800 mb-2">テストひな形生成</h4>
                             <p class="text-gray-600 text-sm">関数やクラスを渡すと、テストコードのひな形を決まった形式で作るスキル</p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-pink-500">
                             <div class="text-2xl mb-2">📝</div>
                             <h4 class="text-lg font-bold text-gray-800 mb-2">日報まとめ</h4>
                             <p class="text-gray-600 text-sm">その日の作業内容を箇条書きで渡すと、整った日報フォーマットに整形するスキル</p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-pink-500">
                             <div class="text-2xl mb-2">📚</div>
                             <h4 class="text-lg font-bold text-gray-800 mb-2">README生成</h4>
                             <p class="text-gray-600 text-sm">プロジェクトの構成を読み取り、セットアップ手順付きのREADMEを作るスキル</p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-pink-500">
                             <div class="text-2xl mb-2">🔍</div>
                             <h4 class="text-lg font-bold text-gray-800 mb-2">コードレビュー</h4>
                             <p class="text-gray-600 text-sm">変更したコードをチェックリストに沿ってレビューし、改善点を指摘するスキル</p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-pink-500">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-pink-500">
                             <div class="text-2xl mb-2">♻️</div>
                             <h4 class="text-lg font-bold text-gray-800 mb-2">リファクタリング提案</h4>
                             <p class="text-gray-600 text-sm">読みづらいコードを渡すと、わかりやすく書き直す案を出すスキル</p>
                         </div>
                     </div>
 
-                    <div class="mt-12 bg-white p-8 rounded-lg shadow-lg border-l-4 border-indigo-500">
+                    <div class="mt-12 bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 border-l-4 border-indigo-500">
                         <h3 class="text-2xl font-bold text-gray-800 mb-4">💡 ハンズオンのコツ</h3>
                         <div class="space-y-4 text-gray-700">
                             <div class="flex items-start">
@@ -1291,7 +1440,7 @@ php artisan make:model Todo -m</pre>
         </section>
 
         <!-- 次のステップ -->
-        <section class="py-16 bg-white">
+        <section id="next" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto text-center">
                     <h2 class="text-4xl font-bold text-gray-800 mb-6">次のステップ</h2>
@@ -1328,5 +1477,87 @@ php artisan make:model Todo -m</pre>
     <script src="global-menu.js"></script>
     <script src="nav-highlight.js"></script>
     <script src="scroll-to-top.js"></script>
+    <script>
+    // 目次（スクロール連動）・読了率・OS 切り替え
+    (function () {
+        var links = Array.prototype.slice.call(document.querySelectorAll('[data-toc]'));
+        var ids = [];
+        links.forEach(function (a) { if (ids.indexOf(a.dataset.toc) < 0) ids.push(a.dataset.toc); });
+        var targets = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+        var labels = {};
+        links.forEach(function (a) { labels[a.dataset.toc] = a.dataset.label; });
+        var current = document.getElementById('tocCurrent');
+        var nums = document.querySelectorAll('.js-progress-num');
+        var bars = document.querySelectorAll('.js-progress-bar');
+        var top = document.getElementById('readProgress');
+        var ticking = false;
+
+        function update() {
+            ticking = false;
+            var y = window.scrollY;
+            var max = document.documentElement.scrollHeight - window.innerHeight;
+            var pct = max > 0 ? Math.min(100, Math.round(y / max * 100)) : 0;
+            top.style.width = pct + '%';
+            bars.forEach(function (b) { b.style.width = pct + '%'; });
+            nums.forEach(function (n) { n.textContent = pct; });
+
+            var line = window.innerWidth >= 1280 ? 120 : 160;
+            var active = null;
+            targets.forEach(function (t) { if (t.getBoundingClientRect().top - line <= 0) active = t.id; });
+            if (pct >= 99 && targets.length) active = targets[targets.length - 1].id;
+            var passed = true;
+            ids.forEach(function (id) {
+                if (id === active) passed = false;
+                links.forEach(function (a) {
+                    if (a.dataset.toc !== id) return;
+                    a.classList.toggle('is-active', id === active);
+                    a.classList.toggle('is-done', active !== null && passed && id !== active);
+                });
+            });
+            if (current) current.textContent = active ? labels[active] : 'はじめに';
+            var side = document.querySelector('#toc .toc-link.is-active');
+            if (side && window.innerWidth >= 1280) {
+                var box = document.getElementById('toc');
+                var r = side.getBoundingClientRect(), b = box.getBoundingClientRect();
+                if (r.top < b.top + 80 || r.bottom > b.bottom - 40) box.scrollTop += r.top - b.top - b.height / 3;
+            }
+        }
+        window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+        window.addEventListener('resize', update);
+        update();
+
+        // スマホ用目次の開閉
+        var toggle = document.getElementById('tocToggle');
+        var panel = document.getElementById('tocPanel');
+        var chev = document.getElementById('tocChevron');
+        function setPanel(open) {
+            panel.classList.toggle('hidden', !open);
+            toggle.setAttribute('aria-expanded', open);
+            chev.style.transform = open ? 'rotate(180deg)' : '';
+        }
+        toggle.addEventListener('click', function () { setPanel(panel.classList.contains('hidden')); });
+        panel.addEventListener('click', function (e) { if (e.target.closest('a')) setPanel(false); });
+
+        // OS 切り替え（自動判別＋選択を記憶）
+        var os = null;
+        try { os = localStorage.getItem('agy-os'); } catch (e) {}
+        if (os !== 'mac' && os !== 'win') os = /Win/i.test(navigator.userAgent) ? 'win' : 'mac';
+        function setOS(v) {
+            os = v;
+            document.documentElement.setAttribute('data-os', v);
+            document.querySelectorAll('[data-os-btn]').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.osBtn === v); });
+            try { localStorage.setItem('agy-os', v); } catch (e) {}
+        }
+        document.querySelectorAll('[data-os-btn]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var before = b.getBoundingClientRect().top;
+                setOS(b.dataset.osBtn);
+                window.scrollBy(0, b.getBoundingClientRect().top - before);
+                update();
+            });
+        });
+        setOS(os);
+    })();
+    </script>
 </body>
 </html>
