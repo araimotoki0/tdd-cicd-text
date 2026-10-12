@@ -3,14 +3,14 @@
    - CSS / JS / 画像 / フォント：キャッシュを返しつつ裏で更新（stale-while-revalidate）
    - 動画：キャッシュしない（容量が大きく、途中からの読み込みがあるため）
    更新するときは VERSION を変える */
-var VERSION = 'csd-2026-10-13b';
+var VERSION = 'csd-2026-10-13c';
 var CACHE = 'csd-' + VERSION;
 
 var PAGES = [
   'index.html', 'handson-basic.html', 'handson-refactor.html', 'handson-assertions.html', 'handson-advanced.html', 'handson-database.html',
   'ai-coding-antigravity.html', 'ai-coding.html', 'mob-ai.html', 'mob-ai-cyberdojo.html',
   'cicd-index.html', 'cicd-handson-basic.html', 'cicd-handson-quality.html', 'cicd-handson-deploy.html',
-  'handson-setup-mac.html', 'handson-setup-windows.html', 'csd-preview.html', 'replit-tdd.html', 'home.html', 'app.html', 'offline.html'
+  'handson-setup-mac.html', 'handson-setup-windows.html', 'csd-preview.html', 'replit-tdd.html', 'home.html', 'app.html', 'login.html', 'offline.html'
 ];
 var ASSETS = ['styles.css', 'ui2.css', 'code-copy.js', 'global-menu.js', 'nav-highlight.js', 'scroll-to-top.js', 'page-nav.js', 'ui2.js',
   'manifest.json', 'img/qr-site.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
@@ -39,6 +39,7 @@ self.addEventListener('fetch', function (e) {
   if (req.method !== 'GET') return;
   var url = new URL(req.url);
   if (isVideo(url)) return;
+  if (url.pathname === '/auth' || url.pathname === '/login.html') return;
 
   // ページ：ネットワーク優先（3.5秒でキャッシュに切り替え）
   if (req.mode === 'navigate') {
