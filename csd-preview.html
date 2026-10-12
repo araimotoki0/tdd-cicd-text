@@ -6,7 +6,7 @@
     <title>CSDクラス チラ見せ説明会 - スクラム開発を主導するための講座</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css?v=20261012b">
+    <link rel="stylesheet" href="styles.css?v=20261012c">
 </head>
 <body class="bg-gray-50">
     <!-- ナビゲーション -->
@@ -58,7 +58,7 @@
             </div>
         </section>
 
-        <!-- 4. AIコーディング（既存維持） -->
+        <!-- 4. AIコーディング -->
         <section class="py-16 bg-gray-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
@@ -67,21 +67,38 @@
                     <div class="bg-white p-8 rounded-lg shadow-lg mb-8">
                         <div class="flex items-center mb-6">
                             <span class="text-4xl mr-4">💻</span>
-                            <h3 class="text-2xl font-bold text-gray-800">Gemini CLI を使った開発</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">Antigravity CLI を使った開発</h3>
                         </div>
 
                         <p class="text-gray-700 text-lg mb-6">
-                            CLIで<strong>Gemini CLI</strong>を用いた開発の仕方を解説します。
+                            Google の AI エージェント <strong>Antigravity CLI</strong>（モデルは <strong>Gemini 3.8 Flash</strong>）を使って、
+                            ターミナルからAIに開発を任せる方法を解説します。
                         </p>
 
-                        <div class="bg-gray-900 p-4 rounded-lg mb-6">
-                            <code class="text-green-400 text-sm">$ gemini</code>
+                        <div class="bg-gray-900 p-4 rounded-lg mb-6 font-mono text-sm leading-7">
+                            <p class="text-green-400">$ agy</p>
+                            <p class="text-gray-200"><span class="text-indigo-300">❯</span> /plan Laravel で Todo アプリを作って</p>
                         </div>
 
-                        <div class="bg-gray-100 p-4 rounded-lg mb-6 border-l-4 border-gray-400">
-                            <p class="text-sm text-gray-700">
-                                ※ 説明会（2026年1月22日）当時の内容です。Gemini CLI は 2026年6月18日に無料・Pro・Ultra ユーザー向けの提供が終了したため、
-                                現在の講座では <a href="ai-coding-antigravity.html" class="text-blue-600 underline">Antigravity CLI（<code>agy</code>）</a> を使います。
+                        <div class="grid md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-indigo-50 p-4 rounded-lg">
+                                <p class="font-bold text-indigo-800 mb-1">🗺️ 計画してから作る</p>
+                                <p class="text-sm text-gray-700"><code>/plan</code> で作業計画を出させ、チームで確認してから実装</p>
+                            </div>
+                            <div class="bg-indigo-50 p-4 rounded-lg">
+                                <p class="font-bold text-indigo-800 mb-1">📄 ルールを伝える</p>
+                                <p class="text-sm text-gray-700"><code>AGENTS.md</code> にプロジェクトのルールを書いて、AIに守らせる</p>
+                            </div>
+                            <div class="bg-indigo-50 p-4 rounded-lg">
+                                <p class="font-bold text-indigo-800 mb-1">🛠️ スキルを作る</p>
+                                <p class="text-sm text-gray-700">よく使う作業手順をスキルにして、チームで再利用</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg mb-6 border-l-4 border-green-500">
+                            <p class="font-bold text-green-800 mb-2">👥 モブAI</p>
+                            <p class="text-gray-700">
+                                Cyber-Dojo を使い、チーム全員でAIと一緒にTDDを進める<strong>モブプログラミング</strong>も体験します。
                             </p>
                         </div>
 
@@ -106,7 +123,7 @@
             </div>
         </section>
 
-        <!-- 6. 開発環境（既存維持） -->
+        <!-- 6. 開発環境 -->
         <section class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
@@ -119,7 +136,7 @@
                         </div>
 
                         <p class="text-gray-700 text-lg mb-6">
-                            開発環境は<strong>Docker Compose</strong>を用いて、実際にローカル環境で開発をしていきます。
+                            開発環境は<strong>Docker Compose</strong>を用いて、<strong>Laravel 13</strong> のアプリを実際にローカル環境で開発していきます。
                         </p>
 
                         <div class="bg-gray-900 p-6 rounded-lg mb-6">
@@ -182,17 +199,17 @@
                             <div class="bg-white p-4 rounded-lg border-l-4 border-green-500">
                                 <p class="font-bold text-green-800 mb-2">✅ ORMでDBにデータを保存</p>
                                 <p class="text-gray-700">正常に完了したか、しなかったかのテスト</p>
-                                <p class="text-gray-500 text-sm mt-2">バリデーション、制約違反、トランザクションの検証</p>
+                                <p class="text-gray-500 text-sm mt-2">保存した値・件数を DB 用のアサーションで検証</p>
                             </div>
                             <div class="bg-white p-4 rounded-lg border-l-4 border-green-500">
                                 <p class="font-bold text-green-800 mb-2">✅ DBからデータを取得</p>
                                 <p class="text-gray-700">取得できたかどうかのテスト</p>
-                                <p class="text-gray-500 text-sm mt-2">クエリの正確性、リレーション、N+1問題の検出</p>
+                                <p class="text-gray-500 text-sm mt-2">条件どおりのデータだけが取れるか（完了済みだけ、など）を検証</p>
                             </div>
                             <div class="bg-white p-4 rounded-lg border-l-4 border-green-500">
                                 <p class="font-bold text-green-800 mb-2">✅ テストごとにDBをリセット</p>
                                 <p class="text-gray-700">テストの独立性を保証</p>
-                                <p class="text-gray-500 text-sm mt-2">マイグレーション＆シーディングで毎回クリーンな状態から実行</p>
+                                <p class="text-gray-500 text-sm mt-2">テスト用のDB（SQLite）を毎回まっさらな状態から作り直して実行</p>
                             </div>
                         </div>
 
@@ -227,11 +244,15 @@
                                 <ul class="space-y-2 text-gray-700">
                                     <li class="flex items-center">
                                         <span class="text-green-500 mr-2">✓</span>
-                                        自動テスト実行
+                                        自動テスト実行（GitHub Actions）
                                     </li>
                                     <li class="flex items-center">
                                         <span class="text-green-500 mr-2">✓</span>
-                                        自動マージ
+                                        静的解析（Larastan）とコード整形チェック（Pint）
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-green-500 mr-2">✓</span>
+                                        テストが通らないとマージできないブランチ保護
                                     </li>
                                 </ul>
                                 <p class="text-gray-500 text-sm mt-3">問題を早期発見し、統合リスクを最小化</p>
@@ -249,7 +270,7 @@
                                 <ul class="space-y-2 text-gray-700">
                                     <li class="flex items-center">
                                         <span class="text-green-500 mr-2">✓</span>
-                                        EC2へ自動デプロイ
+                                        AWS EC2 へ自動デプロイ
                                     </li>
                                     <li class="flex items-center">
                                         <span class="text-green-500 mr-2">✓</span>
@@ -273,7 +294,7 @@
                             </div>
                             <span class="text-green-400">→</span>
                             <div class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm">
-                                <p class="font-bold">Build</p>
+                                <p class="font-bold">品質チェック</p>
                             </div>
                             <span class="text-green-400">→</span>
                             <div class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm">
@@ -401,7 +422,7 @@
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
-    <script src="global-menu.js?v=20261012b"></script>
-    <script src="page-nav.js?v=20261012b"></script>
+    <script src="global-menu.js?v=20261012c"></script>
+    <script src="page-nav.js?v=20261012c"></script>
 </body>
 </html>

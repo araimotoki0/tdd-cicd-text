@@ -1,5 +1,5 @@
 // ページ内ナビゲーション
-// - 見出し(h2)から目次を自動生成（PC: 左に固定 / スマホ: 上部に追従するバー）
+// - 見出し(h2)から目次を自動生成（PC: 右に固定 / スマホ: 上部に追従するバー）
 // - 現在地のハイライト・読了チェック・読了率
 // - ヘッダーの読了プログレスバー
 // - スマホ用メニューボタン（#menuBtn）の開閉
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return list;
         }
 
-        // PC: 左に固定の目次
+        // PC: 右に固定の目次
         var aside = document.createElement('aside');
         aside.className = 'pnav-side';
         aside.setAttribute('aria-label', '目次');

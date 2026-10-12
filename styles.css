@@ -274,15 +274,16 @@ table { max-width: 100%; }
     transition: width .1s linear;
 }
 
-/* PC: 左に固定の目次 */
+/* PC: 右に固定の目次 */
 .pnav-side { display: none; }
 @media (min-width: 1280px) {
-    body.pnav-on .pt-20 { padding-left: 18rem; }
+    body.pnav-on .pt-20 { padding-right: 18rem; }
+    body.pnav-on .scroll-to-top-button { right: calc(18rem + 30px); }
     .pnav-side {
-        display: block; position: fixed; left: 0; top: 64px; bottom: 0; width: 18rem;
+        display: block; position: fixed; right: 0; top: 64px; bottom: 0; width: 18rem;
         padding: 24px 20px 40px; overflow-y: auto; z-index: 30;
         background: rgba(255, 255, 255, .95); backdrop-filter: blur(8px);
-        border-right: 1px solid #e5e7eb; scrollbar-width: thin;
+        border-left: 1px solid #e5e7eb; scrollbar-width: thin;
     }
     .pnav-bar { display: none; }
 }
