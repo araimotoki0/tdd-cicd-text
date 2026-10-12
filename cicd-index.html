@@ -7,14 +7,14 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css?v=20261012d">
-    <link rel="stylesheet" href="ui2.css?v=3">
+    <link rel="stylesheet" href="ui2.css?v=7">
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 ui2" data-chapter="cicd">
     <!-- ナビゲーションバー -->
     <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold">CI/CD ハンズオン講座 - 理論編</h1>
+                <div class="ui2-brand"><button type="button" class="ui2-menu-btn" aria-label="講座メニューを開く" aria-expanded="false" aria-controls="ui2Drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span class="lbl">コース</span></button><h1 class="text-2xl font-bold">CI/CD ハンズオン講座 - 理論編</h1></div>
                 <div class="hidden md:flex space-x-4 text-sm items-center">
                     <a href="cicd-index.html" class="hover:text-blue-200">理論編</a>
                     <span class="text-blue-200">|</span>
@@ -46,8 +46,9 @@
 
     <div class="pt-20">
         <!-- ヒーローセクション -->
-        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+        <section class="ui2-hero bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
             <div class="container mx-auto px-6 text-center">
+                <span class="ui2-eyebrow"><b>5</b>CI/CD　·　理論編</span>
                 <h2 class="text-5xl font-bold mb-4">CI/CD: スクラム開発を加速させる自動化</h2>
                 <p class="text-xl mb-4">継続的インテグレーション・継続的デリバリーでスプリントの価値を最大化</p>
                 <p class="text-sm mb-8 opacity-90">スプリント内で品質を保ちながら、プロダクトオーナーに迅速にフィードバック</p>
@@ -483,6 +484,6 @@
     <script src="nav-highlight.js?v=20261012d"></script>
     <script src="scroll-to-top.js?v=20261012d"></script>
     <script src="page-nav.js?v=20261012d"></script>
-    <script src="ui2.js?v=5"></script>
+    <script src="ui2.js?v=11"></script>
 </body>
 </html>

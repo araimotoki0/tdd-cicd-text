@@ -1,4 +1,4 @@
-// CSD 講座 UI v2：講座の地図・前へ／次へ・完了チェック・講座メニュー・キーボード操作
+// CSD 講座 UI v2：章ラベル・前へ／次へ・講座メニュー（サイドペイン）・キーボード操作
 (function () {
     var CHAPTERS = [
         { id: 'setup', name: '環境構築', sub: 'Mac / Windows', color: '#64748b',
@@ -34,17 +34,16 @@
     });
     var extra = EXTRAS[file];
 
-    var KEY = 'csd-done-v1';
-    function loadDone() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
-    function saveDone(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
-    var done = loadDone();
-    function isDone(f) { return done.indexOf(f) >= 0; }
 
     function el(html) { var d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstChild; }
     function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
     document.addEventListener('DOMContentLoaded', function () {
         var body = document.body;
+        // 目次の見出しを簡潔に・スキップリンク
+        var th = document.querySelector('.pnav-side-head p, #toc .flex > p'); if (th) th.textContent = '目次';
+        var tb = document.querySelector('.pnav-bar-title, #tocBar .text-indigo-700'); if (tb) tb.textContent = '目次';
+        var m0 = document.querySelector('.pt-20'); if (m0) { m0.id = m0.id || 'ui2-main'; document.body.insertBefore(el('<a class="ui2-skip" href="#' + m0.id + '">本文へ移動</a>'), document.body.firstChild); }
         body.classList.add('ui2');
         body.dataset.chapter = chapter ? chapter.id : (extra ? extra.chapter : 'extra');
 
@@ -53,36 +52,12 @@
         if (hero && /bg-gradient/.test(hero.className)) {
             hero.classList.add('ui2-hero');
             // 章のラベル（ヒーローの上）
-            if (!document.getElementById('toc')) {
+            if (!document.getElementById('toc') && !hero.querySelector('.ui2-eyebrow')) {
                 var box = hero.querySelector('.container') || hero;
                 var label = chapter ? '<b>' + chapterNo + '</b>' + esc(chapter.name) + '　·　' + esc(pageLabel)
                                     : '<b>＋</b>' + esc(extra ? extra.label : '');
                 box.insertBefore(el('<span class="ui2-eyebrow">' + label + '</span>'), box.firstChild);
             }
-        }
-
-        // 講座の地図
-        if (hero && (chapter || extra)) {
-            var cur = chapter ? chapter.id : extra.chapter;
-            var steps = CHAPTERS.map(function (c, i) {
-                var allDone = c.pages.every(function (p) { return isDone(p[0]); });
-                var cls = 'ui2-step' + (c.id === cur ? ' is-current' : '') + (allDone ? ' is-done' : '');
-                return '<a class="' + cls + '" style="--c:' + c.color + '" href="' + c.pages[0][0] + '">' +
-                       '<span class="n">' + (i + 1) + '</span><span class="t"><b>' + esc(c.name) + '</b><small>' + esc(c.sub) + '</small></span></a>';
-            }).join('');
-            var curCh = CHAPTERS.filter(function (c) { return c.id === cur; })[0];
-            var sub = '';
-            if (curCh && curCh.pages.length > 1) {
-                sub = '<div class="ui2-sub">' + curCh.pages.map(function (p) {
-                    var cls = (p[0] === file ? 'is-current' : '') + (isDone(p[0]) ? ' is-done' : '');
-                    return '<a class="' + cls + '" href="' + p[0] + '">' + esc(p[1]) + '</a>';
-                }).join('') + '</div>';
-            }
-            var total = LINEAR.length, cnt = LINEAR.filter(function (p) { return isDone(p.file); }).length;
-            var map = el('<nav class="ui2-map" aria-label="講座の地図"><div class="ui2-map-in">' +
-                '<div class="ui2-map-head"><span>講座の地図</span><span class="ui2-done-count">完了 ' + cnt + ' / ' + total + '</span></div>' +
-                '<div class="ui2-steps">' + steps + '</div>' + sub + '</div></nav>');
-            hero.after(map);
         }
 
         // 前へ・次へ・完了
@@ -100,26 +75,13 @@
                 var cap = kind === 'next' ? '次へ →' : '← 前へ';
                 return '<a class="' + kind + '" href="' + p.file + '"><small>' + cap + '　' + esc(p.chapter.name) + '</small><b>' + esc(p.label) + '</b></a>';
             }
-            var complete = idx >= 0 ? '<div class="ui2-complete"><button type="button" aria-pressed="' + isDone(file) + '"><span class="box">✓</span><span class="lbl"></span></button></div>' : '';
-            var nav = el('<section class="ui2-next"><div class="ui2-next-in">' + complete +
+            var nav = el('<section class="ui2-next"><div class="ui2-next-in">' +
                 '<div class="ui2-pn">' + card(prev, 'prev') + (idx === LINEAR.length - 1 ? '<div class="next finish"><small>ゴール</small><b>🎉 全講座おつかれさまでした！</b></div>' : card(next, 'next')) + '</div>' +
                 '<p class="ui2-keys"><kbd>←</kbd> <kbd>→</kbd> キーでも移動できます</p></div></section>');
             footer.before(nav);
-            var btn = nav.querySelector('.ui2-complete button');
-            if (btn) {
-                var lbl = btn.querySelector('.lbl');
-                var paint = function () { lbl.textContent = isDone(file) ? 'このページは完了しました' : 'このページを完了にする'; btn.setAttribute('aria-pressed', isDone(file)); };
-                paint();
-                btn.addEventListener('click', function () {
-                    done = isDone(file) ? done.filter(function (f) { return f !== file; }) : done.concat([file]);
-                    saveDone(done); paint();
-                    document.querySelectorAll('.ui2-sub a, .ui2-menu-group a').forEach(function (a) {
-                        if (a.getAttribute('href') === file) a.classList.toggle('is-done', isDone(file));
-                    });
-                });
-            }
             document.addEventListener('keydown', function (e) {
                 if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+                if (document.body.classList.contains('ui2-open')) return;
                 var t = e.target;
                 if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT|VIDEO)$/.test(t.tagName))) return;
                 if (e.key === 'ArrowRight' && next) location.href = next.file;
@@ -127,20 +89,59 @@
             });
         }
 
-        // 講座メニュー（左上）を章ごとに
-        var content = document.querySelector('#globalMenu .global-menu-content');
-        if (content) {
-            var groups = CHAPTERS.map(function (c, i) {
-                var links = c.pages.map(function (p) {
-                    var cls = (p[0] === file ? 'is-current' : '');
-                    return '<a class="' + cls + '" href="' + p[0] + '"><span>' + esc(p[1]) + '</span>' + (isDone(p[0]) ? '<span class="ok">✓</span>' : '') + '</a>';
-                }).join('');
-                return '<div class="ui2-menu-group" style="--c:' + c.color + '"><p><i></i>' + (i + 1) + '. ' + esc(c.name) + '</p>' + links + '</div>';
+        // ヘッダーのボタン ＋ 左から開くサイドペイン（講座の単位だけ）
+        var bar = document.querySelector('body > nav .container > .flex');
+        var title = bar && bar.firstElementChild;
+        if (bar && title) {
+            // ボタンは HTML に書いてある（ちらつかないように）。なければ作る
+            var btn2 = document.querySelector('.ui2-menu-btn');
+            if (!btn2) {
+                var brand = el('<div class="ui2-brand"></div>');
+                btn2 = el('<button type="button" class="ui2-menu-btn" aria-label="講座メニューを開く" aria-expanded="false" aria-controls="ui2Drawer">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>' +
+                    '<span class="lbl">コース</span></button>');
+                bar.insertBefore(brand, title);
+                brand.appendChild(btn2);
+                brand.appendChild(title);
+            }
+
+            var items = [
+                ['handson-setup-mac.html', '環境構築（Mac）', '#55607a', 'setup', '1', '講義の前に'],
+                ['handson-setup-windows.html', '環境構築（Windows）', '#55607a', 'setup', '1', '講義の前に'],
+                ['ai-coding-antigravity.html', 'AI Coding', '#5b5bd6', 'ai', '2', 'Antigravity CLI・ハーネス'],
+                ['index.html', 'TDD', '#2f8f6b', 'tdd', '3', 'テスト駆動開発'],
+                ['mob-ai.html', 'MobAI', '#b7791f', 'mobai', '4', 'AI とグループ作業'],
+                ['cicd-index.html', 'CI/CD', '#2b6cb0', 'cicd', '5', '自動テスト・デプロイ']
+            ];
+            var curCh = chapter ? chapter.id : (extra ? extra.chapter : '');
+            var list = items.map(function (it, i) {
+                var isCur = it[3] === 'setup' ? file === it[0] : it[3] === curCh;
+                return '<a class="ui2-item' + (isCur ? ' is-current' : '') + '" style="--c:' + it[2] + '" href="' + it[0] + '">' +
+                    '<span class="no">' + it[4] + '</span><span class="nm"><b>' + esc(it[1]) + '</b><small>' + esc(it[5]) + '</small></span>' +
+                    (isCur ? '<span class="here">いまここ</span>' : '') + '</a>';
             }).join('');
-            var others = Object.keys(EXTRAS).map(function (f) {
-                return '<a class="old' + (f === file ? ' is-current' : '') + '" href="' + f + '"><span>' + esc(EXTRAS[f].label) + '</span></a>';
-            }).join('');
-            content.innerHTML = groups + '<div class="ui2-menu-group" style="--c:#94a3b8"><p><i></i>そのほか</p>' + others + '</div>';
+            var drawer = el('<aside class="ui2-drawer" id="ui2Drawer" aria-label="講座メニュー" aria-hidden="true">' +
+                '<div class="ui2-dh"><div><small>CSD COURSE</small><b>講座メニュー</b></div>' +
+                '<button type="button" class="ui2-close" aria-label="閉じる"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
+                '<div class="ui2-dbody">' + list +
+                '<div class="ui2-extra"><a class="' + (file === 'csd-preview.html' ? 'is-current' : '') + '" href="csd-preview.html">チラ見せ説明会（2026/01/22）</a></div>' +
+                '</div><div class="ui2-dfoot"><kbd>Esc</kbd> で閉じる</div></aside>');
+            var scrim = el('<div class="ui2-scrim"></div>');
+            document.body.appendChild(scrim);
+            document.body.appendChild(drawer);
+            var setOpen = function (open) {
+                document.body.classList.toggle('ui2-open', open);
+                btn2.setAttribute('aria-expanded', open);
+                drawer.setAttribute('aria-hidden', !open);
+                if (open) drawer.querySelector('.ui2-close').focus(); else btn2.focus();
+            };
+            btn2.addEventListener('click', function () { setOpen(true); });
+            scrim.addEventListener('click', function () { setOpen(false); });
+            drawer.querySelector('.ui2-close').addEventListener('click', function () { setOpen(false); });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && document.body.classList.contains('ui2-open')) setOpen(false);
+            });
+            drawer.querySelectorAll('.ui2-item, .ui2-extra').forEach(function (n, i) { n.style.transitionDelay = (0.06 + i * 0.035) + 's'; });
         }
     });
 })();

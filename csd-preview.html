@@ -7,14 +7,14 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css?v=20261012d">
-    <link rel="stylesheet" href="ui2.css?v=3">
+    <link rel="stylesheet" href="ui2.css?v=7">
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 ui2" data-chapter="extra">
     <!-- ナビゲーション -->
     <nav class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg fixed w-full top-0 z-50">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold">CSDクラス チラ見せ説明会</h1>
+                <div class="ui2-brand"><button type="button" class="ui2-menu-btn" aria-label="講座メニューを開く" aria-expanded="false" aria-controls="ui2Drawer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span class="lbl">コース</span></button><h1 class="text-2xl font-bold">CSDクラス チラ見せ説明会</h1></div>
                 <div class="hidden md:flex space-x-4 text-sm items-center">
                     <a href="index.html" class="hover:text-indigo-200">TDD講座</a>
                     <span class="text-indigo-200">|</span>
@@ -26,8 +26,9 @@
 
     <div class="pt-20">
         <!-- 1. ヒーローセクション（改善） -->
-        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
+        <section class="ui2-hero bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20">
             <div class="container mx-auto px-6 text-center">
+                <span class="ui2-eyebrow"><b>＋</b>チラ見せ説明会（2026/01/22）</span>
                 <h2 class="text-5xl font-bold mb-6">CSDクラス チラ見せ説明会</h2>
                 <p class="text-2xl mb-4">資格を取るだけで終わらない</p>
                 <p class="text-lg opacity-80 mb-2">スクラム開発を主導するための実践講座</p>
@@ -425,6 +426,6 @@
     </script>
     <script src="global-menu.js?v=20261012d"></script>
     <script src="page-nav.js?v=20261012d"></script>
-    <script src="ui2.js?v=5"></script>
+    <script src="ui2.js?v=11"></script>
 </body>
 </html>
