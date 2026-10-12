@@ -91,6 +91,7 @@
         <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2"><div class="js-progress-bar h-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 rounded-full" style="width:0"></div></div>
         <nav>
 <p class="toc-group">はじめに</p>
+<a href="#harness" class="toc-link" data-toc="harness" data-label="講師がいちばん伝えたいこと"><span class="toc-dot"><span class="num">★</span></span><span>講師がいちばん伝えたいこと</span></a>
 <a href="#why" class="toc-link" data-toc="why" data-label="なぜ Antigravity CLI？"><span class="toc-dot"><span class="num">•</span></span><span>なぜ Antigravity CLI？</span></a>
 <a href="#about" class="toc-link" data-toc="about" data-label="Antigravity CLI とは"><span class="toc-dot"><span class="num">•</span></span><span>Antigravity CLI とは</span></a>
 <a href="#plans" class="toc-link" data-toc="plans" data-label="料金プランと使える量"><span class="toc-dot"><span class="num">•</span></span><span>料金プランと使える量</span></a>
@@ -169,6 +170,7 @@
             <div class="h-0.5 bg-gray-100"><div class="js-progress-bar h-full bg-gradient-to-r from-indigo-500 to-fuchsia-500" style="width:0"></div></div>
             <nav id="tocPanel" class="hidden max-h-[70vh] overflow-y-auto px-4 pb-4">
 <p class="toc-group">はじめに</p>
+<a href="#harness" class="toc-link" data-toc="harness" data-label="講師がいちばん伝えたいこと"><span class="toc-dot"><span class="num">★</span></span><span>講師がいちばん伝えたいこと</span></a>
 <a href="#why" class="toc-link" data-toc="why" data-label="なぜ Antigravity CLI？"><span class="toc-dot"><span class="num">•</span></span><span>なぜ Antigravity CLI？</span></a>
 <a href="#about" class="toc-link" data-toc="about" data-label="Antigravity CLI とは"><span class="toc-dot"><span class="num">•</span></span><span>Antigravity CLI とは</span></a>
 <a href="#plans" class="toc-link" data-toc="plans" data-label="料金プランと使える量"><span class="toc-dot"><span class="num">•</span></span><span>料金プランと使える量</span></a>
@@ -187,6 +189,60 @@
 <a href="#next" class="toc-link" data-toc="next" data-label="次のステップ"><span class="toc-dot"><span class="num">•</span></span><span>次のステップ</span></a>
             </nav>
         </div>
+
+        <!-- 講師がいちばん伝えたいこと：ハーネス -->
+        <section id="harness" class="py-16 bg-gradient-to-b from-amber-50 to-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-center mb-3"><span class="inline-block bg-amber-400 text-amber-950 font-bold text-sm px-4 py-1.5 rounded-full">★ いちばん重要な知識</span></p>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center">講師がいちばん伝えたいこと：ハーネス</h2>
+
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-2 ring-amber-300 mb-8">
+                        <p class="text-gray-800 text-lg leading-relaxed">
+                            講義の中では、あくまで Antigravity CLI という<strong>ハーネスの使い方</strong>を説明しています。<br>
+                            でも、本当に伝えたいのはこれです。<span class="bg-yellow-200 px-1 font-bold">これが、いちばん重要な知識です。</span>
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-gray-900/10 bg-black mb-3">
+                        <video class="w-full h-auto block" src="video/harness.mp4?v=1" poster="video/harness-poster.jpg?v=1" controls preload="metadata" playsinline></video>
+                    </div>
+                    <p class="text-sm text-gray-500 text-center mb-10">🎬 解説動画「ハーネスってなに？」（約3分半・音声あり）</p>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">① LLM は「文字を受け取って、文字を返す」だけ</p>
+                            <p class="text-gray-700 text-sm">AI の中心にある LLM だけでは、ファイルを開くことも、コマンドを実行することもできません。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">② ハーネスが、LLM を「作業できる AI」にする</p>
+                            <p class="text-gray-700 text-sm">馬具が馬の力を馬車を引く力に変えるように、ハーネスは LLM に<strong>道具</strong>（ファイル・コマンド・Web）を渡し、<strong>くり返し</strong>（考える → 動く → 結果を見る）、<strong>文脈</strong>（AGENTS.md・スキル）、<strong>安全</strong>（許可・権限）を足します。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">③ 同じモデルでも、ハーネスで差が出る</p>
+                            <p class="text-gray-700 text-sm">GitHub Copilot では Claude・GPT・Gemini のモデルを選べます。同じモデルでも、ブラウザのチャットと、ターミナルで動く CLI のハーネスでは、できることがまったく違います。CLI は自分のパソコンの上で、ファイル・コマンド・Linux の権限まで使えます。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">④ ハーネスを「作る」仕事も増えている</p>
+                            <p class="text-gray-700 text-sm">文字しか返せない LLM を、お客さまにとって使いやすい形で、執事のように働かせる。Web 開発の現場でも、そんなハーネスを作る案件が増えています。</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-indigo-600 text-white p-6 md:p-8 rounded-2xl shadow-lg mb-6">
+                        <p class="text-xl font-bold mb-2">だから、ハーネスの仕組みを理解して、使い方に慣れること。</p>
+                        <p class="text-indigo-100">ツールの名前やモデルは、これからもどんどん変わります。でも「LLM ＋ ハーネス」という仕組みを知っていれば、どのツールでも使いこなせて、自分で作る側にも回れます。</p>
+                    </div>
+
+                    <div class="bg-gray-50 p-5 rounded-2xl border-l-4 border-gray-400">
+                        <p class="text-sm text-gray-700">
+                            💡 <strong>この動画も、ハーネスを使って作りました。</strong>
+                            AI に台本を書かせ、Gemini の音声合成で3人の声を作り、ブラウザで画面を描いて、動画に組み立てるところまで。
+                            ブラウザのチャットではできない作業も、CLI のハーネスならできる、という実例です。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- なぜAntigravity CLIなのか（経緯） -->
         <section id="why" class="py-16 bg-white">
