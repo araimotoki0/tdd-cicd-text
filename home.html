@@ -14,7 +14,7 @@
     <link rel="icon" href="icons/icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css?v=20261012d">
-    <link rel="stylesheet" href="ui2.css?v=15">
+    <link rel="stylesheet" href="ui2.css?v=17">
 </head>
 <body class="bg-gray-50 ui2" data-chapter="home">
     <!-- ナビゲーションバー -->
@@ -96,16 +96,21 @@
         <section class="py-14 ui2-questsec">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
-                    <a class="ui2-quest" href="https://learn.scrum.abi-agile.com/" target="_blank" rel="noopener">
-                        <div class="ui2-quest-img"><img src="img/scrum-quest.webp" alt="SCRUM QUEST のタイトル画面" loading="lazy"></div>
+                    <div class="ui2-quest">
+                        <a class="ui2-quest-img" href="https://learn.scrum.abi-agile.com/" target="_blank" rel="noopener"><img src="img/scrum-quest.webp" alt="SCRUM QUEST のタイトル画面" loading="lazy"></a>
                         <div class="ui2-quest-body">
                             <p class="ui2-quest-eyebrow">🎮 ゲームでおさらい</p>
                             <h2 class="ui2-quest-title">SCRUM QUEST</h2>
-                            <p class="ui2-quest-lead">Joe・Miho先生・Arai先生と一緒に、遊びながらスクラムの基本をおさらいできるゲームです。1ステージ約2分、全6ステージ。ログイン不要で、スマホのホーム画面に追加すればアプリとして遊べます。</p>
-                            <span class="ui2-quest-btn">遊んでみる <span>↗</span></span>
-                            <small class="ui2-quest-url">learn.scrum.abi-agile.com</small>
+                            <p class="ui2-quest-lead">スクラムのエッセンスを、ゲームで学べる <strong>SCRUM QUEST</strong> を作りました。ログインなしで、すぐに遊べます。<br>よかったら、チームのみんなや会社のみんなにも、やってもらってください。</p>
+                            <div class="ui2-quest-row">
+                                <div class="ui2-quest-actions">
+                                    <a class="ui2-quest-btn" href="https://learn.scrum.abi-agile.com/" target="_blank" rel="noopener">遊んでみる <span>↗</span></a>
+                                    <div class="ui2-quest-url"><span>https://learn.scrum.abi-agile.com/</span><button type="button" class="ui2-copy-url" data-url="https://learn.scrum.abi-agile.com/">コピー</button><button type="button" class="ui2-share" data-url="https://learn.scrum.abi-agile.com/" data-title="SCRUM QUEST — ゲームでスクラムを学ぶ">共有</button></div>
+                                </div>
+                                <div class="ui2-quest-qr"><img src="img/qr-quest.svg" width="112" height="112" alt="SCRUM QUEST の QR コード"><small>スマホで読み取り</small></div>
+                            </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -149,6 +154,6 @@
     <script src="nav-highlight.js?v=20261012d"></script>
     <script src="scroll-to-top.js?v=20261012d"></script>
     <script src="page-nav.js?v=20261012d"></script>
-    <script src="ui2.js?v=18"></script>
+    <script src="ui2.js?v=19"></script>
 </body>
 </html>

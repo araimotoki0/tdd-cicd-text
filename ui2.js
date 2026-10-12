@@ -59,6 +59,15 @@
             deferredPrompt.userChoice.then(function () { deferredPrompt = null; installBtn.hidden = true; });
         });
         window.addEventListener('appinstalled', function () { if (installBtn) installBtn.hidden = true; if (sa) sa.hidden = false; });
+        document.querySelectorAll('.ui2-share').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var data = { title: b.dataset.title || document.title, url: b.dataset.url };
+                if (navigator.share) { navigator.share(data).catch(function () {}); return; }
+                var t = b.textContent;
+                (navigator.clipboard ? navigator.clipboard.writeText(data.url) : Promise.reject()).then(function () { b.textContent = 'URL をコピーしました'; }, function () { b.textContent = '長押しでコピー'; });
+                setTimeout(function () { b.textContent = t; }, 1800);
+            });
+        });
         document.querySelectorAll('.ui2-copy-url').forEach(function (b) {
             b.addEventListener('click', function () {
                 var t = b.textContent;
