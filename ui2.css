@@ -595,3 +595,29 @@ body.ui2 .pt-20 .flex.items-center.justify-center:not(.flex-wrap) { flex-wrap: w
 .ui2-quest-body { min-width: 0; }
 @media (max-width: 720px) { .ui2-quest { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 720px) { .ui2-quest-img { min-height: 300px; } }
+
+/* 初回の「アプリとして使えます」の案内（スマホ） */
+.ui2-ibanner {
+    position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 950;
+    background: #fff; color: var(--text); border-radius: 20px; border: 1px solid var(--line);
+    box-shadow: 0 24px 60px -16px rgba(11, 16, 32, .45); padding: 14px 14px 12px;
+    transform: translateY(calc(100% + 30px)); opacity: 0; transition: transform .45s cubic-bezier(.22, .9, .24, 1), opacity .3s;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+.ui2-ibanner.is-on { transform: none; opacity: 1; }
+.ui2-ib-head { display: flex; align-items: center; gap: 12px; }
+.ui2-ib-head img { width: 44px; height: 44px; border-radius: 12px; flex: none; }
+.ui2-ib-head > div { min-width: 0; }
+.ui2-ib-head b { display: block; font: 700 15px 'Zen Kaku Gothic New', sans-serif; letter-spacing: .02em; }
+.ui2-ib-head small { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
+.ui2-ib-x { margin-left: auto; flex: none; width: 32px; height: 32px; border-radius: 10px; border: 0; background: var(--paper-2); color: var(--muted); font-size: 18px; line-height: 1; cursor: pointer; }
+.ui2-ib-steps { margin: 12px 0 0; padding: 12px 14px 12px 34px; border-radius: 12px; background: var(--paper-2); font-size: 13.5px; line-height: 1.7; }
+.ui2-ib-steps li + li { margin-top: 4px; }
+.ui2-ib-actions { display: flex; gap: 8px; margin-top: 12px; }
+.ui2-ib-actions button { flex: 1; padding: 12px; border-radius: 12px; border: 0; font: 700 14px 'Noto Sans JP', sans-serif; cursor: pointer; }
+.ui2-ib-later { background: var(--paper-2); color: var(--muted); }
+.ui2-ib-go { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: 0 10px 22px -10px color-mix(in srgb, var(--accent) 70%, transparent); }
+.ui2-ib-more { display: block; margin-top: 10px; text-align: center; font-size: 12px; color: var(--muted); text-decoration: none; }
+@media (min-width: 560px) { .ui2-ibanner { left: auto; right: 16px; width: 380px; } }
+.ui2-ib-steps { list-style: decimal; }
+.ui2-ib-head b { font-size: 14px; }

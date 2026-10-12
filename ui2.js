@@ -59,6 +59,46 @@
             deferredPrompt.userChoice.then(function () { deferredPrompt = null; installBtn.hidden = true; });
         });
         window.addEventListener('appinstalled', function () { if (installBtn) installBtn.hidden = true; if (sa) sa.hidden = false; });
+
+        // 初回に「アプリとして使えます」の案内（スマホだけ。ホーム画面アプリ・案内ページでは出さない。?install=1 で強制表示）
+        (function () {
+            var force = /[?&]install=1/.test(location.search);
+            if (!force) {
+                if (standalone || file === 'app.html') return;
+                var mobile = window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 820;
+                if (!mobile) return;
+                try { var t = +localStorage.getItem('csd-install-hint') || 0; if (Date.now() - t < 14 * 864e5) return; } catch (e) {}
+            }
+            var isIOS = os === 'ios';
+            var steps = isIOS
+                ? ['画面の下にある <b>共有ボタン</b>（四角から矢印が出たマーク）をタップ', '「<b>ホーム画面に追加</b>」をタップ', '右上の「<b>追加</b>」をタップ']
+                : ['右上の「<b>⋮</b>」をタップ', '「<b>ホーム画面に追加</b>」または「<b>アプリをインストール</b>」をタップ', '「<b>インストール</b>」をタップ'];
+            var box = el('<div class="ui2-ibanner" role="dialog" aria-label="アプリとして使う">' +
+                '<div class="ui2-ib-head"><img src="icons/icon-192.png" alt="" width="44" height="44"><div><b>CSD講座を、アプリとして使えます</b><small>ホーム画面に追加すると、いつでも復習できます</small></div><button type="button" class="ui2-ib-x" aria-label="閉じる">×</button></div>' +
+                '<ol class="ui2-ib-steps" hidden>' + steps.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>' +
+                '<div class="ui2-ib-actions"><button type="button" class="ui2-ib-later">あとで</button><button type="button" class="ui2-ib-go">' + (isIOS ? 'ホーム画面に追加する' : 'アプリをインストール') + '</button></div>' +
+                '<a class="ui2-ib-more" href="app.html">くわしい手順を見る →</a></div>');
+            document.body.appendChild(box);
+            setTimeout(function () { box.classList.add('is-on'); }, 1200);
+            function close(remember) {
+                box.classList.remove('is-on');
+                if (remember) { try { localStorage.setItem('csd-install-hint', String(Date.now())); } catch (e) {} }
+                setTimeout(function () { box.remove(); }, 450);
+            }
+            box.querySelector('.ui2-ib-x').addEventListener('click', function () { close(true); });
+            box.querySelector('.ui2-ib-later').addEventListener('click', function () { close(true); });
+            box.querySelector('.ui2-ib-go').addEventListener('click', function () {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(function () { deferredPrompt = null; close(true); });
+                    return;
+                }
+                box.querySelector('.ui2-ib-steps').hidden = false;
+                box.querySelector('.ui2-ib-go').hidden = true;
+                box.querySelector('.ui2-ib-later').textContent = '閉じる';
+            });
+            window.addEventListener('appinstalled', function () { close(true); });
+        })();
         document.querySelectorAll('.ui2-share').forEach(function (b) {
             b.addEventListener('click', function () {
                 var data = { title: b.dataset.title || document.title, url: b.dataset.url };
