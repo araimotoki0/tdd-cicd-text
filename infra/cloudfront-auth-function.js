@@ -4,13 +4,14 @@
 // 一度ログインページでユーザー名とパスワードを入れたら Cookie を発行し、以後はそのまま通す。
 //
 // 使い方：
-//   1. 下の USER / PASSWORD に講座のユーザー名とパスワード、TOKEN に推測されにくい長い文字列（40文字くらい）を入れる
-//      ※ このファイルには書かず、CloudFront のコンソール上で入れること（Git に残さないため）
+//   1. 下の PASSWORD に講座のパスワードを入れる（このファイルには書かず、CloudFront のコンソール上で入れる）
 //   2. CloudFront の既存の Basic 認証 Function を、この内容で置き換えて Publish する
 //   3. リポジトリの /login.html がデプロイされていること（push すれば自動）
-var USER = 'ここにユーザー名';
+var crypto = require('crypto');
+var USER = 'csd-study';
 var PASSWORD = 'ここにパスワード';
-var TOKEN = 'ここにランダムな長い文字列';
+// Cookie に入れる値（パスワードそのものは入れない）
+var TOKEN = crypto.createHash('sha256').update('csd-auth-v1:' + USER + ':' + PASSWORD).digest('hex');
 var COOKIE = 'csd_auth';
 var ONE_YEAR = 60 * 60 * 24 * 365;
 
