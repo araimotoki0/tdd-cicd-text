@@ -1,0 +1,250 @@
+/* =========================================================
+   CSD 講座 UI v2（環境構築ページ以外で読み込む）
+   夜空のヒーロー × 紙のような本文 × 章ごとのテーマカラー
+   ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+body.ui2 {
+    --ink: #0b1020;
+    --ink-2: #131a33;
+    --paper: #fbfaf7;
+    --paper-2: #f3f1ec;
+    --line: #e7e3da;
+    --text: #1d2433;
+    --muted: #5b6475;
+    --accent: #6366f1;
+    --accent-2: #a855f7;
+    --accent-soft: #eef0ff;
+    --radius: 18px;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 8px 24px -8px rgba(16, 24, 40, .12);
+    --shadow-lift: 0 2px 4px rgba(16, 24, 40, .05), 0 18px 40px -12px rgba(16, 24, 40, .22);
+
+    font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+    color: var(--text);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'palt' 1;
+    letter-spacing: .01em;
+}
+
+/* 章ごとのテーマカラー */
+body.ui2[data-chapter="ai"]    { --accent: #7c3aed; --accent-2: #c084fc; --accent-soft: #f3edff; }
+body.ui2[data-chapter="tdd"]   { --accent: #059669; --accent-2: #34d399; --accent-soft: #e8f8f1; }
+body.ui2[data-chapter="mobai"] { --accent: #d97706; --accent-2: #fbbf24; --accent-soft: #fff6e5; }
+body.ui2[data-chapter="cicd"]  { --accent: #0284c7; --accent-2: #38bdf8; --accent-soft: #e6f5fd; }
+body.ui2[data-chapter="extra"] { --accent: #64748b; --accent-2: #94a3b8; --accent-soft: #eef2f6; }
+
+body.ui2 ::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+
+/* ---------- 見出し・本文 ---------- */
+body.ui2 h1, body.ui2 h2, body.ui2 h3, body.ui2 h4 {
+    font-family: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+    letter-spacing: .02em;
+}
+body.ui2 .pt-20 p, body.ui2 .pt-20 li { line-height: 1.85; }
+body.ui2 section h2.text-4xl { font-weight: 900; letter-spacing: .03em; }
+body.ui2 section h2.text-4xl.text-center::after,
+body.ui2 section h2.text-4xl.ui2-accent::after {
+    content: ''; display: block; width: 64px; height: 5px; border-radius: 99px; margin: 18px auto 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+/* ---------- ヘッダー ---------- */
+body.ui2 > nav {
+    background: color-mix(in srgb, var(--ink) 82%, transparent) !important;
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, .6);
+}
+body.ui2 > nav h1, body.ui2 > nav .container > .flex > :first-child {
+    font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 900; letter-spacing: .04em;
+}
+body.ui2 > nav a { color: rgba(255, 255, 255, .78); transition: color .15s; }
+body.ui2 > nav a:hover { color: #fff; }
+body.ui2 > nav a.nav-active { background: rgba(255, 255, 255, .12); color: #fff; box-shadow: inset 0 -2px 0 var(--accent-2); }
+body.ui2 .pnav-progress, body.ui2 #readProgress { background: linear-gradient(90deg, var(--accent), var(--accent-2)) !important; }
+body.ui2 #mobileMenu { background: var(--ink-2) !important; border-bottom: 1px solid rgba(255,255,255,.08); }
+
+/* ---------- ヒーロー（夜空とオーロラ） ---------- */
+body.ui2 .ui2-hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    background: var(--ink) !important;
+    padding-top: 96px !important; padding-bottom: 88px !important;
+}
+body.ui2 .ui2-hero::before {
+    content: ''; position: absolute; inset: -40% -10% auto -10%; height: 140%; z-index: -1;
+    background:
+        radial-gradient(40% 50% at 20% 30%, color-mix(in srgb, var(--accent) 70%, transparent) 0, transparent 70%),
+        radial-gradient(35% 45% at 80% 20%, color-mix(in srgb, var(--accent-2) 55%, transparent) 0, transparent 70%),
+        radial-gradient(30% 40% at 60% 90%, rgba(56, 189, 248, .35) 0, transparent 70%);
+    filter: blur(20px); opacity: .9;
+    animation: ui2-aurora 18s ease-in-out infinite alternate;
+}
+body.ui2 .ui2-hero::after {
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 75%);
+}
+@keyframes ui2-aurora { from { transform: translate3d(-3%, 0, 0) scale(1); } to { transform: translate3d(3%, 4%, 0) scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { body.ui2 .ui2-hero::before { animation: none; } }
+body.ui2 .ui2-hero h2 { font-weight: 900; letter-spacing: .03em; text-shadow: 0 10px 40px rgba(0,0,0,.35); }
+body.ui2 .ui2-hero .ui2-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px;
+    padding: 6px 16px 6px 8px; border-radius: 999px; font-size: 13px; font-weight: 700; letter-spacing: .08em;
+    color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); backdrop-filter: blur(6px);
+}
+body.ui2 .ui2-hero .ui2-eyebrow b {
+    display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 8px; border-radius: 99px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2)); font-size: 12px;
+}
+
+/* ---------- 講座の地図（ステッパー） ---------- */
+.ui2-map { background: var(--paper); border-bottom: 1px solid var(--line); }
+.ui2-map-in { max-width: 1100px; margin: 0 auto; padding: 18px 20px 16px; }
+.ui2-map-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .08em; }
+.ui2-map-head .ui2-done-count { color: var(--accent); }
+.ui2-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.ui2-step {
+    position: relative; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px;
+    text-decoration: none; color: var(--muted); background: #fff; border: 1px solid var(--line);
+    transition: transform .15s, box-shadow .15s, border-color .15s; min-width: 0;
+}
+.ui2-step:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--c) 40%, var(--line)); }
+.ui2-step .n {
+    flex: none; width: 28px; height: 28px; border-radius: 99px; display: grid; place-items: center;
+    font-size: 13px; font-weight: 900; color: var(--c); background: color-mix(in srgb, var(--c) 12%, #fff);
+}
+.ui2-step .t { min-width: 0; }
+.ui2-step .t b { display: block; font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Zen Kaku Gothic New', sans-serif; }
+.ui2-step .t small { display: block; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ui2-step.is-current { border-color: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 18%, transparent); }
+.ui2-step.is-current .n { background: var(--c); color: #fff; }
+.ui2-step.is-done .n::after { content: '✓'; position: absolute; top: -6px; left: 30px; width: 18px; height: 18px; border-radius: 99px; background: #10b981; color: #fff; font-size: 11px; display: grid; place-items: center; box-shadow: 0 0 0 2px #fff; }
+.ui2-sub { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.ui2-sub a {
+    font-size: 12px; text-decoration: none; padding: 5px 12px; border-radius: 99px; color: var(--muted);
+    background: #fff; border: 1px solid var(--line); transition: all .15s;
+}
+.ui2-sub a:hover { color: var(--accent); border-color: var(--accent); }
+.ui2-sub a.is-current { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+.ui2-sub a.is-done::before { content: '✓ '; color: #10b981; font-weight: 900; }
+.ui2-sub a.is-current.is-done::before { color: #fff; }
+@media (max-width: 760px) {
+    .ui2-steps { grid-template-columns: repeat(5, minmax(56px, 1fr)); }
+    .ui2-step { flex-direction: column; text-align: center; padding: 8px 4px; gap: 4px; }
+    .ui2-step .t small { display: none; }
+    .ui2-step .t b { font-size: 11px; }
+}
+
+/* ---------- 本文のカード・セクション ---------- */
+body.ui2 section.bg-white { background-color: var(--paper) !important; }
+body.ui2 section.bg-gray-50 { background-color: var(--paper) !important; }
+body.ui2 section.bg-gray-100 { background-color: var(--paper-2) !important; }
+body.ui2 section.bg-indigo-50, body.ui2 section.bg-blue-50 { background-color: color-mix(in srgb, var(--accent-soft) 70%, var(--paper)) !important; }
+body.ui2 .pt-20 .rounded-lg { border-radius: 14px; }
+body.ui2 .pt-20 .rounded-2xl { border-radius: var(--radius); }
+body.ui2 .pt-20 .shadow-lg, body.ui2 .pt-20 .shadow-md { box-shadow: var(--shadow) !important; }
+body.ui2 .pt-20 .bg-white.shadow-lg, body.ui2 .pt-20 .bg-white.shadow-md { border: 1px solid var(--line); transition: transform .2s, box-shadow .2s; }
+body.ui2 .pt-20 a.bg-white.shadow-lg:hover, body.ui2 .pt-20 .grid > .bg-white.shadow-lg:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift) !important; }
+
+/* ---------- コード（エディタ風の枠） ---------- */
+body.ui2 pre, body.ui2 code, body.ui2 .font-mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace; }
+body.ui2 .bg-gray-900 {
+    background: #0f1426 !important; border-radius: 14px !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 12px 30px -16px rgba(0,0,0,.5);
+}
+body.ui2 .bg-gray-900:has(> pre) { padding-top: 40px !important; }
+body.ui2 .bg-gray-900:has(> pre)::before {
+    content: ''; position: absolute; top: 15px; left: 16px; width: 10px; height: 10px; border-radius: 50%;
+    background: #ff5f57; box-shadow: 16px 0 0 #febc2e, 32px 0 0 #28c840;
+}
+body.ui2 pre { font-size: 13.5px; line-height: 1.75; }
+body.ui2 .copy-button { top: 7px; right: 8px; background: rgba(255,255,255,.08); color: #cbd5e1; border-color: rgba(255,255,255,.14); box-shadow: none; }
+body.ui2 .copy-button:hover { background: rgba(255,255,255,.16); color: #fff; border-color: rgba(255,255,255,.3); }
+body.ui2 .pt-20 :not(pre) > code {
+    font-size: .9em; padding: .1em .45em; border-radius: 7px;
+    background: color-mix(in srgb, var(--accent) 9%, #fff); color: color-mix(in srgb, var(--accent) 70%, #111);
+    border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+}
+body.ui2 .bg-gray-900 :not(pre) > code, body.ui2 .bg-gray-900 code { background: none; border: 0; color: inherit; padding: 0; }
+
+/* ---------- 表 ---------- */
+body.ui2 .pt-20 table { border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; }
+body.ui2 .pt-20 table th { background: var(--accent-soft) !important; color: var(--text) !important; font-weight: 700; }
+body.ui2 .pt-20 table td, body.ui2 .pt-20 table th { border-color: var(--line) !important; }
+body.ui2 .pt-20 table tbody tr:nth-child(even) td { background: #fcfbf8; }
+
+/* ---------- ボタン ---------- */
+body.ui2 .pt-20 a.rounded-full[class*="bg-indigo-6"], body.ui2 .pt-20 a.rounded-full[class*="bg-blue-6"] {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2)) !important;
+    box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--accent) 70%, transparent); transition: transform .15s, box-shadow .15s;
+}
+body.ui2 .pt-20 a.rounded-full[class*="bg-indigo-6"]:hover, body.ui2 .pt-20 a.rounded-full[class*="bg-blue-6"]:hover { transform: translateY(-2px); }
+body.ui2 :focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; border-radius: 6px; }
+
+/* ---------- 前へ・次へ・完了 ---------- */
+.ui2-next { background: var(--paper-2); border-top: 1px solid var(--line); }
+.ui2-next-in { max-width: 1000px; margin: 0 auto; padding: 48px 20px 56px; }
+.ui2-complete { display: flex; justify-content: center; margin-bottom: 28px; }
+.ui2-complete button {
+    display: inline-flex; align-items: center; gap: 10px; font: 700 15px 'Noto Sans JP', sans-serif; cursor: pointer;
+    padding: 12px 22px; border-radius: 999px; border: 2px solid var(--line); background: #fff; color: var(--text); transition: all .2s;
+}
+.ui2-complete button .box { width: 22px; height: 22px; border-radius: 7px; border: 2px solid #cbd5e1; display: grid; place-items: center; font-size: 14px; color: transparent; transition: all .2s; }
+.ui2-complete button:hover { border-color: var(--accent); }
+.ui2-complete button[aria-pressed="true"] { border-color: #10b981; background: #ecfdf5; color: #047857; }
+.ui2-complete button[aria-pressed="true"] .box { background: #10b981; border-color: #10b981; color: #fff; }
+.ui2-pn { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ui2-pn a {
+    display: block; padding: 18px 22px; border-radius: 18px; text-decoration: none; background: #fff;
+    border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform .2s, box-shadow .2s, border-color .2s; min-width: 0;
+}
+.ui2-pn a:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--accent); }
+.ui2-pn a small { display: block; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .06em; margin-bottom: 4px; }
+.ui2-pn a b { display: block; font: 900 18px/1.4 'Zen Kaku Gothic New', sans-serif; color: var(--text); }
+.ui2-pn a.next { text-align: right; background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; }
+.ui2-pn a.next small, .ui2-pn a.next b { color: #fff; }
+.ui2-pn .empty { visibility: hidden; }
+.ui2-pn .finish { padding: 18px 22px; border-radius: 18px; text-align: right; background: linear-gradient(135deg, #f59e0b, #ec4899, #8b5cf6); box-shadow: var(--shadow); }
+.ui2-pn .finish small { display: block; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.85); letter-spacing: .06em; margin-bottom: 4px; }
+.ui2-pn .finish b { display: block; font: 900 18px/1.4 'Zen Kaku Gothic New', sans-serif; color: #fff; }
+.ui2-keys { text-align: center; margin-top: 16px; font-size: 12px; color: var(--muted); }
+.ui2-keys kbd { font: 600 11px 'JetBrains Mono', monospace; padding: 2px 7px; border-radius: 6px; background: #fff; border: 1px solid var(--line); box-shadow: 0 1px 0 var(--line); }
+@media (max-width: 640px) { .ui2-pn { grid-template-columns: 1fr; } .ui2-pn .empty { display: none; } .ui2-keys { display: none; } }
+
+/* ---------- フッター ---------- */
+body.ui2 footer { background: var(--ink) !important; margin-top: 0 !important; position: relative; }
+body.ui2 footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+
+/* ---------- 講座メニュー（左上） ---------- */
+body.ui2 .global-menu-button { background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 8px 22px -6px color-mix(in srgb, var(--accent) 70%, transparent); }
+body.ui2 .global-menu { background: var(--ink); width: 340px; left: -360px; }
+body.ui2 .global-menu.active { left: 0; }
+body.ui2 .global-menu-title { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 900; }
+.ui2-menu-group { margin-bottom: 18px; }
+.ui2-menu-group p { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,.55); font-size: 11px; font-weight: 700; letter-spacing: .12em; margin: 0 0 8px 4px; }
+.ui2-menu-group p i { width: 8px; height: 8px; border-radius: 99px; background: var(--c); font-style: normal; }
+.ui2-menu-group a {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(255,255,255,.86); text-decoration: none;
+    padding: 9px 12px; border-radius: 10px; font-size: 14px; transition: background .15s;
+}
+.ui2-menu-group a:hover { background: rgba(255,255,255,.07); }
+.ui2-menu-group a.is-current { background: color-mix(in srgb, var(--c) 30%, transparent); color: #fff; font-weight: 700; }
+.ui2-menu-group a .ok { color: #34d399; font-weight: 900; }
+.ui2-menu-group a.old { color: rgba(255,255,255,.5); font-size: 13px; }
+
+/* ---------- 微調整 ---------- */
+body.ui2 > nav { background: color-mix(in srgb, var(--ink) 94%, transparent) !important; }
+body.ui2 .pt-20 { padding-top: 64px !important; }
+
+/* 本文中の青・藍色を、章のテーマカラーにそろえる */
+body.ui2 .pt-20 section:not(.ui2-hero) :is(.text-blue-600, .text-blue-700, .text-blue-800, .text-indigo-600, .text-indigo-700, .text-indigo-800) {
+    color: color-mix(in srgb, var(--accent) 88%, #000) !important;
+}
+body.ui2 .pt-20 section:not(.ui2-hero) :is(.bg-blue-50, .bg-indigo-50) { background-color: var(--accent-soft) !important; }
+body.ui2 .pt-20 section:not(.ui2-hero) :is(.bg-blue-100, .bg-indigo-100) { background-color: color-mix(in srgb, var(--accent) 14%, #fff) !important; }
+body.ui2 .pt-20 section:not(.ui2-hero) :is(.border-blue-500, .border-blue-600, .border-indigo-400, .border-indigo-500, .border-indigo-600) { border-color: var(--accent) !important; }
+body.ui2 .pt-20 section:not(.ui2-hero) :is(.bg-blue-500, .bg-blue-600, .bg-indigo-500, .bg-indigo-600):not(a) { background-color: var(--accent) !important; }
