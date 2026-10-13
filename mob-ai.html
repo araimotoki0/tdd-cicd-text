@@ -363,24 +363,19 @@
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">実際のAI開発を見てみよう</h2>
-                    <p class="text-gray-600 text-lg mb-8 text-center">講師のデモで、「AIと共に、品質を高める」の4つのステップを1周します（約10分）</p>
+                    <p class="text-gray-600 text-lg mb-8 text-center">題材は「KPT 振り返りボード」。講師のデモで、人間が決め、AI が作り、AI が確かめるところを見ます（約10分）</p>
 
                     <div class="bg-indigo-600 text-white p-6 md:p-8 rounded-2xl shadow-lg mb-6">
-                        <p class="text-sm font-bold text-indigo-200 mb-2">このデモで伝えたいこと</p>
-                        <p class="text-xl md:text-2xl font-bold leading-relaxed">AI に任せるとき、人間の仕事は「基準を決めること」と「判断すること」。<br>そのために、AI に渡す情報をファイルにして、複数の観点で確かめる。</p>
+                        <p class="text-sm font-bold text-indigo-200 mb-2">いちばん大事な理解</p>
+                        <p class="text-xl md:text-2xl font-bold leading-relaxed">AI への指示・手順・役割は、すべて「ファイル」で決まっている。<br>Linux の「すべてがファイル」と同じ。</p>
                     </div>
 
                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                        <p class="font-bold text-gray-800 mb-3">✅ 自分の開発でやること</p>
-                        <ol class="text-gray-700 space-y-2 list-decimal list-inside">
-                            <li>何を作るか・何を満たせば OK かを、<strong>仕様</strong>として書く</li>
-                            <li>受け入れ条件から、AI に<strong>先にテスト</strong>を書かせる（人間は中身を確認するだけ）</li>
-                            <li>AI に守ってほしいことを、<strong>AGENTS.md</strong> に書く</li>
-                            <li>AI が作ったら、<strong>観点ごとに別々に</strong>レビューさせる</li>
-                            <li>指摘のうち、どれを直すかは<strong>人間が決める</strong></li>
-                            <li>学んだことを、<strong>スキルや AGENTS.md に書き足す</strong></li>
-                        </ol>
-                        <p class="text-sm text-gray-500 mt-4">題材は、スプリントで使う「KPT 振り返りボード」（HTML / CSS / JavaScript）。AI が作ったコードの中身は、ここでは載せません。見てほしいのは、AI への渡し方と確かめ方です。</p>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">このデモで使うファイル（これだけ）</p><pre class="text-white whitespace-pre-wrap break-words">docs/spec.md                  何を作るか・何を満たせば OK か（仕様）
+AGENTS.md                     AI への作業ルール
+.claude/skills/kpt-〇〇/       レビューのやり方（スキル）
+.claude/agents/kpt-〇〇.md     レビューする役（エージェント）</pre></div>
+                        <p class="text-gray-700">書き換えれば AI が変わり、git に入れればチームで同じ AI を使えます。<strong>人間がやることは、このファイルを書くことと、判断することだけ</strong>です。</p>
                     </div>
 
                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
@@ -389,100 +384,65 @@
                             <h3 class="text-2xl font-bold text-gray-800">基準を決める</h3>
                             <span class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">人間がやる</span>
                         </div>
-<p class="text-gray-700 mb-4">AI に「何を作るか」だけでなく、「何を満たせば OK か」を先に渡します。<strong>人間が書くのは、この受け入れ条件の数行だけ</strong>。テストは書きません（次のステップで AI に書かせます）。</p>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">docs/spec.md（仕様の一部）</p><pre class="text-white whitespace-pre-wrap break-words">## 受け入れ条件
-- カードの本文は、前後の空白を取り除いたうえで 1〜140 文字
+                        <p class="text-gray-700 mb-4">何を満たせば OK かを、仕様のファイルに書きます。<strong>テストは書きません</strong>（AI に書かせます）。</p>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">docs/spec.md（受け入れ条件）</p><pre class="text-white whitespace-pre-wrap break-words">- カードの本文は、前後の空白を取り除いたうえで 1〜140 文字
 - 本文が空、または 140 文字を超える場合は、エラーを表示して追加しない
 - 種類は keep / problem / try のどれか
-- 入力された本文は、そのまま文字として表示される（HTML として解釈されない）</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>AI は、書かれていないことを推測で埋めます。何が「正しい」かを言葉で決めておくと、AI もレビュー役も、同じ基準で判断できます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「HTML として解釈されない」のように、<strong>安全のための条件</strong>も書いておきます。書いていないと、確かめる人がいません。</span></li></ul></div></div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md（AI への作業ルールの一部）</p><pre class="text-white whitespace-pre-wrap break-words">## 守ること
-- 仕様は docs/spec.md にある。作業の前に必ず読む
+- 入力された本文は、そのまま文字として表示される（HTML として解釈されない）</pre></div>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">AGENTS.md（AI への作業ルールの一部）</p><pre class="text-white whitespace-pre-wrap break-words">- 仕様は docs/spec.md にある。作業の前に必ず読む
 - テストは Node.js に最初から入っている node --test を使う
 - テストを書き換えて通すことはしない。
   テストと仕様が合わない場合は、作業を止めて人間に確認する
 - 仕様にない機能は勝手に足さない
-- 変更したら npm test を実行し、結果を報告する</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>AGENTS.md は、AI が作業の前に必ず読むファイルです。毎回、口で説明しなくて済みます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「テストを書き換えない」：AI は、テストを通すためにテストのほうを変えてしまうことがあるからです。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「仕様にない機能を足さない」：AI は気を利かせて機能を足すことがあります（このデモでも、頼んでいない「下書き保存」が足されました）。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>「npm test を実行」：動くことを、毎回 AI 自身に確かめさせます。</span></li></ul></div></div>
-
+- 変更したら npm test を実行し、結果を報告する</pre></div>
                     </div>
+
                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
                         <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">2</span>
-                            <h3 class="text-2xl font-bold text-gray-800">生成する</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">作らせる</h3>
                             <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">AIがやる</span>
                         </div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">docs/spec.md の受け入れ条件から、先にテストを tests/ に書いてください。
+                        <p class="text-gray-700 mb-4">AI に、先にテストを書かせてから、実装させます。指示は、これだけです。</p>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">docs/spec.md の受け入れ条件から、先にテストを tests/ に書いてください。
 テストが失敗することを npm test で確認してから実装して、
-最後に npm test で全部通してください。</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>テストを書くのは AI の仕事です。人間が手で書くと遅くなります。人間がやるのは、AI が書いたテストに<strong>受け入れ条件が全部入っているか</strong>を見ることだけ（30秒）。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span><strong>実装より先に</strong>テストを書かせるのがポイントです。実装を見ながら書かせると、バグまで「正解」としてテストにしてしまうからです（TDD の Red → Green）。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>試したときは、約1分で AI がテストを17件書き、全部通しました。「空白だけの本文はエラー」のような、見落としやすいケースも入っていました。……では、このまま使っていいでしょうか？</span></li></ul></div></div>
-
+最後に npm test で全部通してください。</pre></div>
+                        <p class="text-gray-700">テストが先に失敗し、実装のあとに通ります（TDD の Red → Green）。人間は、テストに受け入れ条件が全部入っているかを見るだけです。</p>
                     </div>
+
                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
                         <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">3</span>
-                            <h3 class="text-2xl font-bold text-gray-800">検証する（観点ごとに、同時に）</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">確かめる（3つの観点を同時に）</h3>
                             <span class="text-xs font-bold px-3 py-1 rounded-full bg-indigo-100 text-indigo-800">AIがやる</span>
                         </div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">このコードを、セキュリティ・効率・品質の3つの観点で、
-それぞれ別のレビュアーとして同時にレビューしてください。
-コードは書き換えないでください。
-観点ごとに、重要なもの3件までを表にしてください。</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>1つの会話で全部を見させると、観点が混ざって見落としが出ます。<strong>別々のエージェント</strong>にすると、それぞれが1つの観点に集中できます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>同時に動くので速く、人のチームで複数の目で見るのと同じ効果があります。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>最近のハーネスは、こう頼めば<strong>自分でサブエージェントを立ち上げます</strong>。エージェント用の設定ファイルは必須ではありません（役割や権限を毎回同じにしたいときだけ作ります）。</span></li></ul></div></div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">.claude/skills/kpt-security/SKILL.md（スキル）</p><pre class="text-white whitespace-pre-wrap break-words">---
-name: kpt-security
-description: セキュリティの観点でコードをレビューする。
-  XSS、保存データの扱い、入力値の検証を確かめる。コードは書き換えない。
----
-## 確かめること
-1. XSS：ユーザーの入力を innerHTML などで、そのまま HTML として表示していないか
-2. 保存データ：localStorage から読み込むとき、壊れた値で動かなくならないか
-3. 入力値の検証：検証が画面側だけになっていないか
-## 報告の形
-重要なものから最大3件を表にする（重要度・場所・何が起きるか・直し方）</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>スキルは「レビューのやり方」を書いたファイルです。何を見て、どう報告するかを、毎回書かなくて済みます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>チームの誰が頼んでも、どの AI が見ても、<strong>同じ基準</strong>でレビューされます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>見落としに気づいたら、ここに1行足すだけで、次からチーム全員の AI が確かめるようになります。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>スキルは <code>/kpt-security</code> のように、スラッシュで呼べます。3つ同時に頼む <code>/kpt-review</code> も、同じ形のスキルです。</span></li></ul></div></div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI が書いたコードの、問題の1行</p><pre class="text-white whitespace-pre-wrap break-words">html += `&lt;div class=&quot;card&quot;&gt;${card.text}&lt;/div&gt;`;</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>セキュリティ担当が見つけた行です。入力した本文を、そのまま HTML として表示しています。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>カードに <code>&lt;img src=x onerror="alert('XSS')"&gt;</code> と入れると、他の人の画面でプログラムが動いてしまいます（XSS）。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>テストは「書いた条件」しか確かめません。だから、テストとは別の観点の目が必要です。</span></li></ul></div></div>
-<div class="overflow-x-auto mb-2"><table class="w-full text-sm text-left border">
-<thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border">観点</th><th class="p-2 border">いちばん重要な指摘</th></tr></thead><tbody class="text-gray-700">
-<tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border">本文をそのまま HTML として表示している（XSS）。仕様の「HTML として解釈されない」にも反する</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border">1文字入力するたびに、画面全体の描き直しと保存をしている</td></tr>
-<tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border">空白だけ（<code>"   "</code>）のカードが作れてしまう。テストにこのケースがない。頼んでいない「下書き保存」が足されている</td></tr>
-</tbody></table></div>
-<p class="text-xs text-gray-500">3つの観点のレビュー結果（各観点で一番重要なもの）</p>
-
+                        <p class="text-gray-700 mb-4">スキルは、スラッシュで呼べます。打つのは、これだけです。</p>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">/kpt-review</pre></div>
+                        <p class="text-gray-700 mb-4">セキュリティ・効率・品質の3人のレビュアーが、別々に、同時に見ます。コードは書き換えません。1つの観点だけなら <code>/kpt-security</code> のように呼びます。</p>
+                        <div class="overflow-x-auto mb-2"><table class="w-full text-sm text-left border">
+                            <thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border">観点</th><th class="p-2 border">いちばん重要な指摘</th></tr></thead>
+                            <tbody class="text-gray-700">
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">🛡️ セキュリティ</td><td class="p-2 border">本文をそのまま HTML として表示している（XSS）。仕様の「HTML として解釈されない」にも反する</td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">⚡ 効率</td><td class="p-2 border">1文字入力するたびに、画面全体の描き直しと保存をしている</td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">✅ 品質</td><td class="p-2 border">空白だけ（<code>"   "</code>）のカードが作れてしまう。テストにこのケースがない</td></tr>
+                            </tbody>
+                        </table></div>
+                        <p class="text-xs text-gray-500">レビュー結果の例（各観点で一番重要なもの）</p>
                     </div>
+
                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
                         <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">4</span>
-                            <h3 class="text-2xl font-bold text-gray-800">改善する（どれを直すかを決める）</h3>
+                            <h3 class="text-2xl font-bold text-gray-800">直すものを決める</h3>
                             <span class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800">人間がやる</span>
                         </div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">次の2つを直してください。効率の指摘は、今回はカードが少ないので見送ります。
+                        <p class="text-gray-700 mb-4">指摘が全部正しくても、全部直すのが正解とは限りません。<strong>どれを直すかを決めて、責任を持つのは人間</strong>です。</p>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">次の2つを直してください。効率の指摘は、今回はカードが少ないので見送ります。
 1. セキュリティ：XSS（本文を textContent で表示する）
 2. 品質：空白だけのカードを作れないようにする。
-   先にテストを足して失敗することを確認してから（Red）、直してください（Green）。</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>指摘が全部正しくても、全部直すのが正解とは限りません。時間・優先度・影響を考えて決め、<strong>責任を持つのは人間</strong>です。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>品質の問題は、先にテストを足します。同じミスを二度としないように、<strong>基準として残す</strong>ためです。</span></li></ul></div></div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">tests/kpt.test.js（足したテスト：直す前は失敗 → 直したら成功）</p><pre class="text-white whitespace-pre-wrap break-words">test(&#x27;空白だけの本文はエラー&#x27;, () =&gt; {
-  assert.throws(() =&gt; createCard(&#x27;   &#x27;, &#x27;keep&#x27;));
-});</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>直す前に失敗することを見ておくと、このテストが本当に問題を捕まえられると確かめられます（TDD の Red）。</span></li></ul></div></div>
-<div class="space-y-3 mb-6"><div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto"><p class="text-xs text-gray-400 mb-2 font-mono">SKILL.md に1行足す（学びを残す）</p><pre class="text-white whitespace-pre-wrap break-words">4. 表示：ユーザーの入力は textContent で表示しているか（innerHTML を使っていないか）</pre></div><div class="bg-amber-50 border-l-4 border-amber-400 rounded-lg p-4"><p class="font-bold text-amber-800 mb-2">💡 なぜ？</p><ul class="text-sm text-gray-700 space-y-2"><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>今回の学びをスキルに書き足すと、次の開発では、レビューで最初から確かめられます。</span></li><li class="flex gap-2"><span class="text-amber-500 font-bold">→</span><span>人の学びも、AI に渡す文脈も、ファイルとしてチームに残る。これが MobAI の「学習」です。</span></li></ul></div></div>
-
-                    </div>
-                    <div class="bg-yellow-50 p-6 rounded-2xl border-l-4 border-yellow-500">
-                        <p class="font-bold text-yellow-800 mb-2">👀 デモで注目してほしいところ</p>
-                        <p class="text-gray-700">
-                            人間がやっているのは、<strong>基準を決めること</strong>と、<strong>どれを直すか判断すること</strong>だけ。
-                            作ることも、3つの観点で確かめることも、AI が同時に進めています。
-                        </p>
-                    </div>
-
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mt-6">
-                        <p class="font-bold text-gray-800 mb-3">📁 いちばん大事な理解：AI の設定は、すべて「ファイル」</p>
-                        <p class="text-gray-700 mb-3">
-                            Linux で「すべてがファイル」と言われるのと同じです。AI への指示・手順・役割は、すべてファイルとして置かれています。
-                        </p>
-                        <ul class="text-sm text-gray-700 space-y-1 mb-3">
-                            <li><code>AGENTS.md</code> … 作業ルール</li>
-                            <li><code>.claude/skills/</code> … 手順書（スキル）</li>
-                            <li><code>.claude/agents/</code> … 役（エージェント）</li>
-                        </ul>
-                        <p class="text-gray-700">
-                            書き換えれば AI が変わり、git に入れればチームで共有できます。この理解があると、AI の使い方がぐっと上手になります。
-                        </p>
+   先にテストを足して失敗することを確認してから、直してください。</pre></div>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">学びをファイルに足す（kpt-security の SKILL.md）</p><pre class="text-white whitespace-pre-wrap break-words">4. 表示：ユーザーの入力は textContent で表示しているか（innerHTML を使っていないか）</pre></div>
+                        <p class="text-gray-700">学びをファイルに1行足すと、次からチーム全員の AI が最初から確かめます。これが MobAI の「学習」です。</p>
                     </div>
 
                     <div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-4 border-indigo-500 mt-6">
