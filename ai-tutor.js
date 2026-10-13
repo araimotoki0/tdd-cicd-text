@@ -11,8 +11,8 @@
     var AVATAR = 'img/miho_face.webp';
     var TEACHER = 'Miho先生';
     var API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
-    // 精度の高い順。無いモデルは自動で次へ。ai-config.json の model で先頭に割り込める
-    var MODELS = ['gemini-3.1-pro', 'gemini-3.1-pro-preview', 'gemini-3-pro', 'gemini-3-pro-preview', 'gemini-2.5-pro'];
+    // 精度の高い順（2026-10-14 に実際に試して決めた）。無いモデルは自動で次へ。ai-config.json の model で先頭に割り込める
+    var MODELS = ['gemini-4-argon', 'gemini-3.1-pro-preview', 'gemini-pro-latest', 'gemini-3.8-flash'];
     var MAX_PAGE_CHARS = 60000;
     var MAX_HISTORY = 20; // 送る履歴の上限（発言数）
 
@@ -296,11 +296,10 @@
 #csd-tutor-launch:hover{transform:translateY(-2px);box-shadow:0 12px 26px -6px rgba(67,56,202,.7)}\
 #csd-tutor-launch img{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid rgba(255,255,255,.9)}\
 #csd-tutor-launch .csd-tutor-badge{position:absolute;top:-6px;right:-4px;background:#f59e0b;color:#fff;font-size:10px;padding:2px 6px;border-radius:9999px}\
-body.pnav-on #csd-tutor-launch{right:calc(18rem + 30px)}\
 body.csd-tutor-open #csd-tutor-launch{display:none}\
 #csd-tutor{position:fixed;right:24px;bottom:24px;z-index:1200;width:430px;max-width:calc(100vw - 48px);height:min(76vh,760px);display:none;flex-direction:column;background:#fff;color:#1d2433;border-radius:20px;box-shadow:0 2px 4px rgba(16,24,40,.05),0 24px 60px -12px rgba(16,24,40,.35);border:1px solid #e7e3da;overflow:hidden;font-family:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;font-size:14px;line-height:1.7}\
 #csd-tutor.open{display:flex}\
-body.pnav-on #csd-tutor{right:calc(18rem + 24px)}\
+@media (min-width:1280px){body.pnav-on #csd-tutor-launch{right:calc(18rem + 30px)}body.pnav-on #csd-tutor{right:calc(18rem + 24px)}}\
 .csd-tutor-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(135deg,var(--accent,#6366f1),var(--accent-2,#4338ca));color:#fff}\
 .csd-tutor-head img{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid rgba(255,255,255,.9);flex:none}\
 .csd-tutor-head .t{flex:1;min-width:0}\

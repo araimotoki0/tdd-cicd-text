@@ -23,7 +23,7 @@ export default {
         if (request.method !== 'POST') return new Response('POST only', { status: 405, headers: cors });
         if (env.ALLOWED_ORIGIN && origin !== env.ALLOWED_ORIGIN) return new Response('forbidden', { status: 403, headers: cors });
 
-        const model = (new URL(request.url).searchParams.get('model') || 'gemini-3-pro').replace(/[^a-z0-9.-]/gi, '');
+        const model = (new URL(request.url).searchParams.get('model') || 'gemini-4-argon').replace(/[^a-z0-9.-]/gi, '');
         const upstream = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },

@@ -61,7 +61,8 @@ test('エラー文：生徒に伝わる日本語になる', () => {
     assert.equal(t.friendlyError({ name: 'AbortError' }), '');
 });
 
-test('モデル候補：精度の高いものから順に並んでいる', () => {
-    assert.equal(t.MODELS[0], 'gemini-3.1-pro');
-    assert.ok(t.MODELS.indexOf('gemini-2.5-pro') > t.MODELS.indexOf('gemini-3-pro'));
+test('モデル候補：精度の高いものから順に並び、Flash は最後の保険', () => {
+    assert.equal(t.MODELS[0], 'gemini-4-argon');
+    assert.equal(t.MODELS[t.MODELS.length - 1], 'gemini-3.8-flash');
+    assert.ok(t.MODELS.indexOf('gemini-3.1-pro-preview') < t.MODELS.indexOf('gemini-pro-latest'));
 });
