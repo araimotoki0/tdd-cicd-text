@@ -3,7 +3,7 @@
    - CSS / JS / 画像 / フォント：キャッシュを返しつつ裏で更新（stale-while-revalidate）。?v= を含めて完全一致
    - 動画：キャッシュしない（容量が大きく、途中からの読み込みがあるため）
    更新するときは VERSION を変える */
-var VERSION = 'csd-2026-10-14b';
+var VERSION = 'csd-2026-10-14c';
 var CACHE = 'csd-' + VERSION;
 
 var PAGES = [

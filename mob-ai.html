@@ -418,7 +418,7 @@ AGENTS.md                     AI への作業ルール
                         </div>
                         <p class="text-gray-700 mb-4">スキルは、スラッシュで呼べます。打つのは、これだけです。</p>
                     <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">AI への指示</p><pre class="text-white whitespace-pre-wrap break-words">/kpt-review</pre></div>
-                        <p class="text-gray-700 mb-4">セキュリティ・効率・品質の3人のレビュアーが、別々に、同時に見ます。コードは書き換えません。1つの観点だけなら <code>/kpt-security</code> のように呼びます。</p>
+                        <p class="text-gray-700 mb-4">セキュリティ・効率・品質の3人のレビュアーが、別々に、同時に見ます。コードは書き換えません。1つの観点だけなら <code>/kpt-security</code> のように呼びます。3人のレビュアー（エージェント）は、<code>/kpt-review</code> の中で呼ばれるので、名前を覚えなくて大丈夫です。</p>
                         <div class="overflow-x-auto mb-2"><table class="w-full text-sm text-left border">
                             <thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border">観点</th><th class="p-2 border">いちばん重要な指摘</th></tr></thead>
                             <tbody class="text-gray-700">
@@ -443,6 +443,211 @@ AGENTS.md                     AI への作業ルール
    先にテストを足して失敗することを確認してから、直してください。</pre></div>
                     <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">学びをファイルに足す（kpt-security の SKILL.md）</p><pre class="text-white whitespace-pre-wrap break-words">4. 表示：ユーザーの入力は textContent で表示しているか（innerHTML を使っていないか）</pre></div>
                         <p class="text-gray-700">学びをファイルに1行足すと、次からチーム全員の AI が最初から確かめます。これが MobAI の「学習」です。</p>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <details>
+                            <summary class="cursor-pointer font-bold text-gray-800">📂 このデモで使うファイルの全文（開くと見られます・コピーして使えます）</summary>
+                            <div class="space-y-2 mt-4">
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">docs/spec.md<span class="font-normal text-gray-500">（仕様）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words"># 仕様：KPT 振り返りボード
+
+## 目的
+スプリントの振り返りで、チーム全員が Keep / Problem / Try を書き出して共有できるようにする。
+
+## ユーザーストーリー
+- 開発者として、振り返りで気づいたことをカードにして追加したい。思いついたその場で書き留めるため。
+- スクラムマスターとして、Keep / Problem / Try ごとの枚数を見たい。どこに話し合いの時間を使うか決めるため。
+
+## 機能
+1. 種類（Keep / Problem / Try）を選んで、ひとことのカードを追加できる
+2. カードは種類ごとの列に表示される
+3. 各列に、その種類のカードの枚数を表示する
+4. カードはブラウザに保存され、再読み込みしても残る
+
+## 受け入れ条件
+- カードの本文は、前後の空白を取り除いたうえで 1〜140 文字
+- 本文が空、または 140 文字を超える場合は、エラーメッセージを表示して追加しない
+- 種類は keep / problem / try のどれか
+- 入力された本文は、そのまま文字として表示される（HTML として解釈されない）
+
+## 対象外（今回は作らない）
+- カードの編集・削除
+- 複数人でのリアルタイム共有</pre></div>
+                            </details>
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">AGENTS.md<span class="font-normal text-gray-500">（AI への作業ルール）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words"># AGENTS.md
+
+このリポジトリで作業する AI エージェント向けのルールです。
+
+## プロジェクト
+スプリントの振り返りで使う、ブラウザだけで動く KPT ボード。
+**仕様は `docs/spec.md` にあります。作業の前に必ず読んでください。**
+
+## コマンド
+- テスト：`npm test`
+- 画面の確認：`python3 -m http.server 8000` → http://localhost:8000
+
+## ファイル構成
+- `src/kpt.js` … ロジック（DOM を使わない。テスト対象）
+- `src/app.js` … 画面の処理
+- `index.html` / `style.css`
+- `tests/` … テスト（受け入れ条件を確かめる）
+
+## 守ること
+- フレームワークやライブラリは使わない（HTML / CSS / JavaScript だけ）
+- 仕様は docs/spec.md にある。作業の前に必ず読む
+- テストは Node.js に最初から入っている node --test を使う
+- テストを書き換えて通すことはしない。
+  テストと仕様が合わない場合は、作業を止めて人間に確認する
+- 仕様にない機能は勝手に足さない
+- 変更したら `npm test` を実行し、結果を報告する
+- 返答は日本語で
+
+## レビュー
+レビューを頼まれたら、`.claude/skills/` のスキルを使う。
+- `kpt-security` … セキュリティ
+- `kpt-efficiency` … 効率
+- `kpt-quality` … 品質（仕様・テスト）
+- `kpt-review` … 3つを別々のレビュアーで同時に</pre></div>
+                            </details>
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">.claude/skills/kpt-review/SKILL.md<span class="font-normal text-gray-500">（スキル：3つ同時にレビュー）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words">---
+name: kpt-review
+description: セキュリティ・効率・品質の3つの観点で、別々のレビュアーが同時にレビューする。コードは書き換えない。レビューを頼まれたときに使う。
+---
+
+次の3人のレビュアー（サブエージェント）を**同時に**起動する。
+
+- kpt-security-reviewer
+- kpt-efficiency-reviewer
+- kpt-quality-reviewer
+
+返ってきた結果を、観点ごとに「重要なもの3件まで」の表にまとめて報告する。
+最後に、観点ごとの「一番先に直すべき1件」を並べる。コードは書き換えない。</pre></div>
+                            </details>
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">.claude/skills/kpt-security/SKILL.md<span class="font-normal text-gray-500">（スキル：セキュリティ）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words">---
+name: kpt-security
+description: セキュリティの観点でコードをレビューする。XSS、保存データの扱い、入力値の検証を確かめる。レビューを頼まれたときに使う。コードは書き換えない。
+---
+
+# セキュリティレビュー
+
+`src/` と `index.html` を読み、脆弱性を探します。**コードは書き換えません。**
+
+## 確かめること
+1. **XSS**：ユーザーの入力を `innerHTML` などで、そのまま HTML として表示していないか
+2. **保存データ**：localStorage から読み込むとき、壊れた値や想定外の値で動かなくならないか
+3. **入力値の検証**：検証が画面側だけになっていないか（ロジック側でも確かめているか）
+
+## 報告の形
+観点ごとに、重要なものから最大3件を表にする。
+
+| 重要度（高/中/低） | 場所（ファイルと行） | 何が起きるか | 直し方 |
+|---|---|---|---|
+
+最後に「一番先に直すべき1件」を1行で書く。</pre></div>
+                            </details>
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">.claude/skills/kpt-efficiency/SKILL.md<span class="font-normal text-gray-500">（スキル：効率）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words">---
+name: kpt-efficiency
+description: 効率の観点でコードをレビューする。無駄な再描画、保存・読み込みの回数、重複した処理を確かめる。レビューを頼まれたときに使う。コードは書き換えない。
+---
+
+# 効率レビュー
+
+`src/` と `index.html` を読み、無駄や重くなる書き方を探します。**コードは書き換えません。**
+
+## 確かめること
+1. **再描画**：カードを1枚足しただけで、画面全体を毎回作り直していないか
+2. **保存・読み込み**：localStorage の読み書きを、必要以上の回数していないか
+3. **重複した処理**：同じ計算（枚数の数え上げ、空白の除去など）を何度もしていないか
+
+## 報告の形
+観点ごとに、重要なものから最大3件を表にする。
+
+| 重要度（高/中/低） | 場所（ファイルと行） | 何が起きるか | 直し方 |
+|---|---|---|---|
+
+最後に「一番先に直すべき1件」を1行で書く。
+※ カードは数十枚程度の想定。体感に影響しない細かい最適化は「低」にする。</pre></div>
+                            </details>
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">.claude/skills/kpt-quality/SKILL.md<span class="font-normal text-gray-500">（スキル：品質）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words">---
+name: kpt-quality
+description: 品質の観点でコードをレビューする。仕様（docs/spec.md）との違いと、受け入れ条件のテストの抜けを確かめる。レビューを頼まれたときに使う。コードは書き換えない。
+---
+
+# 品質レビュー
+
+`docs/spec.md`、`src/`、`tests/` を読み、仕様との違いとテストの抜けを探します。**コードもテストも書き換えません。**
+
+## 確かめること
+1. **仕様との違い**：「機能」「受け入れ条件」のとおりに動くか。「対象外」の機能を勝手に足していないか
+2. **テストの抜け**：受け入れ条件ごとにテストがあるか（境界値：0文字・1文字・140文字・141文字、前後の空白、不正な種類）
+3. **テストの結果**：`npm test` を実行し、結果を書く
+
+## 報告の形
+観点ごとに、重要なものから最大3件を表にする。
+
+| 重要度（高/中/低） | 場所（ファイルと行） | 何が起きるか | 直し方 |
+|---|---|---|---|
+
+最後に「一番先に直すべき1件」を1行で書く。
+テストと仕様が合わない場合は、どちらを直すべきか決めずに「人間に確認が必要」と書く。</pre></div>
+                            </details>
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">.claude/agents/kpt-security-reviewer.md<span class="font-normal text-gray-500">（エージェント：セキュリティ担当）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words">---
+name: kpt-security-reviewer
+description: KPT ボードのセキュリティ担当のレビュアー。手順は kpt-security スキル。コードは書き換えない。
+tools: Read, Grep, Glob
+---
+
+あなたは KPT ボードの**セキュリティ担当のレビュアー**です。
+
+- 手順は `.claude/skills/kpt-security/SKILL.md` に書いてある。必ず読んで、そのとおりに進める。仕様は `docs/spec.md`、作業ルールは `AGENTS.md`。
+- **コードは書き換えない。** 見つけたことを報告するだけ。
+- 自分の担当（セキュリティ）以外の指摘は、気づいても1行だけにする。</pre></div>
+                            </details>
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">.claude/agents/kpt-efficiency-reviewer.md<span class="font-normal text-gray-500">（エージェント：効率担当）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words">---
+name: kpt-efficiency-reviewer
+description: KPT ボードの効率担当のレビュアー。手順は kpt-efficiency スキル。コードは書き換えない。
+tools: Read, Grep, Glob
+---
+
+あなたは KPT ボードの**効率担当のレビュアー**です。
+
+- 手順は `.claude/skills/kpt-efficiency/SKILL.md` に書いてある。必ず読んで、そのとおりに進める。仕様は `docs/spec.md`、作業ルールは `AGENTS.md`。
+- **コードは書き換えない。** 見つけたことを報告するだけ。
+- 自分の担当（効率）以外の指摘は、気づいても1行だけにする。</pre></div>
+                            </details>
+                            <details class="bg-gray-50 rounded-lg ring-1 ring-gray-900/5">
+                                <summary class="cursor-pointer p-3 font-bold text-gray-800 text-sm">.claude/agents/kpt-quality-reviewer.md<span class="font-normal text-gray-500">（エージェント：品質担当）</span></summary>
+                                <div class="bg-gray-900 p-4 rounded-b-lg font-mono text-sm overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words">---
+name: kpt-quality-reviewer
+description: KPT ボードの品質担当のレビュアー。手順は kpt-quality スキル。コードは書き換えない。
+tools: Read, Grep, Glob, Bash
+---
+
+あなたは KPT ボードの**品質担当のレビュアー**です。
+
+- 手順は `.claude/skills/kpt-quality/SKILL.md` に書いてある。必ず読んで、そのとおりに進める。仕様は `docs/spec.md`、作業ルールは `AGENTS.md`。
+- **コードは書き換えない。** 見つけたことを報告するだけ。
+- 自分の担当（品質）以外の指摘は、気づいても1行だけにする。</pre></div>
+                            </details>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-3">アプリのコード（src）とテスト（tests）は、AI が作るので載せません。</p>
+                        </details>
                     </div>
 
                     <div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-4 border-indigo-500 mt-6">
