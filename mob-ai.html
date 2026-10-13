@@ -15,6 +15,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css?v=20261012d">
     <link rel="stylesheet" href="ui2.css?v=22">
+    <link rel="stylesheet" href="guide/guide.css?v=1">
 </head>
 <body class="bg-gray-50 ui2" data-chapter="mobai">
     <!-- ナビゲーション -->
@@ -56,8 +57,24 @@
             </div>
         </section>
 
+        <!-- 3人の案内（声つき） -->
+        <section class="mg-dock-wrap py-12 bg-gradient-to-b from-indigo-50 to-white" id="guide-start" data-nolisten>
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-center mb-3"><span class="inline-block bg-indigo-600 text-white font-bold text-sm px-4 py-1.5 rounded-full">🎧 まず、これを聞いてください</span></p>
+                    <p class="text-3xl font-bold text-gray-800 mb-3 text-center">3人が、このページを声で案内します</p>
+                    <p class="text-gray-600 text-center mb-6">Joe・Miho先生・Arai先生が、いちばん大事なところから順に、画面を指しながら説明します（<span data-total>約4分</span>・音が出ます）。各章の見出しの「この章だけ聞く」で、その章だけも聞けます。</p>
+                    <div class="mg-intro">
+                        <video src="guide/video/intro.mp4" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>
+                        <button type="button" class="mg-playall" data-play-all>▶ 3人の案内を聞く（<span data-total>約4分</span>）</button>
+                    </div>
+                    <div class="mg-dock"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- 講師がいちばん伝えたいこと：MobAI -->
-        <section id="most-important" class="py-16 bg-gradient-to-b from-amber-50 to-white">
+        <section id="most-important" data-voice="c1" class="py-16 bg-gradient-to-b from-amber-50 to-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <p class="text-center mb-3"><span class="inline-block bg-amber-400 text-amber-950 font-bold text-sm px-4 py-1.5 rounded-full">★ いちばん重要な知識</span></p>
@@ -75,26 +92,26 @@
                     </div>
                     <p class="text-sm text-gray-500 text-center mb-10">🎬 解説動画「MobAI ってなに？」（約3分・音声あり）</p>
 
-                    <div class="grid md:grid-cols-2 gap-4 mb-8">
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                    <div class="grid md:grid-cols-2 gap-4 mb-8" data-spot="s-cards">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5" data-spot="s-card1">
                             <p class="font-bold text-indigo-700 mb-2">① AI の道具は、1人では追いきれない</p>
                             <p class="text-gray-700 text-sm">エージェント、スキル、フック、MCP、権限、ワークフロー……。18か月前にはなかった新しい仕組みが、15個以上。1人で全部を使いこなすのは大変でも、支え合う3人のチームなら、ずっと簡単です。</p>
                         </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5" data-spot="s-card2">
                             <p class="font-bold text-indigo-700 mb-2">② 人か AI かは、もう重要ではない</p>
                             <p class="text-gray-700 text-sm">MobAI は「AI を活用したグループ作業」。メンバーが人間か、AI か、その両方かは重要ではありません。人と AI が同じ目標に向かって、考える → 作る → 見る → 判断する → 学ぶ、をくり返します。</p>
                         </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5" data-spot="s-card3">
                             <p class="font-bold text-indigo-700 mb-2">③ 速さ・質・学び</p>
                             <p class="text-gray-700 text-sm">その場で決めるので待ちや引き継ぎがない（速さ）。AI の成果物を複数の目で確かめる（質）。学んだことや AI に渡す文脈を、AGENTS.md やスキルのファイルとしてチームに残す（学び）。</p>
                         </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5" data-spot="s-card4">
                             <p class="font-bold text-indigo-700 mb-2">④ 役割を決めることが、目的ではない</p>
                             <p class="text-gray-700 text-sm">テスラでは決まった役割は使っていませんでした。役割はグループ作業を始めるための入り口。本当に大事なのは、同じ画面を見て、一緒に考え、一緒に決めることです。</p>
                         </div>
                     </div>
 
-                    <div class="bg-indigo-600 text-white p-6 md:p-8 rounded-2xl shadow-lg">
+                    <div class="bg-indigo-600 text-white p-6 md:p-8 rounded-2xl shadow-lg" data-spot="s-summary">
                         <p class="text-xl font-bold mb-2">最高の品質を、速く、効率よく。</p>
                         <p class="text-indigo-100">AI の世界は、1人では追いきれないほど広く、速く変わります。だから、人と AI がグループになって、一緒に作り、複数の目で確かめ、学んだことをチームに残す。それが MobAI です。</p>
                     </div>
@@ -103,7 +120,7 @@
         </section>
 
         <!-- 1. 10倍速くなったら -->
-        <section class="py-16 bg-white">
+        <section id="sec-speed" data-voice="c2" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">AIで開発が10倍速くなったら？</h2>
@@ -111,7 +128,7 @@
                         AI によって、コードを書く・テストする・修正するといった作業は急速に速くなっています。<br>
                         では、開発が10倍速くなったら、<strong>価値を生み出すスピードも10倍</strong>になるのでしょうか？
                     </p>
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div class="grid md:grid-cols-2 gap-6" data-spot="s-speed">
                         <div class="bg-gray-50 p-6 rounded-2xl ring-1 ring-gray-900/5 text-center">
                             <p class="text-sm text-gray-500 mb-1">Speed of making</p>
                             <p class="text-2xl font-bold text-gray-800">「作る速さ」</p>
@@ -127,11 +144,11 @@
         </section>
 
         <!-- 2. 働き方の変化 -->
-        <section class="py-16 bg-gray-100">
+        <section id="sec-change" data-voice="c3" class="py-16 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">AIは、チームの働き方を変え始めている</h2>
-                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 space-y-4 text-gray-700 text-lg">
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 space-y-4 text-gray-700 text-lg" data-spot="s-change">
                         <p>
                             AI の進化によって、チームの働き方も大きく変わり始めています。
                             これまでは、開発・コードレビュー・テストなどを複数人で分担することが一般的でした。
@@ -147,7 +164,7 @@
         </section>
 
         <!-- 3. チームの価値 -->
-        <section class="py-16 bg-white">
+        <section id="sec-team" data-voice="c4" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">AIが一人の開発者を強力に支援できる時代、<br class="hidden md:inline">チームにはどんな価値があるのか？</h2>
@@ -164,7 +181,7 @@
                             一方で、複数人で開発すれば、必ず良い成果が生まれるわけでもありません。
                             認識の違いや、意思決定の遅れが問題になることもあります。
                         </p>
-                        <p class="text-indigo-700 font-bold">
+                        <p class="text-indigo-700 font-bold" data-spot="s-team-value">
                             チームの価値は、単に作業を分担することではありません。
                             異なる知識や視点を組み合わせ、より良い判断をし、その結果から一緒に学べることです。
                         </p>
@@ -174,14 +191,14 @@
         </section>
 
         <!-- 4. テスラ -->
-        <section class="py-16 bg-gray-100">
+        <section id="sec-tesla" data-voice="c5" class="py-16 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">テスラに学ぶフィードバックループ</h2>
                     <p class="text-gray-700 text-lg mb-6 text-center">
                         大事なのは、作る速さそのものではなく、<strong>チームがどれだけ速く学び、次の改善につなげられるか</strong>です。
                     </p>
-                    <div class="flex flex-wrap items-center justify-center gap-2 text-sm font-bold">
+                    <div class="flex flex-wrap items-center justify-center gap-2 text-sm font-bold" data-spot="s-loop">
                         <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full">走行データ</span><span class="text-gray-400">→</span>
                         <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full">学ぶ</span><span class="text-gray-400">→</span>
                         <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full">改善する</span><span class="text-gray-400">→</span>
@@ -193,7 +210,7 @@
         </section>
 
         <!-- 5. AIと共に品質を高める -->
-        <section class="py-16 bg-white">
+        <section id="sec-quality" data-voice="c6" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">AIと共に、品質を高める</h2>
@@ -201,7 +218,7 @@
                         AI にはコードを書いてもらうだけでなく、レビュー・修正・テストも任せられます。<br>
                         大切なのは、<strong>何を満たせばよいかを明確にし、実際の結果で確かめること</strong>です。
                     </p>
-                    <div class="grid md:grid-cols-4 gap-3 mb-4">
+                    <div class="grid md:grid-cols-4 gap-3 mb-4" data-spot="s-steps">
                         <div class="bg-indigo-50 p-5 rounded-2xl text-center">
                             <p class="text-xs font-bold text-indigo-500">01 Define</p>
                             <p class="text-lg font-bold text-gray-800">基準を決める</p>
@@ -230,7 +247,7 @@
         </section>
 
         <!-- 6. MobAIとは -->
-        <section class="py-16 bg-gray-100">
+        <section id="sec-mobai" data-voice="c7" class="py-16 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">MobAIとは？</h2>
@@ -238,14 +255,14 @@
                         Joe Justice は2023年から、AI を活用したグループ作業「MobAI」を提唱してきました。
                         大切にしているのは、AI に作業を任せることだけではなく、<strong>人と AI が互いの強みを活かし、より良い成果を生み出すこと</strong>です。
                     </p>
-                    <div class="flex flex-wrap items-center justify-center gap-2 text-sm font-bold mb-8">
+                    <div class="flex flex-wrap items-center justify-center gap-2 text-sm font-bold mb-8" data-spot="s-cycle">
                         <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full">考える</span><span class="text-gray-400">→</span>
                         <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full">作る</span><span class="text-gray-400">→</span>
                         <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full">見る</span><span class="text-gray-400">→</span>
                         <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full">判断する</span><span class="text-gray-400">→</span>
                         <span class="bg-indigo-600 text-white px-4 py-2 rounded-full">学ぶ</span>
                     </div>
-                    <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <div class="grid md:grid-cols-3 gap-4 mb-6" data-spot="s-pillars">
                         <div class="bg-gray-50 p-5 rounded-2xl ring-1 ring-gray-900/5">
                             <p class="font-bold text-gray-800 mb-1">⚡ 速さ</p>
                             <p class="text-sm text-gray-700">待ちや引き継ぎを減らし、その場で次へ進む</p>
@@ -265,13 +282,13 @@
         </section>
 
         <!-- 7. 体験 -->
-        <section class="py-16 bg-indigo-50">
+        <section id="sec-try" data-voice="c8" class="py-16 bg-indigo-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">MobAIを体験する</h2>
                     <p class="text-center mb-8"><span class="bg-indigo-600 text-white text-sm font-bold px-4 py-1.5 rounded-full">⏱ 13分</span></p>
 
-                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6" data-spot="s-theme">
                         <p class="text-sm font-bold text-indigo-600 mb-1">目的</p>
                         <p class="text-gray-800 mb-6">AI と協働しながら、1人では思いつかないアイデアを生み出し、改善する。</p>
 
@@ -287,7 +304,7 @@
                         <p class="text-gray-700">ポスター、漫画、歌、キャッチコピー、チームの行動指針など、好きな形で表現してください。</p>
                     </div>
 
-                    <div class="bg-green-50 p-6 rounded-2xl border-l-4 border-green-500">
+                    <div class="bg-green-50 p-6 rounded-2xl border-l-4 border-green-500" data-spot="s-hint">
                         <p class="font-bold text-green-800 mb-2">💡 MobAI のヒント</p>
                         <p class="text-gray-700">
                             AI の画面を共有し、みんなで会話しながら1つの作品を作ってみましょう。
@@ -299,14 +316,14 @@
         </section>
 
         <!-- 8. 現場で -->
-        <section class="py-16 bg-white">
+        <section id="sec-field" data-voice="c9" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">現場でMobAIをどう活かす？</h2>
                     <p class="text-center mb-4"><span class="bg-indigo-600 text-white text-sm font-bold px-4 py-1.5 rounded-full">⏱ 13分</span></p>
                     <p class="text-gray-700 text-center mb-8">開発現場での AI 活用や共同作業の現状を共有し、人間と AI エージェントが協働する可能性を考えます。</p>
 
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div class="grid md:grid-cols-2 gap-6" data-spot="s-discuss">
                         <div class="bg-gray-50 p-6 rounded-2xl ring-1 ring-gray-900/5">
                             <p class="font-bold text-gray-800 mb-3">① 現場の今を共有する</p>
                             <ul class="text-gray-700 space-y-2 text-sm">
@@ -331,11 +348,11 @@
         </section>
 
         <!-- 9. なぜ -->
-        <section class="py-16 bg-gray-100">
+        <section id="sec-why" data-voice="c10" class="py-16 bg-gray-100">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">なぜモブAIをするのか？</h2>
-                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 space-y-4 text-gray-700">
+                    <div class="bg-white p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 space-y-4 text-gray-700" data-spot="s-why">
                         <p>
                             AI がコードの生成・テスト・レビューを担えるようになり、1人の開発者ができることは大きく広がっています。
                             しかし開発で重要なのは、コードを書くことだけではありません。
@@ -359,26 +376,26 @@
         </section>
 
         <!-- 10. デモ -->
-        <section class="py-16 bg-indigo-50">
+        <section id="sec-demo" data-voice="c11" class="py-16 bg-indigo-50">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto">
                     <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">実際のAI開発を見てみよう</h2>
                     <p class="text-gray-600 text-lg mb-8 text-center">題材は「KPT 振り返りボード」。講師のデモで、人間が決め、AI が作り、AI が確かめるところを見ます（約10分）</p>
 
-                    <div class="bg-indigo-600 text-white p-6 md:p-8 rounded-2xl shadow-lg mb-6">
+                    <div class="bg-indigo-600 text-white p-6 md:p-8 rounded-2xl shadow-lg mb-6" data-spot="s-key">
                         <p class="text-sm font-bold text-indigo-200 mb-2">いちばん大事な理解</p>
                         <p class="text-xl md:text-2xl font-bold leading-relaxed">AI への指示・手順・役割は、すべて「ファイル」で決まっている。<br>Linux の「すべてがファイル」と同じ。</p>
                     </div>
 
                     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">このデモで使うファイル（これだけ）</p><pre class="text-white whitespace-pre-wrap break-words">docs/spec.md                  何を作るか・何を満たせば OK か（仕様）
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4" data-spot="s-files"><p class="text-xs text-gray-400 mb-2 font-mono">このデモで使うファイル（これだけ）</p><pre class="text-white whitespace-pre-wrap break-words">docs/spec.md                  何を作るか・何を満たせば OK か（仕様）
 AGENTS.md                     AI への作業ルール
 .claude/skills/kpt-〇〇/       レビューのやり方（スキル）
 .claude/agents/kpt-〇〇.md     レビューする役（エージェント）</pre></div>
                         <p class="text-gray-700">書き換えれば AI が変わり、git に入れればチームで同じ AI を使えます。<strong>人間がやることは、このファイルを書くことと、判断することだけ</strong>です。</p>
                     </div>
 
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6" data-spot="s-spec">
                         <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">1</span>
                             <h3 class="text-2xl font-bold text-gray-800">基準を決める</h3>
@@ -397,7 +414,7 @@ AGENTS.md                     AI への作業ルール
 - 変更したら npm test を実行し、結果を報告する</pre></div>
                     </div>
 
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6" data-spot="s-instruct">
                         <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">2</span>
                             <h3 class="text-2xl font-bold text-gray-800">作らせる</h3>
@@ -410,7 +427,7 @@ AGENTS.md                     AI への作業ルール
                         <p class="text-gray-700">テストが先に失敗し、実装のあとに通ります（TDD の Red → Green）。人間は、テストに受け入れ条件が全部入っているかを見るだけです。</p>
                     </div>
 
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6" data-spot="s-review">
                         <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">3</span>
                             <h3 class="text-2xl font-bold text-gray-800">確かめる（3つの観点を同時に）</h3>
@@ -430,7 +447,7 @@ AGENTS.md                     AI への作業ルール
                         <p class="text-xs text-gray-500">レビュー結果の例（各観点で一番重要なもの）</p>
                     </div>
 
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6" data-spot="s-decide">
                         <div class="flex items-center gap-3 mb-4 flex-wrap">
                             <span class="flex-none w-9 h-9 rounded-full bg-indigo-600 text-white grid place-items-center font-bold">4</span>
                             <h3 class="text-2xl font-bold text-gray-800">直すものを決める</h3>
@@ -441,7 +458,7 @@ AGENTS.md                     AI への作業ルール
 1. セキュリティ：XSS（本文を textContent で表示する）
 2. 品質：空白だけのカードを作れないようにする。
    先にテストを足して失敗することを確認してから、直してください。</pre></div>
-                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">学びをファイルに足す（kpt-security の SKILL.md）</p><pre class="text-white whitespace-pre-wrap break-words">4. 表示：ユーザーの入力は textContent で表示しているか（innerHTML を使っていないか）</pre></div>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4" data-spot="s-learn"><p class="text-xs text-gray-400 mb-2 font-mono">学びをファイルに足す（kpt-security の SKILL.md）</p><pre class="text-white whitespace-pre-wrap break-words">4. 表示：ユーザーの入力は textContent で表示しているか（innerHTML を使っていないか）</pre></div>
                         <p class="text-gray-700">学びをファイルに1行足すと、次からチーム全員の AI が最初から確かめます。これが MobAI の「学習」です。</p>
                     </div>
 
@@ -650,7 +667,7 @@ tools: Read, Grep, Glob, Bash
                         </details>
                     </div>
 
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6" data-spot="s-skill-vs-agent">
                         <h3 class="text-2xl font-bold text-gray-800 mb-2">🧩 スキルとエージェントの違い</h3>
                         <p class="text-gray-700 mb-4">どちらもファイル1つで決まりますが、動き方が違います。<strong>スキルは「手順書」、エージェントは「別の担当者」</strong>です。</p>
                         <div class="overflow-x-auto mb-6"><table class="w-full text-sm text-left border">
@@ -676,7 +693,7 @@ tools: Read, Grep, Glob, Bash
                         <p class="text-sm text-gray-500">ほかに、スキルの先頭に <code>context: fork</code> と <code>agent: 名前</code> を書くと、スキルの手順をそのままエージェント1人に任せられます。</p>
                     </div>
 
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6" data-spot="s-folders">
                         <h3 class="text-2xl font-bold text-gray-800 mb-2">📁 .claude と .agents：ツールで読むフォルダが違う</h3>
                         <p class="text-gray-700 mb-4">スキルの書き方（<code>SKILL.md</code>）は、ツールが違ってもほぼ同じです。ただ、<strong>どのフォルダを読むかは、ツール（ハーネス）ごとに違います</strong>。Claude Code は <code>.claude/</code> を読み、<code>.agents/</code> の中は読みません。Antigravity や Codex は <code>.agents/</code> からスキルを読みます。</p>
                         <div class="overflow-x-auto mb-4"><table class="w-full text-sm text-left border">
@@ -698,86 +715,14 @@ tools: Read, Grep, Glob, Bash
                             <li>・Claude in Chrome の活用</li>
                             <li>・Claude Code on the web の活用</li>
                         </ul>
-                        <p class="text-sm text-gray-500 mt-3">最新のやり方は、この下の「AI と、声つきのチュートリアル動画を作る」で見せます。</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 11. 最新の使い方：声つきのチュートリアル動画を AI と作る -->
-        <section id="latest" class="py-16 bg-gradient-to-b from-sky-50 to-white">
-            <div class="container mx-auto px-6">
-                <div class="max-w-4xl mx-auto">
-                    <p class="text-center mb-3"><span class="inline-block bg-sky-500 text-white font-bold text-sm px-4 py-1.5 rounded-full">NEW ・ 最新の使い方</span></p>
-                    <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">AI と、声つきのチュートリアル動画を作る</h2>
-                    <p class="text-gray-600 text-lg mb-8 text-center">Claude in Chrome と Playwright で画面を作って確かめ、画像・声・動画の AI でキャラクターを動かします。下のチュートリアルも動画も、<strong>2026年10月14日に、AI と一緒に作りました</strong>。</p>
-
-                    <a href="miro-tutorial.html" class="block bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl shadow-lg p-6 md:p-8 mb-6 transition">
-                        <p class="text-sm font-bold text-indigo-200 mb-1">まずはこれを体験</p>
-                        <p class="text-2xl md:text-3xl font-bold mb-2">🖱 動くチュートリアル「Miro 超入門」を開く →</p>
-                        <p class="text-indigo-100">3人が声で案内し、光っている所を押しながら Miro を覚えます。全 17 章・約 2 分。通しで見ることも、章ごとに聞くこともできます（音が出ます）。</p>
-                    </a>
-                    <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-gray-900/10 bg-black mb-3">
-                        <video class="w-full h-auto block" src="video/miro-tutorial.mp4?v=2" poster="video/miro-tutorial-poster.jpg?v=1" controls preload="metadata" playsinline></video>
-                    </div>
-                    <p class="text-sm text-gray-500 text-center mb-10">🎬 同じ内容の動画版「Miro 超入門」（約2分・4K・音声あり）。配るときはこちら</p>
-
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">作り方は3ステップ</h3>
-                    <div class="grid md:grid-cols-3 gap-4 mb-8">
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
-                            <p class="font-bold text-indigo-700 mb-2">① 粗くて安い絵で決める</p>
-                            <p class="text-gray-700 text-sm">安いモデル（gemini-3.1-flash-image・1K、1枚 約10円）で、3人 × 7ポーズを作って並べて選びます。基準の絵を毎回添えるので、顔も色もそろいます。</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
-                            <p class="font-bold text-indigo-700 mb-2">② セリフで動かす</p>
-                            <p class="text-gray-700 text-sm">台本は「画面に出す字幕」と「声で読む文（かな書き）」に分けます。声は2本ずつ作り、書き起こして台本と合う方を AI が選びます。口は声の大きさで開け閉めします。</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
-                            <p class="font-bold text-indigo-700 mb-2">③ 最後に 4K で仕上げる</p>
-                            <p class="text-gray-700 text-sm">決まった絵だけ、上位モデル（gemini-3-pro-image・4K、1枚 約36円）で描き直します。オープニングは Veo の 4K。画面は Playwright で 3840×2160 に書き出します。</p>
-                        </div>
-                    </div>
-
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">ブラウザを動かす2つの道具</h3>
-                    <div class="grid md:grid-cols-2 gap-4 mb-8">
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
-                            <p class="font-bold text-indigo-700 mb-2">Claude in Chrome</p>
-                            <p class="text-gray-700 text-sm">ふだんの Chrome を、AI がその場で操作します。初めての画面を探る、できあがりを人の目線で確かめる、が得意です。</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
-                            <p class="font-bold text-indigo-700 mb-2">Playwright</p>
-                            <p class="text-gray-700 text-sm">決めた手順をスクリプトにして、何度でも同じように動かします。同じ大きさで撮る、最初から最後まで通して確かめる、が得意です。この動画の画面も Playwright で書き出しました。</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-2 ring-sky-300 mb-8">
-                        <p class="font-bold text-gray-800 mb-3">💰 この動画にかかった費用：約3,300円</p>
-                        <ul class="text-gray-700 text-sm space-y-1">
-                            <li>・下書きの絵（gemini-3.1-flash-image・1K）22枚：約220円</li>
-                            <li>・仕上げの絵（gemini-3-pro-image・4K）64枚：約2,300円（口パク用に口を開けた絵の描き直しを含む）</li>
-                            <li>・オープニングの動く絵（Veo 3.1・4K・8秒）1本：約720円</li>
-                            <li>・声（2本ずつ作って選ぶ）・書き起こしの確認・BGM：約30円</li>
-                        </ul>
-                        <p class="text-sm text-gray-500 mt-3">API の料金（2026年10月時点、1ドル＝150円で計算）。下書きを安く何度も作り、決まったものだけ高画質で作るのがコツです。</p>
-                    </div>
-
-                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
-                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">AI への頼み方（この動画を作ったときの流れ）</p><pre class="text-white whitespace-pre-wrap break-words">Scrum Quest の3人（Joe・Miho先生・Arai先生）の絵を基準にして、
-Miro の使い方を案内する2分の動画を作って。
-・まず安いモデル（gemini-3.1-flash-image・1K）で、3人 × 7ポーズを緑の背景で作り、一覧にして見せて
-・台本は、画面に出す字幕（text）と、声で読む文（say・かな書き）を分けて
-・声は2本ずつ作って、書き起こしで台本と合う方を選んで
-・画面は HTML で作り、Playwright で 3840×2160 に書き出して
-・決まったら上位モデル（gemini-3-pro-image・4K）で描き直し、口を開けた絵も作って口パクさせて
-Gemini の APIキーはファイルにある。中身は表示しないで。</pre></div>
-                        <p class="text-gray-700">MobAI でやるなら、1人が AI に頼み、ほかの人は同じ画面を見て「この絵でいい？」「このセリフ、読み間違えていない？」を判断します。<strong>作るのは AI、決めるのは人</strong>です。</p>
+                        <p class="text-sm text-gray-500 mt-3">最新のやり方は、ここには書かず、講座の場でお伝えします。</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 次のステップ -->
-        <section class="py-16 bg-white">
+        <section id="sec-next" data-voice="c12" class="py-16 bg-white">
             <div class="container mx-auto px-6">
                 <div class="max-w-4xl mx-auto text-center">
                     <h2 class="text-4xl font-bold text-gray-800 mb-6">次のステップ</h2>
@@ -785,7 +730,7 @@ Gemini の APIキーはファイルにある。中身は表示しないで。</p
                         次は <strong>CI/CD 講座</strong>です。AI が作ったコードも、人が書いたコードも、<br>
                         push するたびにテストと品質チェックが自動で走る仕組みを作ります。
                     </p>
-                    <a href="cicd-index.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg">
+                    <a href="cicd-index.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full inline-block transition text-lg" data-spot="s-next">
                         CI/CD 講座へ進む →
                     </a>
                 </div>
@@ -814,5 +759,7 @@ Gemini の APIキーはファイルにある。中身は表示しないで。</p
     <script src="scroll-to-top.js?v=20261012d"></script>
     <script src="page-nav.js?v=20261012d"></script>
     <script src="ui2.js?v=20"></script>
+    <script src="guide/lines.js?v=1"></script>
+    <script src="guide/guide.js?v=1"></script>
 </body>
 </html>
