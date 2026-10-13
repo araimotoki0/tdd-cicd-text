@@ -679,6 +679,30 @@ Todoモデル
 git commit -m "Add GitHub Actions workflow for testing"
 git push</pre>
                                 </div>
+                                <div class="mt-4 bg-amber-50 rounded-lg border-l-4 border-amber-500 p-4">
+                                    <p class="font-bold text-amber-800 mb-3">⚠️ ここで push が拒否される人が多いです</p>
+                                    <div class="text-gray-700 text-sm space-y-3">
+                                        <div class="bg-gray-900 p-3 rounded font-mono text-xs overflow-x-auto"><pre class="text-white whitespace-pre-wrap break-words">! [remote rejected] master -&gt; master (refusing to allow an OAuth App to create or update workflow .github/workflows/test.yml without workflow scope)</pre></div>
+                                        <p><strong>原因：</strong>GitHub は、<code>.github/workflows/</code> のファイルを push するとき、<strong>workflow</strong> という権限を求めます。普通の push では要らないので、ここで初めて引っかかります。</p>
+
+                                        <p class="font-bold text-gray-800 pt-2">直し方：トークンを作って、パスワードの代わりに使う</p>
+                                        <ol class="list-decimal list-inside space-y-1">
+                                            <li>GitHub の右上のアイコン → <strong>Settings</strong> → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong> → <strong>Generate new token (classic)</strong></li>
+                                            <li><strong>repo</strong> と <strong>workflow</strong> の2つにチェックを入れて作る</li>
+                                            <li>出てきたトークンをコピーする（<strong>この画面でしか見られません</strong>）</li>
+                                            <li>もう一度 <code>git push</code> して、パスワードを聞かれたら、トークンを貼る</li>
+                                        </ol>
+
+                                        <p class="font-bold text-gray-800 pt-2">それでもダメなとき</p>
+                                        <ul class="space-y-1">
+                                            <li>• <strong>パスワードを聞かれず、同じエラーになる：</strong>古い認証が残っています。Mac は「キーチェーンアクセス」、Windows は「資格情報マネージャー」で <code>github.com</code> を消してから、もう一度 push します。</li>
+                                            <li>• <strong>GitHub CLI（gh）が入っている：</strong><code>gh auth refresh -h github.com -s workflow</code> を打って、ブラウザで承認してから push します。gh は Git とは別のソフトなので、入っていない人は上のトークンの方法でやります。</li>
+                                            <li>• <strong>どうしても push できない：</strong>GitHub のリポジトリページで <strong>Add file → Create new file</strong> を選び、ファイル名に <code>.github/workflows/test.yml</code> と入れて、中身を貼って保存します。そのあと手元で <code>git pull</code> します。</li>
+                                        </ul>
+
+                                        <p class="pt-2 text-gray-600">💡 研修の前にトークンを作って、一度 push まで通しておくと、当日ここで止まりません。</p>
+                                    </div>
+                                </div>
                             </li>
 
                             <li class="border-l-4 border-blue-500 pl-6">
