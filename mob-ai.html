@@ -650,13 +650,122 @@ tools: Read, Grep, Glob, Bash
                         </details>
                     </div>
 
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">🧩 スキルとエージェントの違い</h3>
+                        <p class="text-gray-700 mb-4">どちらもファイル1つで決まりますが、動き方が違います。<strong>スキルは「手順書」、エージェントは「別の担当者」</strong>です。</p>
+                        <div class="overflow-x-auto mb-6"><table class="w-full text-sm text-left border">
+                            <thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border"></th><th class="p-2 border">スキル</th><th class="p-2 border">エージェント</th></tr></thead>
+                            <tbody class="text-gray-700">
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">置き場所</td><td class="p-2 border"><code>.claude/skills/名前/SKILL.md</code></td><td class="p-2 border"><code>.claude/agents/名前.md</code></td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">動く場所</td><td class="p-2 border">今の会話の中。AI 本人が手順どおりに動く</td><td class="p-2 border">別の会話。終わったら結果の要約だけを返す</td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">それまでの会話</td><td class="p-2 border">見える</td><td class="p-2 border">見えない（AI がまとめた依頼文だけを受け取る）</td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">AI が勝手に使うか</td><td class="p-2 border">使う（description を見て判断する）</td><td class="p-2 border">使う（description を見て仕事を任せる）</td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">人が呼ぶには</td><td class="p-2 border"><code>/スキル名</code></td><td class="p-2 border">言葉で頼む（「kpt-security-reviewer で見て」）か、<code>@agent-名前</code>。<strong><code>/</code> では呼べない</strong></td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">向いていること</td><td class="p-2 border">手順や知識の使い回し。やりとりしながら進める作業</td><td class="p-2 border">出力が長い作業。道具や権限を絞りたい作業。何人かで同時に進める作業</td></tr>
+                            </tbody>
+                        </table></div>
+                        <p class="font-bold text-gray-800 mb-2"><code>/</code> で呼べないエージェントは、スキルから呼ぶ</p>
+                        <p class="text-gray-700 mb-4">このデモの <code>/kpt-review</code> がこの形です。スキルに「3人のレビュアーを同時に起動する」と書いておくと、<code>/kpt-review</code> と打つだけで3人が動きます。</p>
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">/kpt-review と打ったときの流れ</p><pre class="text-white whitespace-pre-wrap break-words">人間：/kpt-review
+ └ AI がスキル kpt-review（手順書）を読む
+    └ エージェント3人を同時に起動する（それぞれ別の会話）
+        kpt-security-reviewer   … kpt-security スキルの手順でレビュー
+        kpt-efficiency-reviewer … kpt-efficiency スキルの手順でレビュー
+        kpt-quality-reviewer    … kpt-quality スキルの手順でレビュー
+    └ 3人の要約を受け取り、表にまとめて報告する</pre></div>
+                        <p class="text-sm text-gray-500">ほかに、スキルの先頭に <code>context: fork</code> と <code>agent: 名前</code> を書くと、スキルの手順をそのままエージェント1人に任せられます。</p>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">📁 .claude と .agents：ツールで読むフォルダが違う</h3>
+                        <p class="text-gray-700 mb-4">スキルの書き方（<code>SKILL.md</code>）は、ツールが違ってもほぼ同じです。ただ、<strong>どのフォルダを読むかは、ツール（ハーネス）ごとに違います</strong>。Claude Code は <code>.claude/</code> を読み、<code>.agents/</code> の中は読みません。Antigravity や Codex は <code>.agents/</code> からスキルを読みます。</p>
+                        <div class="overflow-x-auto mb-4"><table class="w-full text-sm text-left border">
+                            <thead class="bg-indigo-100 text-indigo-900"><tr><th class="p-2 border"></th><th class="p-2 border">Claude Code</th><th class="p-2 border">Antigravity</th><th class="p-2 border">Codex</th></tr></thead>
+                            <tbody class="text-gray-700">
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">作業ルール</td><td class="p-2 border"><code>CLAUDE.md</code>（ないときは <code>AGENTS.md</code>）</td><td class="p-2 border"><code>AGENTS.md</code>（<code>GEMINI.md</code> も可）</td><td class="p-2 border"><code>AGENTS.md</code></td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">スキル</td><td class="p-2 border"><code>.claude/skills/</code></td><td class="p-2 border"><code>.agents/skills/</code></td><td class="p-2 border"><code>.agents/skills/</code></td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">エージェント</td><td class="p-2 border"><code>.claude/agents/名前.md</code></td><td class="p-2 border"><code>.agents/agents/名前.md</code></td><td class="p-2 border"><code>.codex/agents/名前.toml</code></td></tr>
+                                <tr><td class="p-2 border whitespace-nowrap font-bold">スキルを人が呼ぶ</td><td class="p-2 border"><code>/スキル名</code></td><td class="p-2 border"><code>/スキル名</code></td><td class="p-2 border"><code>$スキル名</code></td></tr>
+                            </tbody>
+                        </table></div>
+                        <p class="text-gray-700 mb-4">このデモは Claude Code で動かすので、<code>.claude/</code> に置いています。<code>AGENTS.md</code> はどのツールも読むので（Claude Code は <code>CLAUDE.md</code> がないとき）、作業ルールは共通にできます。ほかのツールでも同じスキルを使うときは、<code>SKILL.md</code> を <code>.agents/skills/</code> にもコピーします。エージェントは、ツールごとに書き方（項目やファイルの形式）が違うので、書き直しが必要です。</p>
+                        <p class="text-xs text-gray-500">2026年10月時点の公式ドキュメントより。Antigravity は古い <code>.agent/skills/</code>（s なし）も読みます。出典：Claude Code（<a href="https://code.claude.com/docs/en/skills" class="underline" target="_blank" rel="noopener">スキル</a>・<a href="https://code.claude.com/docs/en/sub-agents" class="underline" target="_blank" rel="noopener">エージェント</a>・<a href="https://code.claude.com/docs/en/memory" class="underline" target="_blank" rel="noopener">AGENTS.md</a>）、Antigravity（<a href="https://antigravity.google/docs/skills/" class="underline" target="_blank" rel="noopener">スキル</a>・<a href="https://antigravity.google/docs/subagents/" class="underline" target="_blank" rel="noopener">エージェント</a>）、Codex（<a href="https://learn.chatgpt.com/docs/build-skills" class="underline" target="_blank" rel="noopener">スキル</a>・<a href="https://learn.chatgpt.com/docs/agent-configuration/subagents" class="underline" target="_blank" rel="noopener">エージェント</a>）</p>
+                    </div>
+
                     <div class="bg-indigo-50 p-6 md:p-8 rounded-2xl border-l-4 border-indigo-500 mt-6">
                         <p class="font-bold text-indigo-900 mb-3">🤫 こっそり案内します</p>
                         <ul class="text-gray-700 space-y-1">
                             <li>・Claude in Chrome の活用</li>
                             <li>・Claude Code on the web の活用</li>
                         </ul>
-                        <p class="text-sm text-gray-500 mt-3">最新のやり方は、ここには書かず、講座の場でお伝えします。</p>
+                        <p class="text-sm text-gray-500 mt-3">最新のやり方は、この下の「AI と、声つきのチュートリアル動画を作る」で見せます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. 最新の使い方：声つきのチュートリアル動画を AI と作る -->
+        <section id="latest" class="py-16 bg-gradient-to-b from-sky-50 to-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-center mb-3"><span class="inline-block bg-sky-500 text-white font-bold text-sm px-4 py-1.5 rounded-full">NEW ・ 最新の使い方</span></p>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4 text-center">AI と、声つきのチュートリアル動画を作る</h2>
+                    <p class="text-gray-600 text-lg mb-8 text-center">Claude in Chrome と Playwright で画面を作って確かめ、画像・声・動画の AI でキャラクターを動かします。下の動画も、<strong>2026年10月14日に、AI と一緒に作りました</strong>。</p>
+
+                    <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-gray-900/10 bg-black mb-3">
+                        <video class="w-full h-auto block" src="video/miro-tutorial.mp4?v=1" poster="video/miro-tutorial-poster.jpg?v=1" controls preload="metadata" playsinline></video>
+                    </div>
+                    <p class="text-sm text-gray-500 text-center mb-10">🎬 「Miro 超入門」（約2分・4K・音声あり）。案内は Joe・Miho先生・Arai先生です</p>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">作り方は3ステップ</h3>
+                    <div class="grid md:grid-cols-3 gap-4 mb-8">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">① 粗くて安い絵で決める</p>
+                            <p class="text-gray-700 text-sm">安いモデル（gemini-3.1-flash-image・1K、1枚 約10円）で、3人 × 7ポーズを作って並べて選びます。基準の絵を毎回添えるので、顔も色もそろいます。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">② セリフで動かす</p>
+                            <p class="text-gray-700 text-sm">台本は「画面に出す字幕」と「声で読む文（かな書き）」に分けます。声は2本ずつ作り、書き起こして台本と合う方を AI が選びます。口は声の大きさで開け閉めします。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">③ 最後に 4K で仕上げる</p>
+                            <p class="text-gray-700 text-sm">決まった絵だけ、上位モデル（gemini-3-pro-image・4K、1枚 約36円）で描き直します。オープニングは Veo の 4K。画面は Playwright で 3840×2160 に書き出します。</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">ブラウザを動かす2つの道具</h3>
+                    <div class="grid md:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">Claude in Chrome</p>
+                            <p class="text-gray-700 text-sm">ふだんの Chrome を、AI がその場で操作します。初めての画面を探る、できあがりを人の目線で確かめる、が得意です。</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md ring-1 ring-gray-900/5">
+                            <p class="font-bold text-indigo-700 mb-2">Playwright</p>
+                            <p class="text-gray-700 text-sm">決めた手順をスクリプトにして、何度でも同じように動かします。同じ大きさで撮る、最初から最後まで通して確かめる、が得意です。この動画の画面も Playwright で書き出しました。</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-2 ring-sky-300 mb-8">
+                        <p class="font-bold text-gray-800 mb-3">💰 この動画にかかった費用：約3,300円</p>
+                        <ul class="text-gray-700 text-sm space-y-1">
+                            <li>・下書きの絵（gemini-3.1-flash-image・1K）22枚：約220円</li>
+                            <li>・仕上げの絵（gemini-3-pro-image・4K）64枚：約2,300円（口パク用に口を開けた絵の描き直しを含む）</li>
+                            <li>・オープニングの動く絵（Veo 3.1・4K・8秒）1本：約720円</li>
+                            <li>・声（2本ずつ作って選ぶ）・書き起こしの確認・BGM：約30円</li>
+                        </ul>
+                        <p class="text-sm text-gray-500 mt-3">API の料金（2026年10月時点、1ドル＝150円で計算）。下書きを安く何度も作り、決まったものだけ高画質で作るのがコツです。</p>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md ring-1 ring-gray-900/5 mb-6">
+                    <div class="bg-gray-900 p-4 rounded-lg font-mono text-sm overflow-x-auto mb-4"><p class="text-xs text-gray-400 mb-2 font-mono">AI への頼み方（この動画を作ったときの流れ）</p><pre class="text-white whitespace-pre-wrap break-words">Scrum Quest の3人（Joe・Miho先生・Arai先生）の絵を基準にして、
+Miro の使い方を案内する2分の動画を作って。
+・まず安いモデル（gemini-3.1-flash-image・1K）で、3人 × 7ポーズを緑の背景で作り、一覧にして見せて
+・台本は、画面に出す字幕（text）と、声で読む文（say・かな書き）を分けて
+・声は2本ずつ作って、書き起こしで台本と合う方を選んで
+・画面は HTML で作り、Playwright で 3840×2160 に書き出して
+・決まったら上位モデル（gemini-3-pro-image・4K）で描き直し、口を開けた絵も作って口パクさせて
+Gemini の APIキーはファイルにある。中身は表示しないで。</pre></div>
+                        <p class="text-gray-700">MobAI でやるなら、1人が AI に頼み、ほかの人は同じ画面を見て「この絵でいい？」「このセリフ、読み間違えていない？」を判断します。<strong>作るのは AI、決めるのは人</strong>です。</p>
                     </div>
                 </div>
             </div>
