@@ -1,0 +1,7 @@
+{
+  "_comment": "AI 先生（ai-tutor.js）の設定。これを ai-config.json という名前でコピーして使う。ai-config.json は git に入れない（.gitignore 済み）。本番は GitHub Actions が Secrets の GEMINI_API_KEY から生成する。",
+  "apiKey": "ここに Gemini の API キー",
+  "model": "",
+  "proxyUrl": "",
+  "thinkingLevel": "low"
+}

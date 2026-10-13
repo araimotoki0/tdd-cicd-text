@@ -65,12 +65,34 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
 
+      # ステップ2.5: AI 先生（ai-tutor.js）の設定を Secrets から作る
+      #   - ai-config.json は git に入れない（.gitignore）。ここで作ってから S3 に上げる
+      #   - GEMINI_API_KEY：Gemini の API キー。AI_PROXY_URL：中継サーバーを使うときだけ（infra/ai-proxy-worker.js）
+      #   - ページの見出し一覧（ai-site-index.json）も、ここで最新にする
+      - name: Write AI tutor config
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AI_PROXY_URL: ${{ secrets.AI_PROXY_URL }}
+        run: |
+          node -e '
+            const fs = require("fs");
+            fs.writeFileSync("ai-config.json", JSON.stringify({
+              apiKey: process.env.GEMINI_API_KEY || "",
+              model: "",
+              proxyUrl: process.env.AI_PROXY_URL || "",
+              thinkingLevel: "low"
+            }) + "\n");
+          '
+          node tools/build-ai-site-index.mjs
+
       # ステップ3: S3バケットにファイルを同期
       - name: Deploy to S3
         run: |
           aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} \
             --exclude ".git/*" \
             --exclude ".github/*" \
+            --exclude "tests/*" \
+            --exclude "tools/*" \
             --delete
 
       # ステップ4: CloudFrontのキャッシュを無効化

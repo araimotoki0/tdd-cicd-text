@@ -3,7 +3,7 @@
    - CSS / JS / 画像 / フォント：キャッシュを返しつつ裏で更新（stale-while-revalidate）。?v= を含めて完全一致
    - 動画：キャッシュしない（容量が大きく、途中からの読み込みがあるため）
    更新するときは VERSION を変える */
-var VERSION = 'csd-2026-10-14i';
+var VERSION = 'csd-2026-10-14j';
 var CACHE = 'csd-' + VERSION;
 
 var PAGES = [
@@ -12,7 +12,7 @@ var PAGES = [
   'cicd-index.html', 'cicd-handson-basic.html', 'cicd-handson-quality.html', 'cicd-handson-deploy.html',
   'handson-setup-mac.html', 'handson-setup-windows.html', 'csd-preview.html', 'home.html', 'app.html', 'login.html', 'offline.html'
 ];
-var ASSETS = ['styles.css', 'ui2.css', 'code-copy.js', 'global-menu.js', 'nav-highlight.js', 'scroll-to-top.js', 'page-nav.js', 'ui2.js',
+var ASSETS = ['styles.css', 'ui2.css', 'code-copy.js', 'global-menu.js', 'nav-highlight.js', 'scroll-to-top.js', 'page-nav.js', 'ui2.js', 'ai-tutor.js', 'ai-site-index.json', 'img/miho_face.webp',
   'manifest.json', 'img/qr-site.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {

@@ -1,0 +1,3 @@
+# AI 先生の API キー（本番は GitHub Actions が Secrets から生成する）
+ai-config.json
+.DS_Store
