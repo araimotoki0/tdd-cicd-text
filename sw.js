@@ -3,12 +3,12 @@
    - CSS / JS / 画像 / フォント：キャッシュを返しつつ裏で更新（stale-while-revalidate）。?v= を含めて完全一致
    - 動画：キャッシュしない（容量が大きく、途中からの読み込みがあるため）
    更新するときは VERSION を変える */
-var VERSION = 'csd-2026-10-14f';
+var VERSION = 'csd-2026-10-14g';
 var CACHE = 'csd-' + VERSION;
 
 var PAGES = [
   'index.html', 'handson-basic.html', 'handson-refactor.html', 'handson-assertions.html', 'handson-advanced.html', 'handson-database.html',
-  'ai-coding-antigravity.html', 'mob-ai.html',
+  'ai-coding-antigravity.html', 'mob-ai.html', 'miro-tutorial.html',
   'cicd-index.html', 'cicd-handson-basic.html', 'cicd-handson-quality.html', 'cicd-handson-deploy.html',
   'handson-setup-mac.html', 'handson-setup-windows.html', 'csd-preview.html', 'home.html', 'app.html', 'login.html', 'offline.html'
 ];
