@@ -231,6 +231,20 @@
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <div class="flex items-center mb-2">
+                                    <span class="text-2xl mr-3">🐙</span>
+                                    <h4 class="font-bold text-lg">GitHub CLI（gh）</h4>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">GitHub へのログインと push の認証</p>
+                                <div class="bg-yellow-50 p-3 rounded border-l-4 border-yellow-400">
+                                    <p class="text-xs font-bold text-yellow-800 mb-1">💡 CI/CD 講座で必要になります</p>
+                                    <p class="text-xs text-gray-700">
+                                        ワークフローのファイルを push するには <strong>workflow</strong> 権限が要ります。
+                                        <code class="bg-gray-200 px-1 rounded">gh auth login -s workflow</code> で、先に付けておきます。
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow">
+                                <div class="flex items-center mb-2">
                                     <span class="text-2xl mr-3">🐳</span>
                                     <h4 class="font-bold text-lg">Docker Desktop</h4>
                                 </div>
@@ -422,6 +436,29 @@
 git config --global user.email "your.email@example.com"
 git config --list</pre>
                         </div>
+
+                        <h4 class="font-bold text-gray-800 mb-3 mt-8">GitHub CLI（gh）のインストールとログイン（こちらも必須です）</h4>
+                        <p class="text-gray-700 mb-3">
+                            CI/CD 講座で <code class="bg-gray-200 px-1 rounded">.github/workflows/</code> のファイルを push するとき、GitHub は <strong>workflow</strong> という権限を求めます。
+                            いま gh でログインして、この権限を付けておくと、講座当日に push で止まりません。
+                        </p>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                            <pre>brew install gh
+gh --version
+gh auth login -h github.com -s workflow</pre>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">
+                            質問には、<strong>HTTPS</strong> → <strong>Yes</strong>（Git の認証も gh に任せる）→ <strong>Login with a web browser</strong> の順に答えます。
+                            表示されたコードをブラウザに貼って、自分の GitHub アカウントで承認してください。
+                        </p>
+                        <h4 class="font-bold text-gray-800 mb-3">確認コマンド</h4>
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-3">
+                            <pre>gh auth status</pre>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-6">
+                            <code class="bg-gray-200 px-1 rounded">Token scopes:</code> の行に <strong>workflow</strong> が入っていればOKです。
+                            入っていない人は <code class="bg-gray-200 px-1 rounded">gh auth refresh -h github.com -s workflow</code> を実行してください。
+                        </p>
                     </div>
                 </div>
             </div>
@@ -738,6 +775,8 @@ agy</pre>
                         <h3 class="text-2xl font-bold text-green-800 mb-6">✅ 確認コマンド一覧</h3>
                         <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm mb-6">
                             <pre>git --version
+gh --version
+gh auth status
 docker --version
 docker compose version
 agy --version</pre>
@@ -752,6 +791,10 @@ agy --version</pre>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
                                 <label class="text-gray-700">git --versionでバージョン表示</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" class="mr-3 w-5 h-5">
+                                <label class="text-gray-700">gh auth status の Token scopes に workflow が入っている</label>
                             </div>
                             <div class="flex items-center">
                                 <input type="checkbox" class="mr-3 w-5 h-5">
