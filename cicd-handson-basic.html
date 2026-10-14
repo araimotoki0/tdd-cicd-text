@@ -690,7 +690,18 @@ git push</pre>
 git push</pre></div>
                                         <p>ブラウザが開くので、承認してから push します。環境構築で <code>gh auth login -s workflow</code> まで済ませた人は、このエラー自体が出ません。</p>
 
-                                        <p class="font-bold text-gray-800 pt-2">gh が入っていない人：トークンを作って、パスワードの代わりに使う</p>
+                                        <p class="font-bold text-gray-800 pt-2">gh が入っていない人：gh を入れてログインする（5分）</p>
+                                        <p><code>gh --version</code> で「command not found」になる人はこちら。Mac はターミナル、Windows は WSL2（Ubuntu）で実行します。</p>
+                                        <div class="bg-gray-900 p-3 rounded font-mono text-xs overflow-x-auto"><pre class="text-white"># Mac
+brew install gh
+
+# Windows（WSL2 の Ubuntu）
+sudo apt update &amp;&amp; sudo apt install -y gh</pre></div>
+                                        <div class="bg-gray-900 p-3 rounded font-mono text-xs overflow-x-auto"><pre class="text-white">gh auth login -h github.com -s workflow
+git push</pre></div>
+                                        <p>質問には <strong>HTTPS</strong> → <strong>Yes</strong>（Git の認証も gh に任せる）→ <strong>Login with a web browser</strong> の順に答え、表示されたコードをブラウザに貼って承認します。<code>-s workflow</code> を付けてログインするので、そのまま push が通ります。画面つきの手順は環境構築ページ（<a href="handson-setup-mac.html#gh" class="text-blue-600 underline">Mac</a> / <a href="handson-setup-windows.html#gh" class="text-blue-600 underline">Windows</a>）にあります。</p>
+
+                                        <p class="font-bold text-gray-800 pt-2">gh を入れられない人：トークンを作って、パスワードの代わりに使う</p>
                                         <ol class="list-decimal list-inside space-y-1">
                                             <li>GitHub の右上のアイコン → <strong>Settings</strong> → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong> → <strong>Generate new token (classic)</strong></li>
                                             <li><strong>repo</strong> と <strong>workflow</strong> の2つにチェックを入れて作る</li>
@@ -705,7 +716,7 @@ git push</pre></div>
                                             <li>• <strong>どうしても push できない：</strong>GitHub のリポジトリページで <strong>Add file → Create new file</strong> を選び、ファイル名に <code>.github/workflows/test.yml</code> と入れて、中身を貼って保存します。そのあと手元で <code>git pull</code> します。</li>
                                         </ul>
 
-                                        <p class="pt-2 text-gray-600">💡 環境構築ページの「GitHub CLI（gh）のインストールとログイン」を済ませておくと、当日ここで止まりません。</p>
+                                        <p class="pt-2 text-gray-600">💡 環境構築ページの「GitHub CLI（gh）のインストールとログイン」（<a href="handson-setup-mac.html#gh" class="text-blue-600 underline">Mac</a> / <a href="handson-setup-windows.html#gh" class="text-blue-600 underline">Windows</a>）を済ませておくと、当日ここで止まりません。</p>
                                     </div>
                                 </div>
                             </li>
