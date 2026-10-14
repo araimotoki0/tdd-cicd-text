@@ -56,7 +56,7 @@
 .mg-btn{border:3px solid var(--navy);background:#fff;border-radius:12px;padding:8px 12px;font-weight:800;font-size:13px;white-space:nowrap}
 .mg-btn:disabled{opacity:.35;cursor:default}
 .mg-rate1{display:none}
-.mg-play{padding:11px 16px;border-radius:14px;border:4px solid var(--navy);background:var(--navy);color:#fff;font-weight:900;font-size:16px;box-shadow:3px 4px 0 rgba(27,42,107,.35);transition:transform .08s}
+.mg-play{padding:11px 16px;border-radius:14px;border:4px solid var(--navy);background:var(--navy);color:#fff;font-weight:900;font-size:16px;box-shadow:3px 4px 0 rgba(27,42,107,.35);transition:transform .08s;white-space:nowrap}
 .mg-play:active{transform:translate(2px,2px);box-shadow:none}
 .mg-rates{display:flex;gap:6px;align-items:center;font-size:12px;font-weight:800;color:#555;margin-top:8px}
 .mg-rates button{border:2px solid #c8cde0;background:#fff;border-radius:8px;padding:3px 10px;font-weight:800;font-size:12px}
@@ -76,8 +76,8 @@
 .mg-intro video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border:4px solid var(--navy);border-radius:18px;box-shadow:6px 7px 0 var(--navy);background:#2b50ff}
 
 /* ── 右下…ではなく左下に浮かぶとき（右下は「先生に聞く」） */
-.mg.floating{position:fixed;left:18px;bottom:18px;z-index:1100;width:350px;max-width:calc(100vw - 36px);background:#fff;border:4px solid var(--navy);border-radius:20px;box-shadow:8px 9px 0 var(--navy);padding:12px 14px 12px}
-.mg.floating .mg-body{grid-template-columns:104px 1fr;gap:10px}
+.mg.floating{position:fixed;left:18px;bottom:18px;z-index:1100;width:410px;max-width:calc(100vw - 36px);background:#fff;border:4px solid var(--navy);border-radius:20px;box-shadow:8px 9px 0 var(--navy);padding:12px 14px 12px}
+.mg.floating .mg-body{grid-template-columns:116px 1fr;gap:10px}
 .mg.floating .mg-text{font-size:14px;line-height:1.6}
 .mg.floating .mg-say{padding:9px 11px 16px;min-height:90px}
 .mg.floating .mg-play{padding:9px 12px;font-size:14px}
@@ -108,6 +108,12 @@ section.mg-speaking{box-shadow:inset 6px 0 0 #2b50ff}
 .mg-hole{position:fixed;z-index:1000;border-radius:18px;border:4px solid #ffd93b;box-shadow:0 0 0 200vmax rgba(8,18,52,.55),0 0 0 8px rgba(255,217,59,.35);pointer-events:none;transition:left .3s,top .3s,width .3s,height .3s}
 .mg-hole[hidden]{display:none}
 
+/* 画面いっぱいの花吹雪・紙吹雪・きらきら（押せない層）と、押した瞬間の光 */
+.mg-fxpage{position:fixed;inset:0;width:100%;height:100%;z-index:1200;pointer-events:none}
+.mg-fxpage[hidden]{display:none}
+.mg.docked.go{animation:mg-glow 1.3s ease-out}
+@keyframes mg-glow{0%{box-shadow:8px 9px 0 var(--navy),0 0 0 0 rgba(255,217,59,.95)}100%{box-shadow:8px 9px 0 var(--navy),0 0 0 48px rgba(255,217,59,0)}}
+
 @media (max-width:900px){
   .mg-intro{grid-template-columns:1fr}
   .mg.docked{padding:12px 12px 12px;border-radius:16px}
@@ -124,7 +130,8 @@ section.mg-speaking{box-shadow:inset 6px 0 0 #2b50ff}
   .mg.floating .mg-text{font-size:13px}
   .mg.floating .mg-info{margin-bottom:5px}
   .mg.floating .mg-btn{padding:7px 9px;font-size:12px}
-  .mg.floating .mg-play{padding:8px 10px;font-size:13px}
+  .mg.floating .mg-prev span,.mg.floating .mg-next span{display:none}   /* 狭いときは ⏮ ⏭ だけにして、一時停止が折れないようにする */
+  .mg.floating .mg-play{padding:8px 8px;font-size:13px}
   .mg.floating .mg-prog{margin:6px 0 4px}
   .mg-listen{padding:4px 10px;font-size:12px}
   .mg-listen-wrap{margin:-8px 0 16px}

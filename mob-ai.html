@@ -15,7 +15,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css?v=20261012d">
     <link rel="stylesheet" href="ui2.css?v=22">
-    <link rel="stylesheet" href="guide/guide.css?v=1">
+    <link rel="stylesheet" href="guide/guide.css?v=2">
 </head>
 <body class="bg-gray-50 ui2" data-chapter="mobai">
     <!-- ナビゲーション -->
@@ -737,6 +737,69 @@ tools: Read, Grep, Glob, Bash
             </div>
         </section>
 
+        <!-- こんなこともできる：この案内役の作り方（2026-10-14） -->
+        <section id="how-made" class="py-16 bg-gradient-to-b from-gray-900 via-indigo-950 to-gray-900 text-white">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <p class="text-center mb-3"><span class="inline-block bg-yellow-400 text-yellow-950 font-bold text-sm px-4 py-1.5 rounded-full">💡 こんなこともできる</span></p>
+                    <h2 class="text-4xl font-bold mb-4 text-center">この案内役は、ひと晩でできました</h2>
+                    <p class="text-indigo-100 text-center text-lg mb-10 leading-relaxed">
+                        今まで、チュートリアルを1本作るのに <strong class="text-yellow-300">7日間</strong> かかっていました。<br class="hidden md:inline">
+                        それが、<strong class="text-yellow-300">夜に命令して、寝ているだけ</strong>でできる。<br class="hidden md:inline">
+                        2026年10月13日の夜に頼んで、14日の朝には、上の「3人の案内」が公開されていました。
+                    </p>
+
+                    <div class="grid md:grid-cols-3 gap-4 mb-10">
+                        <div class="bg-white/10 ring-1 ring-white/20 rounded-2xl p-6">
+                            <p class="text-yellow-300 font-bold text-lg mb-2">🌙 夜</p>
+                            <p class="text-sm text-indigo-50 leading-relaxed">「3人が、このページを声で案内するようにして。止めずに全力で。私は寝ます」と Claude Code に頼んで、寝る。</p>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/20 rounded-2xl p-6">
+                            <p class="text-yellow-300 font-bold text-lg mb-2">🤖 寝ているあいだ</p>
+                            <p class="text-sm text-indigo-50 leading-relaxed">AI が台本を書き、3人の声を作り、絵と動きを作り、ページに組み込み、パソコンとスマホで実際に動かして確かめ、公開まで済ませる。</p>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/20 rounded-2xl p-6">
+                            <p class="text-yellow-300 font-bold text-lg mb-2">☀️ 朝</p>
+                            <p class="text-sm text-indigo-50 leading-relaxed">できたものを見て、「ボタンが折れ曲がってる」「もっと派手に、花吹雪とばして」と伝える。直るまで、数分。</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-4">駆使した道具</h3>
+                    <div class="grid md:grid-cols-2 gap-3 mb-10 text-sm">
+                        <div class="bg-white/10 ring-1 ring-white/10 rounded-xl p-4">
+                            <p class="font-bold text-yellow-200 mb-1">Claude Code</p>
+                            <p class="text-indigo-50 leading-relaxed">台本・コード・テスト・公開まで、全部をやる AI エージェント。寝ているあいだの主役。</p>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/10 rounded-xl p-4">
+                            <p class="font-bold text-yellow-200 mb-1">Chrome 拡張（Claude in Chrome）</p>
+                            <p class="text-indigo-50 leading-relaxed">AI が自分でブラウザを操作。手本にした声つきチュートリアルの動きを観察し、API の使用量の画面も自分で確認。</p>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/10 rounded-xl p-4">
+                            <p class="font-bold text-yellow-200 mb-1">Playwright</p>
+                            <p class="text-indigo-50 leading-relaxed">できたページをパソコン幅とスマホ幅で実際に動かし、スクリーンショットを撮り、エラー・はみ出し・光る場所のズレを自動で検査。</p>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/10 rounded-xl p-4">
+                            <p class="font-bold text-yellow-200 mb-1">Gemini（絵）＋ Veo（動画）</p>
+                            <p class="text-indigo-50 leading-relaxed">Scrum Quest の3人の絵から、ポーズ違い・口の開閉・まばたきの差分を生成。話している間の動く絵は、Veo の8秒ループ。</p>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/10 rounded-xl p-4">
+                            <p class="font-bold text-yellow-200 mb-1">Gemini TTS（声）</p>
+                            <p class="text-indigo-50 leading-relaxed">29本のせりふを3人の声で生成。2テイク作って書き起こしで聞き比べ、台本どおりに読めたほうを採用。口パクは声の大きさに同期。</p>
+                        </div>
+                        <div class="bg-white/10 ring-1 ring-white/10 rounded-xl p-4">
+                            <p class="font-bold text-yellow-200 mb-1">GitHub Actions ＋ S3 / CloudFront</p>
+                            <p class="text-indigo-50 leading-relaxed">push したら自動で公開。AI 自身が push するので、朝にはもう見られる状態。</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-400 text-yellow-950 rounded-2xl p-6 md:p-8 shadow-lg">
+                        <p class="text-xl font-bold mb-2">人がやったのは、「決める」ことだけ</p>
+                        <p class="leading-relaxed">最初の命令。「ゲームのチュートリアルみたいに」「Miro じゃなくて、このページを案内して」という方向の修正。そして朝の確認。コードは1行も書いていません。これが、このページで言っている「考える → 作る → 見る → 判断する → 学ぶ」のループです。寝ているあいだも、ループは回っていました。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- フッター -->
         <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12">
             <div class="container mx-auto px-4">
@@ -760,7 +823,7 @@ tools: Read, Grep, Glob, Bash
     <script src="page-nav.js?v=20261012d"></script>
     <script src="ui2.js?v=20"></script>
     <script src="guide/lines.js?v=1"></script>
-    <script src="guide/guide.js?v=1"></script>
+    <script src="guide/guide.js?v=2"></script>
     <script src="ai-tutor.js?v=1"></script>
 </body>
 </html>

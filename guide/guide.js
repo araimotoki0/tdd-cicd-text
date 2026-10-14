@@ -104,6 +104,8 @@ function sfx(kind) {
   const t = actx.currentTime;
   const tone = (f0, f1, at, dur, vol, type) => { const o = actx.createOscillator(), gn = actx.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f0, at); if (f1) o.frequency.exponentialRampToValueAtTime(f1, at + dur * .8); o.connect(gn); gn.connect(actx.destination); gn.gain.setValueAtTime(.0001, at); gn.gain.exponentialRampToValueAtTime(vol, at + .015); gn.gain.exponentialRampToValueAtTime(.0001, at + dur); o.start(at); o.stop(at + dur + .02); };
   if (kind === 'tap') tone(660, 440, t, .1, .08);
+  else if (kind === 'start') [523, 659, 784].forEach((f, i) => tone(f, 0, t + i * .07, .28, .08, 'triangle'));
+  else if (kind === 'chap') tone(880, 1320, t, .18, .05);
   else if (kind === 'done') [523, 659, 784, 1047].forEach((f, i) => tone(f, 0, t + i * .12, .5, .1, 'triangle'));
 }
 // 声の大きさ（lines.js の env: 25回/秒・0〜9）で口パク
@@ -183,6 +185,71 @@ function confetti() {
   })(t0);
 }
 
+// ── 派手な演出: 画面いっぱいの花吹雪・紙吹雪・きらきら（押せない層の canvas。動きを減らす設定では出さない）
+const big = document.createElement('canvas'); big.className = 'mg-fxpage'; big.hidden = true; document.body.appendChild(big);
+const P = []; let bigRaf = 0, bigLast = 0;
+const COLS = ['#ffd93b', '#ff7a59', '#2b50ff', '#2fbf8f', '#ff5c8a', '#ffffff', '#a78bfa'];
+const PINK = ['#ffc1d6', '#ffd1e0', '#ff9fc0', '#fff0f5', '#ffb3cc', '#ffe1ea'];
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+function fxEmit(kind, n, x, y, o) {
+  if (reduce()) return;
+  o = o || {};
+  n = Math.round(n * (innerWidth < 900 ? .6 : 1));
+  for (let i = 0; i < n; i++) {
+    if (kind === 'petal') P.push({ k: 'petal', x: Math.random() * innerWidth, y: -20 - Math.random() * innerHeight * .6, vx: .5 + Math.random() * 1.2, vy: 1.3 + Math.random() * 1.9, s: 6 + Math.random() * 7, c: pick(PINK), a: Math.random() * Math.PI * 2, va: (Math.random() - .5) * .1, ph: Math.random() * Math.PI * 2, life: 0, ttl: 6 + Math.random() * 3 });
+    else if (kind === 'confetti') {
+      const ang = (o.angle == null ? -Math.PI / 2 : o.angle) + (Math.random() - .5) * (o.spread || 1.2), sp = (o.speed || 14) * (.45 + Math.random() * .8);
+      P.push({ k: 'conf', x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, s: 6 + Math.random() * 7, c: pick(COLS), a: Math.random() * Math.PI, va: (Math.random() - .5) * .4, life: 0, ttl: 2.8 + Math.random() * 1.4 });
+    } else {
+      const ang = Math.random() * Math.PI * 2, sp = 2.5 + Math.random() * 7;
+      P.push({ k: 'star', x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 2.5, s: 4 + Math.random() * 8, c: pick(['#ffd93b', '#ffffff', '#ffe98a', '#ffb3cc']), a: Math.random() * Math.PI, va: (Math.random() - .5) * .3, life: 0, ttl: .9 + Math.random() * .8 });
+    }
+  }
+  if (!bigRaf && P.length) { big.hidden = false; bigLast = performance.now(); bigRaf = requestAnimationFrame(fxFrame); }
+}
+function fxFrame(now) {
+  const dpr = Math.min(2, devicePixelRatio || 1), w = innerWidth, h = innerHeight;
+  if (big.width !== Math.round(w * dpr) || big.height !== Math.round(h * dpr)) { big.width = Math.round(w * dpr); big.height = Math.round(h * dpr); }
+  const ctx = big.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+  const dt = Math.min(.05, (now - bigLast) / 1000), f = dt * 60; bigLast = now;
+  for (let i = P.length - 1; i >= 0; i--) {
+    const p = P[i]; p.life += dt;
+    if (p.k === 'petal') { p.ph += dt * 3; p.x += (p.vx + Math.sin(p.ph) * 1.5) * f; p.y += (p.vy + Math.cos(p.ph * .7) * .5) * f; p.a += p.va * f; }
+    else if (p.k === 'conf') { p.vy += .32 * f; p.vx *= Math.pow(.985, f); p.vy *= Math.pow(.985, f); p.x += p.vx * f; p.y += p.vy * f; p.a += p.va * f; }
+    else { p.vy += .1 * f; p.x += p.vx * f; p.y += p.vy * f; p.a += p.va * f; }
+    const fade = Math.max(0, Math.min(1, (p.ttl - p.life) / .7));
+    if (fade <= 0 || p.y > h + 30) { P.splice(i, 1); continue; }
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.globalAlpha = fade; ctx.fillStyle = p.c;
+    if (p.k === 'petal') {
+      ctx.beginPath(); ctx.ellipse(0, 0, p.s, p.s * .55, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = fade * .55; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(-p.s * .3, -p.s * .15, p.s * .35, p.s * .2, 0, 0, Math.PI * 2); ctx.fill();
+    } else if (p.k === 'conf') { ctx.scale(1, Math.abs(Math.cos(p.a * 2)) * .85 + .15); ctx.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * .66); }
+    else { ctx.beginPath(); for (let j = 0; j < 8; j++) { const rr = j % 2 ? p.s * .38 : p.s, aa = j * Math.PI / 4; ctx.lineTo(Math.cos(aa) * rr, Math.sin(aa) * rr); } ctx.closePath(); ctx.fill(); }
+    ctx.restore();
+  }
+  if (P.length) bigRaf = requestAnimationFrame(fxFrame); else { bigRaf = 0; big.hidden = true; }
+}
+function fxStart(from) {   // 「3人の案内を聞く」を押したとき: ボタンから紙吹雪がはじけ、花吹雪が降る
+  const r = from ? from.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0, height: 0 };
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  fxEmit('confetti', 130, cx, cy, { angle: -Math.PI / 2, spread: 2.6, speed: 17 });
+  fxEmit('star', 45, cx, cy);
+  fxEmit('petal', 100);
+}
+function fxChapter() {   // 章が変わるとき: 枠からきらきら＋少しの花びら
+  const r = stage.getBoundingClientRect();
+  fxEmit('star', 28, r.left + r.width / 2, r.top + r.height * .4);
+  fxEmit('petal', 22);
+}
+function fxEnd() {   // 最後まで聞いたとき: 左右から紙吹雪の大砲、花吹雪、しばらく続く
+  const h = innerHeight;
+  fxEmit('confetti', 110, 0, h * .75, { angle: -Math.PI / 4, spread: .9, speed: 22 });
+  fxEmit('confetti', 110, innerWidth, h * .75, { angle: -Math.PI * 3 / 4, spread: .9, speed: 22 });
+  fxEmit('petal', 180);
+  let n = 0;
+  const t = setInterval(() => { if (reduce()) return clearInterval(t); fxEmit('confetti', 55, Math.random() * innerWidth, h * .3, { angle: -Math.PI / 2, spread: 2.6, speed: 11 }); fxEmit('petal', 45); if (++n >= 6) clearInterval(t); }, 650);
+}
+
 // ── 光らせる所（穴）: 要素の位置を追いかける
 let holeRaf = 0;
 function spotEl(name) { return name ? document.querySelector('[data-spot="' + name + '"]') : null; }
@@ -201,6 +268,8 @@ function showHole(el) {
 function scrollToLine(l) {
   const el = spotEl(l.spot) || secOf(l.sec);
   if (!el) return;
+  // 入口の舞台の中で押したとき（枠が大きく見えていて、光らせる所のないせりふ）は、ページを動かさない。光らせる所が出たら、そこへ動く
+  if (!l.spot && dock && !dockHidden && !g.classList.contains('floating')) return;
   const r = el.getBoundingClientRect(), vh = innerHeight;
   // 枠は、入口の舞台から離れると浮かぶ（左下）。その分だけ下を空けて、光らせる所が枠に隠れないようにする
   const inDock = dock && dock.contains(el);
@@ -323,13 +392,13 @@ function finish(run) {
   setChar(l.who, l.pose, false);
   const next = S.cur + 1;
   const more = next < L.length && (S.mode === 'all' || L[next].sec === l.sec);
-  if (more) { setBtn(); S.timer = setTimeout(() => { if (run === S.run) play(next, S.mode); }, GAP * 1000 / S.rate); return; }
+  if (more) { setBtn(); S.timer = setTimeout(() => { if (run !== S.run) return; if (L[next].sec !== l.sec) { fxChapter(); sfx('chap'); } play(next, S.mode); }, GAP * 1000 / S.rate); return; }
   showHole(null);
-  if (S.mode === 'all') {   // 通しで最後まで: お祝い
+  if (S.mode === 'all') {   // 通しで最後まで: お祝い（枠の中の紙吹雪＋画面いっぱいの花吹雪）
     S.started = false; g.classList.add('ended');
     textEl.textContent = '🎉 おつかれさま！ これが MobAI です。講座で お会いしましょう。';
-    setChar(l.who, 'cheer', false); confetti(); sfx('done');
-  }
+    setChar(l.who, 'cheer', false); confetti(); fxEnd(); sfx('done');
+  } else fxChapter();   // この章だけ: 小さくきらきら
   setBtn();
 }
 function pause() {
@@ -357,8 +426,8 @@ playBtn.addEventListener('click', () => {
   else if (S.paused) resume();
   else play(g.classList.contains('ended') ? 0 : S.cur, S.mode || 'all', { scroll: true });
 });
-$('.mg-prev', g).addEventListener('click', () => { gesture(); sfx('tap'); prevChapter(); });
-$('.mg-next', g).addEventListener('click', () => { gesture(); sfx('tap'); nextChapter(); });
+$('.mg-prev', g).addEventListener('click', () => { gesture(); sfx('tap'); prevChapter(); fxChapter(); });
+$('.mg-next', g).addEventListener('click', () => { gesture(); sfx('tap'); nextChapter(); fxChapter(); });
 // 字幕をタップ: 話している途中なら、このせりふを飛ばして次へ
 $('.mg-say', g).addEventListener('click', () => { if (!S.playing) return; gesture(); sfx('tap'); const run = S.run; cancelAnimationFrame(S.raf); clearTimeout(S.raf); audio.pause(); finish(run); });
 const minimize = () => { g.classList.add('min'); store.set('min', '1'); };
@@ -374,6 +443,8 @@ document.querySelectorAll('[data-play-all]').forEach((b) => {
     if (S.playing && S.mode === 'all') { pause(); return; }
     if (S.paused && S.mode === 'all') { resume(); return; }
     play(0, 'all', { scroll: true });
+    sfx('start'); fxStart(b);
+    g.classList.remove('go'); void g.offsetWidth; g.classList.add('go');
   });
 });
 // 各章の見出しに「この章だけ聞く」を足す
